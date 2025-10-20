@@ -184,7 +184,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         
         // Allow requests from the React development server
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        // Vite default port is 5173, but also include 3000 for compatibility
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173",
+            "http://localhost:3000"
+        ));
         
         // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
