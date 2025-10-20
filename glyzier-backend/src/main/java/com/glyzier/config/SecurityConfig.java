@@ -5,6 +5,7 @@ import com.glyzier.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -134,9 +135,14 @@ public class SecurityConfig {
             // Configure authorization rules
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints - anyone can access these
+                // Authentication endpoints (login, register)
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/products/**").permitAll()
-                .requestMatchers("/api/sellers/*/products").permitAll()
+                
+                // Public product browsing (GET only)
+                .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
+                
+                // Public seller viewing (GET only)
+                .requestMatchers(HttpMethod.GET, "/api/sellers/{sid}").permitAll()
                 
                 // All other /api endpoints require authentication
                 .requestMatchers("/api/**").authenticated()
