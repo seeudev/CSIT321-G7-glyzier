@@ -1,34 +1,20 @@
-# 🔌 Glyzier API Documentation
+# Glyzier API Documentation
 
-Complete API reference for the Glyzier Artist Portfolio and Store platform.
-
-**Base URL**: `http://localhost:8080/api`  
-**Authentication**: JWT Bearer Token (where required)  
-**Content-Type**: `application/json`
+Base URL: `http://localhost:8080/api`  
+Authentication: JWT Bearer Token in Authorization header  
+Content-Type: `application/json`
 
 ---
 
-## 📑 Table of Contents
+## Authentication
 
-1. [Authentication](#1-authentication-endpoints)
-2. [User Management](#2-user-management-endpoints)
-3. [Seller Management](#3-seller-management-endpoints)
-4. [Product Management](#4-product-management-endpoints)
-5. [Order Management](#5-order-management-endpoints)
-6. [Error Responses](#6-error-responses)
-7. [Testing Examples](#7-testing-examples)
+### POST /auth/register
 
----
+Register new user account.
 
-## 1. Authentication Endpoints
+**Authentication**: Not required
 
-### 1.1 Register User
-
-**Endpoint**: `POST /api/auth/register`  
-**Authentication**: Not required  
-**Description**: Create a new user account
-
-#### Request Body
+**Request**:
 ```json
 {
   "displayname": "John Doe",
@@ -37,15 +23,15 @@ Complete API reference for the Glyzier Artist Portfolio and Store platform.
 }
 ```
 
-#### Validation Rules
-- `displayname`: Required, 3-100 characters
-- `email`: Required, valid email format, unique
-- `password`: Required, minimum 6 characters
+**Validation**:
+- displayname: 3-100 chars, required
+- email: valid format, unique, required
+- password: min 6 chars, required
 
-#### Success Response (201 Created)
+**Response 201**:
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huQGV4YW1wbGUuY29tIiwiaWF0IjoxNjk...",
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
   "type": "Bearer",
   "userid": 1,
   "email": "john@example.com",
@@ -53,34 +39,20 @@ Complete API reference for the Glyzier Artist Portfolio and Store platform.
 }
 ```
 
-#### Error Responses
-- `400 Bad Request`: Validation failed or email already exists
-  ```json
-  {
-    "error": "Email already exists"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "displayname": "John Doe",
-    "email": "john@example.com",
-    "password": "SecurePass123"
-  }'
+**Error 400**:
+```json
+{"error": "Email already exists"}
 ```
 
 ---
 
-### 1.2 Login User
+### POST /auth/login
 
-**Endpoint**: `POST /api/auth/login`  
-**Authentication**: Not required  
-**Description**: Authenticate user and receive JWT token
+Authenticate user and receive JWT token.
 
-#### Request Body
+**Authentication**: Not required
+
+**Request**:
 ```json
 {
   "email": "john@example.com",
@@ -88,10 +60,10 @@ curl -X POST http://localhost:8080/api/auth/register \
 }
 ```
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huQGV4YW1wbGUuY29tIiwiaWF0IjoxNjk...",
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
   "type": "Bearer",
   "userid": 1,
   "email": "john@example.com",
@@ -99,40 +71,22 @@ curl -X POST http://localhost:8080/api/auth/register \
 }
 ```
 
-#### Error Responses
-- `401 Unauthorized`: Invalid credentials
-  ```json
-  {
-    "error": "Invalid email or password"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "SecurePass123"
-  }'
+**Error 401**:
+```json
+{"error": "Invalid email or password"}
 ```
 
 ---
 
-## 2. User Management Endpoints
+## User Management
 
-### 2.1 Get Current User
+### GET /users/me
 
-**Endpoint**: `GET /api/users/me`  
-**Authentication**: Required (JWT)  
-**Description**: Retrieve information about the currently authenticated user
+Get current authenticated user.
 
-#### Request Headers
-```
-Authorization: Bearer <jwt_token>
-```
+**Authentication**: Required
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "userid": 1,
@@ -143,55 +97,36 @@ Authorization: Bearer <jwt_token>
 }
 ```
 
-#### Error Responses
-- `401 Unauthorized`: No token or invalid token
-  ```json
-  {
-    "error": "Unauthorized"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/users/me \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
 ---
 
-## 3. Seller Management Endpoints
+## Seller Management
 
-### 3.1 Register as Seller
+### POST /sellers/register
 
-**Endpoint**: `POST /api/sellers/register`  
-**Authentication**: Required (JWT)  
-**Description**: Convert user account to seller/artist account
+Convert user to seller account.
 
-#### Request Headers
-```
-Authorization: Bearer <jwt_token>
-```
+**Authentication**: Required
 
-#### Request Body
+**Request**:
 ```json
 {
   "sellername": "Artisan Gallery",
-  "storebio": "Professional digital artist specializing in portraits and landscapes. Creating unique pieces since 2020."
+  "storebio": "Professional digital artist."
 }
 ```
 
-#### Validation Rules
-- `sellername`: Required, 3-100 characters, unique
-- `storebio`: Optional, max 1000 characters
+**Validation**:
+- sellername: 3-100 chars, unique, required
+- storebio: max 1000 chars, optional
 
-#### Success Response (201 Created)
+**Response 201**:
 ```json
 {
   "message": "Successfully registered as a seller",
   "seller": {
     "sid": 1,
     "sellername": "Artisan Gallery",
-    "storebio": "Professional digital artist specializing in portraits and landscapes.",
+    "storebio": "Professional digital artist.",
     "createdAt": "2025-10-20T12:00:00.000+00:00",
     "user": {
       "userid": 1,
@@ -202,88 +137,44 @@ Authorization: Bearer <jwt_token>
 }
 ```
 
-#### Error Responses
-- `400 Bad Request`: User already a seller
-  ```json
-  {
-    "error": "User is already a seller"
-  }
-  ```
-- `400 Bad Request`: Sellername taken
-  ```json
-  {
-    "error": "Seller name already exists"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/sellers/register \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "sellername": "Artisan Gallery",
-    "storebio": "Professional digital artist"
-  }'
+**Error 400**:
+```json
+{"error": "User is already a seller"}
 ```
 
 ---
 
-### 3.2 Get Seller by ID
+### GET /sellers/{sid}
 
-**Endpoint**: `GET /api/sellers/{sid}`  
-**Authentication**: Not required  
-**Description**: Get public information about a seller
+Get seller information.
 
-#### URL Parameters
-- `sid` (Long): Seller ID
+**Authentication**: Not required
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "sid": 1,
   "sellername": "Artisan Gallery",
-  "storebio": "Professional digital artist specializing in portraits and landscapes.",
+  "storebio": "Professional digital artist.",
   "createdAt": "2025-10-20T12:00:00.000+00:00",
   "user": {
     "userid": 1,
     "displayname": "John Doe",
     "email": "john@example.com"
   },
-  "products": [
-    {
-      "pid": 1,
-      "productname": "Sunset Landscape",
-      "type": "Print",
-      "price": 29.99,
-      "status": "Available"
-    }
-  ]
+  "products": []
 }
-```
-
-#### Error Responses
-- `404 Not Found`: Seller doesn't exist
-  ```json
-  {
-    "error": "Seller not found"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/sellers/1
 ```
 
 ---
 
-### 3.3 Get Own Seller Profile
+### GET /sellers/me
 
-**Endpoint**: `GET /api/sellers/me`  
-**Authentication**: Required (JWT)  
-**Description**: Get seller profile for the authenticated user
+Get own seller profile.
 
-#### Success Response (200 OK)
+**Authentication**: Required
+
+**Response 200**:
 ```json
 {
   "sid": 1,
@@ -293,65 +184,53 @@ curl -X GET http://localhost:8080/api/sellers/1
 }
 ```
 
-#### Error Responses
-- `404 Not Found`: User is not a seller
-  ```json
-  {
-    "error": "User is not a seller"
-  }
-  ```
-
----
-
-### 3.4 Check Seller Status
-
-**Endpoint**: `GET /api/sellers/check`  
-**Authentication**: Required (JWT)  
-**Description**: Check if the authenticated user is a seller
-
-#### Success Response (200 OK)
+**Error 404**:
 ```json
-{
-  "isSeller": true,
-  "sid": 1
-}
-```
-or
-```json
-{
-  "isSeller": false
-}
+{"error": "User is not a seller"}
 ```
 
 ---
 
-## 4. Product Management Endpoints
+### GET /sellers/check
 
-### 4.1 Create Product (Seller Only)
+Check if user is a seller.
 
-**Endpoint**: `POST /api/products`  
-**Authentication**: Required (JWT + Seller)  
-**Description**: Create a new product listing
+**Authentication**: Required
 
-#### Request Body
+**Response 200**:
+```json
+{"isSeller": true, "sid": 1}
+```
+
+---
+
+## Product Management
+
+### POST /products
+
+Create product (seller only).
+
+**Authentication**: Required (Seller)
+
+**Request**:
 ```json
 {
   "productname": "Sunset Landscape Print",
   "type": "Print",
   "price": 29.99,
   "status": "Available",
-  "fileKeys": ["sunset-main.jpg", "sunset-detail1.jpg", "sunset-detail2.jpg"]
+  "fileKeys": ["sunset-main.jpg", "sunset-detail1.jpg"]
 }
 ```
 
-#### Validation Rules
-- `productname`: Required, 3-200 characters
-- `type`: Required (e.g., "Print", "Digital", "Original")
-- `price`: Required, must be positive
-- `status`: Required (e.g., "Available", "Sold Out", "Coming Soon")
-- `fileKeys`: Optional array of file key strings (simulated)
+**Validation**:
+- productname: 3-200 chars, required
+- type: required (e.g., "Print", "Digital", "Original")
+- price: positive number, required
+- status: required (e.g., "Available", "Sold Out")
+- fileKeys: optional array of strings (simulated)
 
-#### Success Response (201 Created)
+**Response 201**:
 ```json
 {
   "pid": 1,
@@ -370,53 +249,25 @@ or
       "fileKey": "sunset-main.jpg",
       "fileType": "image",
       "fileFormat": "jpg"
-    },
-    {
-      "pfileid": 2,
-      "fileKey": "sunset-detail1.jpg",
-      "fileType": "image",
-      "fileFormat": "jpg"
     }
   ],
   "inventory": null
 }
 ```
 
-#### Error Responses
-- `403 Forbidden`: User is not a seller
-  ```json
-  {
-    "error": "Only sellers can create products"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "productname": "Sunset Landscape Print",
-    "type": "Print",
-    "price": 29.99,
-    "status": "Available",
-    "fileKeys": ["sunset-main.jpg"]
-  }'
-```
-
 ---
 
-### 4.2 Get All Products
+### GET /products
 
-**Endpoint**: `GET /api/products`  
-**Authentication**: Not required  
-**Description**: Retrieve all products (public browsing)
+List all products.
 
-#### Query Parameters
-- `page` (optional): Page number (default: 0)
-- `size` (optional): Items per page (default: 20)
+**Authentication**: Not required
 
-#### Success Response (200 OK)
+**Query Parameters**:
+- page: default 0
+- size: default 20
+
+**Response 200**:
 ```json
 {
   "content": [
@@ -431,46 +282,23 @@ curl -X POST http://localhost:8080/api/products \
         "sid": 1,
         "sellername": "Artisan Gallery"
       }
-    },
-    {
-      "pid": 2,
-      "productname": "Abstract Digital Art",
-      "type": "Digital",
-      "price": 15.00,
-      "status": "Available",
-      "createdAt": "2025-10-20T13:00:00.000+00:00",
-      "seller": {
-        "sid": 2,
-        "sellername": "Modern Canvas"
-      }
     }
   ],
-  "pageable": {
-    "pageNumber": 0,
-    "pageSize": 20
-  },
-  "totalElements": 2,
+  "pageable": {"pageNumber": 0, "pageSize": 20},
+  "totalElements": 1,
   "totalPages": 1
 }
 ```
 
-#### cURL Example
-```bash
-curl -X GET "http://localhost:8080/api/products?page=0&size=10"
-```
-
 ---
 
-### 4.3 Get Product by ID
+### GET /products/{pid}
 
-**Endpoint**: `GET /api/products/{pid}`  
-**Authentication**: Not required  
-**Description**: Get detailed information about a specific product
+Get product details.
 
-#### URL Parameters
-- `pid` (Long): Product ID
+**Authentication**: Not required
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "pid": 1,
@@ -502,31 +330,15 @@ curl -X GET "http://localhost:8080/api/products?page=0&size=10"
 }
 ```
 
-#### Error Responses
-- `404 Not Found`: Product doesn't exist
-  ```json
-  {
-    "error": "Product not found"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/products/1
-```
-
 ---
 
-### 4.4 Update Product (Seller Only)
+### PUT /products/{pid}
 
-**Endpoint**: `PUT /api/products/{pid}`  
-**Authentication**: Required (JWT + Product Owner)  
-**Description**: Update an existing product
+Update product (owner only).
 
-#### URL Parameters
-- `pid` (Long): Product ID
+**Authentication**: Required (Product Owner)
 
-#### Request Body
+**Request**:
 ```json
 {
   "productname": "Sunset Landscape Print - Limited Edition",
@@ -537,7 +349,7 @@ curl -X GET http://localhost:8080/api/products/1
 }
 ```
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "pid": 1,
@@ -550,89 +362,45 @@ curl -X GET http://localhost:8080/api/products/1
     "sid": 1,
     "sellername": "Artisan Gallery"
   },
-  "files": [
-    {
-      "pfileid": 3,
-      "fileKey": "sunset-main-hd.jpg",
-      "fileType": "image",
-      "fileFormat": "jpg"
-    }
-  ]
+  "files": []
 }
 ```
 
-#### Error Responses
-- `403 Forbidden`: User doesn't own this product
-  ```json
-  {
-    "error": "You do not have permission to edit this product"
-  }
-  ```
-- `404 Not Found`: Product doesn't exist
-
-#### cURL Example
-```bash
-curl -X PUT http://localhost:8080/api/products/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "productname": "Sunset Landscape Print - Limited Edition",
-    "type": "Print",
-    "price": 39.99,
-    "status": "Available"
-  }'
+**Error 403**:
+```json
+{"error": "You do not have permission to edit this product"}
 ```
 
 ---
 
-### 4.5 Delete Product (Seller Only)
+### DELETE /products/{pid}
 
-**Endpoint**: `DELETE /api/products/{pid}`  
-**Authentication**: Required (JWT + Product Owner)  
-**Description**: Delete a product listing
+Delete product (owner only).
 
-#### URL Parameters
-- `pid` (Long): Product ID
+**Authentication**: Required (Product Owner)
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
-{
-  "message": "Product deleted successfully"
-}
-```
-
-#### Error Responses
-- `403 Forbidden`: User doesn't own this product
-- `404 Not Found`: Product doesn't exist
-
-#### cURL Example
-```bash
-curl -X DELETE http://localhost:8080/api/products/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+{"message": "Product deleted successfully"}
 ```
 
 ---
 
-### 4.6 Set Product Inventory (Seller Only)
+### POST /products/{pid}/inventory
 
-**Endpoint**: `POST /api/products/{pid}/inventory`  
-**Authentication**: Required (JWT + Product Owner)  
-**Description**: Set or update inventory quantity for a product (simulated)
+Set product inventory (seller only).
 
-#### URL Parameters
-- `pid` (Long): Product ID
+**Authentication**: Required (Product Owner)
 
-#### Request Body
+**Request**:
 ```json
-{
-  "qtyonhand": 50
-}
+{"qtyonhand": 50}
 ```
 
-#### Validation Rules
-- `qtyonhand`: Required, must be >= 0
+**Validation**:
+- qtyonhand: >= 0, required
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "message": "Inventory updated successfully",
@@ -645,28 +413,15 @@ curl -X DELETE http://localhost:8080/api/products/1 \
 }
 ```
 
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/products/1/inventory \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "qtyonhand": 50
-  }'
-```
-
 ---
 
-### 4.7 Get Products by Seller
+### GET /products/seller/{sid}
 
-**Endpoint**: `GET /api/products/seller/{sid}`  
-**Authentication**: Not required  
-**Description**: Get all products from a specific seller
+Get seller's products.
 
-#### URL Parameters
-- `sid` (Long): Seller ID
+**Authentication**: Not required
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 [
   {
@@ -676,55 +431,36 @@ curl -X POST http://localhost:8080/api/products/1/inventory \
     "price": 29.99,
     "status": "Available",
     "createdAt": "2025-10-20T12:00:00.000+00:00"
-  },
-  {
-    "pid": 3,
-    "productname": "Mountain Vista",
-    "type": "Print",
-    "price": 35.00,
-    "status": "Available",
-    "createdAt": "2025-10-20T14:00:00.000+00:00"
   }
 ]
 ```
 
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/products/seller/1
-```
-
 ---
 
-## 5. Order Management Endpoints
+## Order Management
 
-### 5.1 Place Order
+### POST /orders/place
 
-**Endpoint**: `POST /api/orders/place`  
-**Authentication**: Required (JWT)  
-**Description**: Place an order for one or more products (simulated checkout)
+Place order (simulated checkout).
 
-#### Request Body
+**Authentication**: Required
+
+**Request**:
 ```json
 {
   "items": [
-    {
-      "pid": 1,
-      "quantity": 2
-    },
-    {
-      "pid": 3,
-      "quantity": 1
-    }
+    {"pid": 1, "quantity": 2},
+    {"pid": 3, "quantity": 1}
   ]
 }
 ```
 
-#### Validation Rules
-- `items`: Required, at least 1 item
-- `pid`: Required, must exist
-- `quantity`: Required, must be > 0
+**Validation**:
+- items: min 1 item, required
+- pid: must exist, required
+- quantity: > 0, required
 
-#### Success Response (201 Created)
+**Response 201**:
 ```json
 {
   "message": "Order placed successfully",
@@ -739,53 +475,29 @@ curl -X GET http://localhost:8080/api/products/seller/1
         "productNameSnapshot": "Sunset Landscape Print",
         "unitPrice": 29.99,
         "quantity": 2
-      },
-      {
-        "opid": 2,
-        "productNameSnapshot": "Mountain Vista",
-        "unitPrice": 35.00,
-        "quantity": 1
       }
     ]
   }
 }
 ```
 
-#### Error Responses
-- `400 Bad Request`: Product not found or insufficient inventory
-  ```json
-  {
-    "error": "Product with ID 99 not found"
-  }
-  ```
-  ```json
-  {
-    "error": "Insufficient inventory for product: Sunset Landscape Print"
-  }
-  ```
-
-#### cURL Example
-```bash
-curl -X POST http://localhost:8080/api/orders/place \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "items": [
-      {"pid": 1, "quantity": 2},
-      {"pid": 3, "quantity": 1}
-    ]
-  }'
+**Error 400**:
+```json
+{"error": "Product with ID 99 not found"}
+```
+```json
+{"error": "Insufficient inventory for product: Sunset Landscape Print"}
 ```
 
 ---
 
-### 5.2 Get Order History
+### GET /orders/my-history
 
-**Endpoint**: `GET /api/orders/my-history`  
-**Authentication**: Required (JWT)  
-**Description**: Get all orders placed by the authenticated user
+Get user's order history.
 
-#### Success Response (200 OK)
+**Authentication**: Required
+
+**Response 200**:
 ```json
 [
   {
@@ -794,35 +506,19 @@ curl -X POST http://localhost:8080/api/orders/place \
     "status": "Completed",
     "placedAt": "2025-10-20T16:00:00.000+00:00",
     "itemCount": 2
-  },
-  {
-    "orderid": 2,
-    "total": 29.99,
-    "status": "Completed",
-    "placedAt": "2025-10-21T10:30:00.000+00:00",
-    "itemCount": 1
   }
 ]
 ```
 
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/orders/my-history \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
 ---
 
-### 5.3 Get Order Details
+### GET /orders/{orderid}
 
-**Endpoint**: `GET /api/orders/{orderid}`  
-**Authentication**: Required (JWT + Order Owner)  
-**Description**: Get detailed information about a specific order
+Get order details (owner only).
 
-#### URL Parameters
-- `orderid` (Long): Order ID
+**Authentication**: Required (Order Owner)
 
-#### Success Response (200 OK)
+**Response 200**:
 ```json
 {
   "orderid": 1,
@@ -848,168 +544,75 @@ curl -X GET http://localhost:8080/api/orders/my-history \
           "sellername": "Artisan Gallery"
         }
       }
-    },
-    {
-      "opid": 2,
-      "productNameSnapshot": "Mountain Vista",
-      "unitPrice": 35.00,
-      "quantity": 1,
-      "product": {
-        "pid": 3,
-        "productname": "Mountain Vista",
-        "seller": {
-          "sid": 1,
-          "sellername": "Artisan Gallery"
-        }
-      }
     }
   ]
 }
 ```
 
-#### Error Responses
-- `403 Forbidden`: User doesn't own this order
-  ```json
-  {
-    "error": "You do not have permission to view this order"
-  }
-  ```
-- `404 Not Found`: Order doesn't exist
-
-#### cURL Example
-```bash
-curl -X GET http://localhost:8080/api/orders/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+**Error 403**:
+```json
+{"error": "You do not have permission to view this order"}
 ```
 
 ---
 
-## 6. Error Responses
+## Error Responses
 
-### Common HTTP Status Codes
-
-| Code | Status | Description |
-|------|--------|-------------|
-| 200 | OK | Request successful |
-| 201 | Created | Resource created successfully |
-| 400 | Bad Request | Invalid request data or validation failed |
-| 401 | Unauthorized | Missing or invalid authentication token |
-| 403 | Forbidden | Authenticated but not authorized for this action |
-| 404 | Not Found | Requested resource doesn't exist |
-| 500 | Internal Server Error | Server-side error occurred |
-
-### Error Response Format
-
-All errors follow this format:
+**Format**:
 ```json
 {
-  "error": "Human-readable error message",
+  "error": "Error message",
   "timestamp": "2025-10-20T16:00:00.000+00:00",
   "status": 400
 }
 ```
 
-### Common Error Messages
-
-#### Authentication Errors
-```json
-{"error": "Unauthorized"}
-{"error": "Invalid or expired token"}
-{"error": "Invalid email or password"}
-```
-
-#### Validation Errors
-```json
-{"error": "Email already exists"}
-{"error": "Invalid email format"}
-{"error": "Password must be at least 6 characters"}
-{"error": "Product name is required"}
-```
-
-#### Permission Errors
-```json
-{"error": "Only sellers can create products"}
-{"error": "You do not have permission to edit this product"}
-{"error": "User is not a seller"}
-```
-
-#### Not Found Errors
-```json
-{"error": "Product not found"}
-{"error": "Seller not found"}
-{"error": "Order not found"}
-```
+**Status Codes**:
+- 200: OK
+- 201: Created
+- 400: Bad Request
+- 401: Unauthorized
+- 403: Forbidden
+- 404: Not Found
+- 500: Internal Server Error
 
 ---
 
-## 7. Testing Examples
+## Testing Example
 
-### Complete User Flow Test
-
-#### 1. Register a User
 ```bash
+# Register
 RESPONSE=$(curl -s -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{
-    "displayname": "Test Artist",
-    "email": "test@artist.com",
-    "password": "Test123456"
-  }')
+  -d '{"displayname":"Test Artist","email":"test@artist.com","password":"Test123456"}')
 
 TOKEN=$(echo $RESPONSE | jq -r '.token')
-echo "Token: $TOKEN"
-```
 
-#### 2. Become a Seller
-```bash
+# Become seller
 curl -X POST http://localhost:8080/api/sellers/register \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "sellername": "Test Art Studio",
-    "storebio": "Creating beautiful art for everyone"
-  }'
-```
+  -d '{"sellername":"Test Studio","storebio":"Test bio"}'
 
-#### 3. Create a Product
-```bash
+# Create product
 curl -X POST http://localhost:8080/api/products \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "productname": "Test Artwork",
-    "type": "Print",
-    "price": 25.00,
-    "status": "Available",
-    "fileKeys": ["test-art.jpg"]
-  }'
-```
+  -d '{"productname":"Test Art","type":"Print","price":25.00,"status":"Available","fileKeys":["test.jpg"]}'
 
-#### 4. Set Inventory
-```bash
+# Set inventory
 curl -X POST http://localhost:8080/api/products/1/inventory \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "qtyonhand": 100
-  }'
-```
+  -d '{"qtyonhand":100}'
 
-#### 5. Browse Products (No Auth)
-```bash
+# Browse products (no auth)
 curl -X GET http://localhost:8080/api/products
-```
 
-#### 6. Place an Order (as different user)
-```bash
-# Register another user
+# Register buyer
 BUYER_RESPONSE=$(curl -s -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{
-    "displayname": "Art Buyer",
-    "email": "buyer@test.com",
-    "password": "Buyer123456"
-  }')
+  -d '{"displayname":"Buyer","email":"buyer@test.com","password":"Buyer123456"}')
 
 BUYER_TOKEN=$(echo $BUYER_RESPONSE | jq -r '.token')
 
@@ -1017,59 +620,40 @@ BUYER_TOKEN=$(echo $BUYER_RESPONSE | jq -r '.token')
 curl -X POST http://localhost:8080/api/orders/place \
   -H "Authorization: Bearer $BUYER_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "items": [
-      {"pid": 1, "quantity": 2}
-    ]
-  }'
-```
+  -d '{"items":[{"pid":1,"quantity":2}]}'
 
-#### 7. Check Order History
-```bash
+# Check order history
 curl -X GET http://localhost:8080/api/orders/my-history \
   -H "Authorization: Bearer $BUYER_TOKEN"
 ```
 
 ---
 
-## 8. Notes and Best Practices
+## Notes
 
-### JWT Token Management
-- Tokens expire after 24 hours
-- Store tokens securely (e.g., localStorage in browsers, secure storage in mobile apps)
-- Include token in Authorization header: `Bearer <token>`
-- Refresh token by logging in again when expired
+**JWT Token**:
+- Expires after 24 hours
+- Format: `Authorization: Bearer <token>`
+- Refresh by logging in again
 
-### Pagination
-- Default page size is 20 items
+**Pagination**:
+- Default: 20 items per page
 - Page numbers start at 0
-- Use query parameters: `?page=0&size=10`
+- Use: `?page=0&size=10`
 
-### Simulated Features
-⚠️ **Educational Project - Simulated Components**:
-- **File Uploads**: `fileKeys` are strings, not actual files
-- **Inventory**: Simple decrement, no race condition handling
-- **Payments**: No real payment processing
-- **Email**: No email notifications
+**Simulated Features**:
+- File uploads: fileKeys are strings
+- Inventory: simple decrement
+- Payments: no real processing
 
-### Security Considerations
-- All passwords are encrypted with BCrypt
-- Use HTTPS in production
-- Validate all input on the server side
-- JWT secret should be strong and environment-specific
-- CORS is configured for localhost development
+**Security**:
+- Passwords: BCrypt encrypted
+- Authentication: JWT stateless
+- CORS: enabled for localhost
+- Validation: all endpoints
+- SQL injection: prevented via JPA
 
 ---
 
-## 📚 Additional Resources
-
-- **Main README**: [../README.md](../README.md)
-- **GitHub Repository**: https://github.com/seeudev/CSIT321-G7-glyzier
-- **Spring Boot Docs**: https://spring.io/projects/spring-boot
-- **React Documentation**: https://react.dev/
-
----
-
-**Last Updated**: October 21, 2025  
-**API Version**: 1.0  
-**Project**: Glyzier - CSIT321 Group 7
+Last Updated: October 21, 2025  
+Project: Glyzier CSIT321-G7
