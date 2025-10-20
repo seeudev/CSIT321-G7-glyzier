@@ -371,4 +371,39 @@ const getCurrentUser = async () => {
 ## Security Considerations
 
 ### Best Practices
-1. heck the remaining files in the batch due to size...
+1. ✅ Always use HTTPS in production
+2. ✅ Store tokens securely (consider HttpOnly cookies for production)
+3. ✅ Validate and sanitize all user input
+4. ✅ Implement rate limiting on authentication endpoints
+5. ✅ Use environment variables for sensitive configuration
+6. ✅ Implement token refresh mechanism
+7. ✅ Add password strength requirements
+8. ✅ Implement account lockout after failed login attempts
+
+### Current Implementation (Development/University)
+- ⚠️ HTTP (localhost only)
+- ⚠️ Simple JWT secret
+- ⚠️ 24-hour token expiration with no refresh
+- ⚠️ Basic password validation
+
+---
+
+## Troubleshooting
+
+### "No qualifying bean of type 'UserRepository'"
+**Solution:** Ensure `@EnableJpaRepositories` is configured in `GlyzierApplication.java`
+
+### "CORS policy: No 'Access-Control-Allow-Origin' header"
+**Solution:** Verified - CORS is configured for `http://localhost:3000`
+
+### "JWT Token parsing failed"
+**Solution:** Check that the token format is `Bearer <token>` in the Authorization header
+
+### "401 Unauthorized" on protected endpoints
+**Solution:** Verify the JWT token is valid and not expired. Check Authorization header format.
+
+---
+
+**Last Updated:** October 20, 2025  
+**Module:** 2 - Authentication & User API  
+**Version:** 1.0
