@@ -6,19 +6,17 @@
  * Functionality:
  * - Email and password input fields
  * - Form validation
- * - Calls the backend API to authenticate user
+ * - Calls the backend API to authenticate user via AuthContext
  * - Stores JWT token on successful login
- * - Redirects to dashboard after login
- * 
- * This is a placeholder for Module 5. Full functionality will be
- * implemented in Module 6 when AuthService and AuthContext are created.
+ * - Redirects to dashboard (or previous location) after login
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0 (Module 6 - Full Implementation)
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 /**
  * LoginPage functional component
@@ -26,6 +24,16 @@ import { Link } from 'react-router-dom';
  * @returns {JSX.Element} The login page component
  */
 function LoginPage() {
+  // Get login function from AuthContext
+  const { login } = useAuth();
+  
+  // Navigation hook for redirecting after successful login
+  const navigate = useNavigate();
+  
+  // Get location to redirect back to where user was trying to go
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
+  
   // State for form inputs
   const [formData, setFormData] = useState({
     email: '',
@@ -55,23 +63,33 @@ function LoginPage() {
   
   /**
    * Handle form submission
-   * This will be fully implemented in Module 6 with AuthService
+   * 
+   * Calls the login function from AuthContext which:
+   * 1. Sends credentials to backend
+   * 2. Stores JWT token in localStorage
+   * 3. Updates global auth state
+   * 4. Redirects to dashboard or previous page
    * 
    * @param {Event} e - The form submit event
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
-    // Placeholder - will be implemented in Module 6
-    console.log('Login attempt with:', formData);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Call the login function from AuthContext
+      await login(formData.email, formData.password);
+      
+      // Login successful - redirect to dashboard or previous location
+      navigate(from, { replace: true });
+    } catch (error) {
+      // Login failed - show error message
+      setError(error.message || 'Login failed. Please try again.');
+    } finally {
+      // Always stop loading indicator
       setLoading(false);
-      setError('Login functionality will be implemented in Module 6');
-    }, 1000);
+    }
   };
   
   return (
@@ -143,11 +161,6 @@ function LoginPage() {
           <Link to="/" style={styles.link}>
             ← Back to Home
           </Link>
-        </div>
-        
-        {/* Module note */}
-        <div style={styles.note}>
-          <p>📝 Note: Full authentication will be implemented in Module 6</p>
         </div>
       </div>
     </div>
@@ -239,14 +252,6 @@ const styles = {
     color: '#667eea',
     textDecoration: 'none',
     fontWeight: 'bold',
-  },
-  note: {
-    marginTop: '20px',
-    padding: '12px',
-    backgroundColor: '#fff3cd',
-    borderRadius: '5px',
-    textAlign: 'center',
-    fontSize: '0.9em',
   },
 };
 
