@@ -5,17 +5,18 @@
  * It will display:
  * - A welcome message
  * - Featured products (to be implemented in Module 7)
- * - Navigation to login/register for guests
+ * - Navigation to login/register for guests or dashboard for logged-in users
  * 
  * In Module 7, this page will be updated to show a grid of products
  * fetched from the backend API.
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0 (Module 6 - Added authentication awareness)
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 /**
  * HomePage functional component
@@ -23,21 +24,54 @@ import { Link } from 'react-router-dom';
  * @returns {JSX.Element} The home page component
  */
 function HomePage() {
+  // Get authentication state and functions from context
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  /**
+   * Handle logout
+   * Logs out the user and stays on the home page
+   */
+  const handleLogout = () => {
+    logout();
+    // Optional: You could show a success message here
+  };
+  
   return (
     <div style={styles.container}>
       <div style={styles.hero}>
-        <h1 style={styles.title}>Welcome to Glyzier</h1>
+        <h1 style={styles.title}>
+          {isAuthenticated ? `Welcome back, ${user.displayname}!` : 'Welcome to Glyzier'}
+        </h1>
         <p style={styles.subtitle}>
           Discover and purchase amazing artwork from talented artists
         </p>
         
         <div style={styles.buttonGroup}>
-          <Link to="/login" style={styles.button}>
-            Login
-          </Link>
-          <Link to="/register" style={{...styles.button, ...styles.buttonSecondary}}>
-            Register
-          </Link>
+          {isAuthenticated ? (
+            // Buttons for authenticated users
+            <>
+              <Link to="/dashboard" style={styles.button}>
+                My Dashboard
+              </Link>
+              <button 
+                onClick={handleLogout} 
+                style={{...styles.button, ...styles.buttonSecondary}}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            // Buttons for guests
+            <>
+              <Link to="/login" style={styles.button}>
+                Login
+              </Link>
+              <Link to="/register" style={{...styles.button, ...styles.buttonSecondary}}>
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
       

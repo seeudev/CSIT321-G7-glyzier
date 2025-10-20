@@ -5,19 +5,18 @@
  * 
  * Functionality:
  * - Display name, email, and password input fields
- * - Form validation
- * - Calls the backend API to create a new user account
+ * - Client-side form validation
+ * - Calls the backend API to create a new user account via AuthContext
  * - Redirects to login page after successful registration
- * 
- * This is a placeholder for Module 5. Full functionality will be
- * implemented in Module 6 when AuthService and AuthContext are created.
+ * - Shows success message before redirect
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0 (Module 6 - Full Implementation)
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 /**
  * RegisterPage functional component
@@ -25,6 +24,12 @@ import { Link } from 'react-router-dom';
  * @returns {JSX.Element} The register page component
  */
 function RegisterPage() {
+  // Get register function from AuthContext
+  const { register } = useAuth();
+  
+  // Navigation hook for redirecting after successful registration
+  const navigate = useNavigate();
+  
   // State for form inputs
   const [formData, setFormData] = useState({
     displayname: '',
@@ -35,6 +40,9 @@ function RegisterPage() {
   
   // State for error messages
   const [error, setError] = useState('');
+  
+  // State for success message
+  const [success, setSuccess] = useState('');
   
   // State for loading indicator
   const [loading, setLoading] = useState(false);
@@ -56,13 +64,17 @@ function RegisterPage() {
   
   /**
    * Handle form submission
-   * This will be fully implemented in Module 6 with AuthService
+   * 
+   * Performs client-side validation then calls the register function
+   * from AuthContext which sends data to the backend.
+   * On success, shows a message and redirects to login page.
    * 
    * @param {Event} e - The form submit event
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     
     // Client-side validation: Check if passwords match
     if (formData.password !== formData.confirmPassword) {
@@ -76,20 +88,30 @@ function RegisterPage() {
       return;
     }
     
+    // Check display name length
+    if (formData.displayname.length < 3) {
+      setError('Display name must be at least 3 characters long');
+      return;
+    }
+    
     setLoading(true);
     
-    // Placeholder - will be implemented in Module 6
-    console.log('Registration attempt with:', {
-      displayname: formData.displayname,
-      email: formData.email,
-      password: formData.password,
-    });
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Call the register function from AuthContext
+      await register(formData.displayname, formData.email, formData.password);
+      
+      // Registration successful - show success message
+      setSuccess('Account created successfully! Redirecting to login...');
+      
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (error) {
+      // Registration failed - show error message
+      setError(error.message || 'Registration failed. Please try again.');
       setLoading(false);
-      setError('Registration functionality will be implemented in Module 6');
-    }, 1000);
+    }
   };
   
   return (
@@ -102,6 +124,13 @@ function RegisterPage() {
         {error && (
           <div style={styles.error}>
             {error}
+          </div>
+        )}
+        
+        {/* Success message display */}
+        {success && (
+          <div style={styles.success}>
+            {success}
           </div>
         )}
         
@@ -197,11 +226,6 @@ function RegisterPage() {
             ← Back to Home
           </Link>
         </div>
-        
-        {/* Module note */}
-        <div style={styles.note}>
-          <p>📝 Note: Full authentication will be implemented in Module 6</p>
-        </div>
       </div>
     </div>
   );
@@ -243,6 +267,14 @@ const styles = {
     borderRadius: '5px',
     marginBottom: '20px',
     border: '1px solid #fcc',
+  },
+  success: {
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    padding: '12px',
+    borderRadius: '5px',
+    marginBottom: '20px',
+    border: '1px solid #c3e6cb',
   },
   form: {
     display: 'flex',
@@ -296,14 +328,6 @@ const styles = {
     color: '#667eea',
     textDecoration: 'none',
     fontWeight: 'bold',
-  },
-  note: {
-    marginTop: '20px',
-    padding: '12px',
-    backgroundColor: '#fff3cd',
-    borderRadius: '5px',
-    textAlign: 'center',
-    fontSize: '0.9em',
   },
 };
 

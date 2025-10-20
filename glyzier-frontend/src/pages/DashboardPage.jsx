@@ -3,21 +3,20 @@
  * 
  * This page serves as the main dashboard for authenticated users.
  * 
- * Functionality (to be implemented in Module 8):
- * - Display user information
- * - Show order history
- * - Provide "Become a Seller" option
- * - Link to seller dashboard if user is a seller
- * 
- * This is a placeholder for Module 5. Full functionality will be
- * implemented in Module 8 with order history and seller features.
+ * Functionality:
+ * - Display user information from AuthContext (Module 6)
+ * - Show order history (to be implemented in Module 8)
+ * - Provide "Become a Seller" option (to be implemented in Module 8)
+ * - Link to seller dashboard if user is a seller (to be implemented in Module 8)
+ * - Logout functionality (Module 6)
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0 (Module 6 - Added real user info and logout)
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 /**
  * DashboardPage functional component
@@ -25,19 +24,37 @@ import { Link } from 'react-router-dom';
  * @returns {JSX.Element} The dashboard page component
  */
 function DashboardPage() {
+  // Get authentication state and functions from context
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  /**
+   * Handle logout
+   * Logs out the user and redirects to home page
+   */
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+  
   return (
     <div style={styles.container}>
       <div style={styles.content}>
         <h1 style={styles.title}>User Dashboard</h1>
-        <p style={styles.subtitle}>Welcome to your Glyzier dashboard</p>
+        <p style={styles.subtitle}>Welcome to your Glyzier dashboard, {user.displayname}!</p>
         
-        {/* User info section - placeholder */}
+        {/* User info section - now with real data from AuthContext */}
         <div style={styles.section}>
           <h2 style={styles.sectionTitle}>👤 Your Information</h2>
           <div style={styles.card}>
-            <p><strong>Display Name:</strong> Will be loaded from AuthContext (Module 6)</p>
-            <p><strong>Email:</strong> Will be loaded from AuthContext (Module 6)</p>
-            <p><strong>Member Since:</strong> To be implemented</p>
+            <p><strong>User ID:</strong> {user.uid}</p>
+            <p><strong>Display Name:</strong> {user.displayname}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <div style={{ marginTop: '15px' }}>
+              <button onClick={handleLogout} style={styles.logoutButton}>
+                Logout
+              </button>
+            </div>
           </div>
         </div>
         
@@ -137,6 +154,17 @@ const styles = {
     cursor: 'not-allowed',
     marginTop: '10px',
     opacity: 0.6,
+  },
+  logoutButton: {
+    padding: '10px 20px',
+    fontSize: '0.95em',
+    fontWeight: 'bold',
+    backgroundColor: '#dc3545',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
   },
   link: {
     color: '#667eea',
