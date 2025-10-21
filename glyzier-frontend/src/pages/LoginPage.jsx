@@ -10,13 +10,19 @@
  * - Stores JWT token on successful login
  * - Redirects to dashboard (or previous location) after login
  * 
+ * Design:
+ * - Split-screen layout following Figma wireframe
+ * - Form on left, decorative art background on right
+ * - Uses CSS modules for styling
+ * 
  * @author Glyzier Team
- * @version 2.0 (Module 6 - Full Implementation)
+ * @version 3.0 (Figma wireframe implementation with CSS modules)
  */
 
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import styles from './LoginPage.module.css';
 
 /**
  * LoginPage functional component
@@ -45,6 +51,12 @@ function LoginPage() {
   
   // State for loading indicator
   const [loading, setLoading] = useState(false);
+  
+  // State for password visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
+  
+  // State for remember me checkbox
+  const [rememberMe, setRememberMe] = useState(false);
   
   /**
    * Handle input changes
@@ -93,166 +105,102 @@ function LoginPage() {
   };
   
   return (
-    <div style={styles.container}>
-      <div style={styles.formWrapper}>
-        <h1 style={styles.title}>Login to Glyzier</h1>
-        <p style={styles.subtitle}>Access your account to browse and purchase artwork</p>
-        
-        {/* Error message display */}
-        {error && (
-          <div style={styles.error}>
-            {error}
-          </div>
-        )}
-        
-        {/* Login form */}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {/* Email input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              style={styles.input}
-              placeholder="Enter your email"
-            />
-          </div>
+    <div className={styles.container}>
+      {/* Left side - Login form */}
+      <div className={styles.formSection}>
+        <div className={styles.formWrapper}>
+          <div className={styles.logo}>Glyzier</div>
           
-          {/* Password input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              style={styles.input}
-              placeholder="Enter your password"
-            />
-          </div>
+          <h1 className={styles.title}>Sign in</h1>
+          <p className={styles.subtitle}>Your journey starts here.</p>
           
-          {/* Submit button */}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              ...styles.button,
-              ...(loading ? styles.buttonDisabled : {}),
-            }}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        
-        {/* Link to register page */}
-        <div style={styles.footer}>
-          <p>
-            Don't have an account?{' '}
-            <Link to="/register" style={styles.link}>
-              Register here
-            </Link>
-          </p>
-          <Link to="/" style={styles.link}>
-            ← Back to Home
-          </Link>
+          {/* Error message display */}
+          {error && (
+            <div className={styles.error}>
+              {error}
+            </div>
+          )}
+          
+          {/* Login form */}
+          <form onSubmit={handleSubmit} className={styles.form}>
+            {/* Email input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.label}>Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className={styles.input}
+                placeholder="your.email.here@gmail.com"
+              />
+            </div>
+            
+            {/* Password input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.label}>Password</label>
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className={styles.input}
+                  placeholder="••••••••••••••"
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+            
+            {/* Keep me logged in checkbox */}
+            <div className={styles.checkbox}>
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <label htmlFor="rememberMe">Keep me logged in</label>
+            </div>
+            
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={styles.submitButton}
+            >
+              {loading ? 'Signing in...' : 'Sign in'}
+            </button>
+          </form>
+          
+          {/* Link to register page */}
+          <div className={styles.footer}>
+            <p>
+              Need an account? <Link to="/register">Create one</Link>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Right side - Decorative art background */}
+      <div className={styles.artSection}>
+        <div className={styles.artContent}>
+          <p className={styles.artTitle}>(Artwork carousel - coming soon)</p>
         </div>
       </div>
     </div>
   );
 }
-
-// Inline styles
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: '20px',
-  },
-  formWrapper: {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '10px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    maxWidth: '450px',
-    width: '100%',
-  },
-  title: {
-    fontSize: '2em',
-    marginBottom: '10px',
-    color: '#333',
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: '30px',
-  },
-  error: {
-    backgroundColor: '#fee',
-    color: '#c33',
-    padding: '12px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    border: '1px solid #fcc',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  label: {
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: '0.95em',
-  },
-  input: {
-    padding: '12px',
-    fontSize: '1em',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
-    outline: 'none',
-    transition: 'border-color 0.3s',
-  },
-  button: {
-    padding: '14px',
-    fontSize: '1.1em',
-    fontWeight: 'bold',
-    backgroundColor: '#667eea',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    marginTop: '10px',
-  },
-  buttonDisabled: {
-    backgroundColor: '#999',
-    cursor: 'not-allowed',
-  },
-  footer: {
-    marginTop: '25px',
-    textAlign: 'center',
-    color: '#666',
-  },
-  link: {
-    color: '#667eea',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-  },
-};
 
 export default LoginPage;
