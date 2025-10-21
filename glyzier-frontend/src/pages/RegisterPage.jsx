@@ -4,19 +4,25 @@
  * This page provides a registration form for new users.
  * 
  * Functionality:
- * - Display name, email, and password input fields
+ * - Display name, email, date of birth, and password input fields
  * - Client-side form validation
  * - Calls the backend API to create a new user account via AuthContext
  * - Redirects to login page after successful registration
  * - Shows success message before redirect
  * 
+ * Design:
+ * - Split-screen layout following Figma wireframe
+ * - Form on left, decorative art background on right
+ * - Uses CSS modules for styling
+ * 
  * @author Glyzier Team
- * @version 2.0 (Module 6 - Full Implementation)
+ * @version 3.0 (Figma wireframe implementation with CSS modules)
  */
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import styles from './RegisterPage.module.css';
 
 /**
  * RegisterPage functional component
@@ -33,6 +39,7 @@ function RegisterPage() {
   // State for form inputs
   const [formData, setFormData] = useState({
     displayname: '',
+    dateOfBirth: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -46,6 +53,10 @@ function RegisterPage() {
   
   // State for loading indicator
   const [loading, setLoading] = useState(false);
+  
+  // State for password visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   /**
    * Handle input changes
@@ -115,220 +126,155 @@ function RegisterPage() {
   };
   
   return (
-    <div style={styles.container}>
-      <div style={styles.formWrapper}>
-        <h1 style={styles.title}>Create Your Account</h1>
-        <p style={styles.subtitle}>Join Glyzier to start buying or selling artwork</p>
-        
-        {/* Error message display */}
-        {error && (
-          <div style={styles.error}>
-            {error}
-          </div>
-        )}
-        
-        {/* Success message display */}
-        {success && (
-          <div style={styles.success}>
-            {success}
-          </div>
-        )}
-        
-        {/* Registration form */}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {/* Display name input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="displayname" style={styles.label}>Display Name</label>
-            <input
-              type="text"
-              id="displayname"
-              name="displayname"
-              value={formData.displayname}
-              onChange={handleChange}
-              required
-              minLength={3}
-              maxLength={100}
-              style={styles.input}
-              placeholder="Enter your display name"
-            />
-            <small style={styles.hint}>This name will be visible to other users</small>
-          </div>
+    <div className={styles.container}>
+      {/* Left side - Registration form */}
+      <div className={styles.formSection}>
+        <div className={styles.formWrapper}>
+          <div className={styles.logo}>Glyzier</div>
           
-          {/* Email input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              style={styles.input}
-              placeholder="Enter your email"
-            />
-          </div>
+          <h1 className={styles.title}>Sign up</h1>
+          <p className={styles.subtitle}>Sign up to enjoy the features of Glyzier</p>
           
-          {/* Password input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              minLength={6}
-              style={styles.input}
-              placeholder="Enter your password"
-            />
-            <small style={styles.hint}>Minimum 6 characters</small>
-          </div>
+          {/* Error message display */}
+          {error && (
+            <div className={styles.error}>
+              {error}
+            </div>
+          )}
           
-          {/* Confirm password input */}
-          <div style={styles.formGroup}>
-            <label htmlFor="confirmPassword" style={styles.label}>Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              style={styles.input}
-              placeholder="Re-enter your password"
-            />
-          </div>
+          {/* Success message display */}
+          {success && (
+            <div className={styles.success}>
+              {success}
+            </div>
+          )}
           
-          {/* Submit button */}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              ...styles.button,
-              ...(loading ? styles.buttonDisabled : {}),
-            }}
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
-        
-        {/* Link to login page */}
-        <div style={styles.footer}>
-          <p>
-            Already have an account?{' '}
-            <Link to="/login" style={styles.link}>
-              Login here
-            </Link>
-          </p>
-          <Link to="/" style={styles.link}>
-            ← Back to Home
-          </Link>
+          {/* Registration form */}
+          <form onSubmit={handleSubmit} className={styles.form}>
+            {/* Display name input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="displayname" className={styles.label}>Your Name</label>
+              <input
+                type="text"
+                id="displayname"
+                name="displayname"
+                value={formData.displayname}
+                onChange={handleChange}
+                required
+                minLength={3}
+                maxLength={100}
+                className={styles.input}
+                placeholder="Juan Dela Cruz"
+              />
+            </div>
+            
+            {/* Date of Birth input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="dateOfBirth" className={styles.label}>Date of Birth</label>
+              <input
+                type="date"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            
+            {/* Email input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.label}>Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className={styles.input}
+                placeholder="juan.delacruz@cit.edu"
+              />
+            </div>
+            
+            {/* Password input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.label}>Password</label>
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                  className={styles.input}
+                  placeholder="Password"
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+              <small className={styles.hint}>Minimum 6 characters</small>
+            </div>
+            
+            {/* Confirm password input */}
+            <div className={styles.formGroup}>
+              <label htmlFor="confirmPassword" className={styles.label}>Confirm Password</label>
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className={styles.input}
+                  placeholder="Re-enter your password"
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label="Toggle confirm password visibility"
+                >
+                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+            
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={styles.submitButton}
+            >
+              {loading ? 'Creating Account...' : 'Sign up'}
+            </button>
+          </form>
+          
+          {/* Link to login page */}
+          <div className={styles.footer}>
+            <p>
+              Already have an account? <Link to="/login">Sign in</Link>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Right side - Decorative art background */}
+      <div className={styles.artSection}>
+        <div className={styles.artContent}>
+          <p className={styles.artTitle}>(Artwork carousel - coming soon)</p>
         </div>
       </div>
     </div>
   );
 }
-
-// Inline styles
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: '20px',
-  },
-  formWrapper: {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '10px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    maxWidth: '500px',
-    width: '100%',
-  },
-  title: {
-    fontSize: '2em',
-    marginBottom: '10px',
-    color: '#333',
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: '30px',
-  },
-  error: {
-    backgroundColor: '#fee',
-    color: '#c33',
-    padding: '12px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    border: '1px solid #fcc',
-  },
-  success: {
-    backgroundColor: '#d4edda',
-    color: '#155724',
-    padding: '12px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    border: '1px solid #c3e6cb',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '18px',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-  label: {
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: '0.95em',
-  },
-  input: {
-    padding: '12px',
-    fontSize: '1em',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
-    outline: 'none',
-    transition: 'border-color 0.3s',
-  },
-  hint: {
-    color: '#888',
-    fontSize: '0.85em',
-  },
-  button: {
-    padding: '14px',
-    fontSize: '1.1em',
-    fontWeight: 'bold',
-    backgroundColor: '#667eea',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    marginTop: '10px',
-  },
-  buttonDisabled: {
-    backgroundColor: '#999',
-    cursor: 'not-allowed',
-  },
-  footer: {
-    marginTop: '25px',
-    textAlign: 'center',
-    color: '#666',
-  },
-  link: {
-    color: '#667eea',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-  },
-};
 
 export default RegisterPage;

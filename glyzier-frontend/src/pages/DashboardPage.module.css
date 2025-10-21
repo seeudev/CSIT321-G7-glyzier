@@ -1,0 +1,338 @@
+/**
+ * DashboardPage CSS Module
+ * 
+ * Styles for the dashboard page.
+ * Since there's no specific dashboard wireframe in the provided Figma files,
+ * this implements a clean, modern dashboard design consistent with the
+ * overall application aesthetic.
+ * 
+ * @author Glyzier Team
+ * @version 3.0 (CSS Module implementation)
+ */
+
+.container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 0;
+}
+
+.header {
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  padding: 40px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.welcomeSection {
+  flex: 1;
+}
+
+.title {
+  font-size: 2.5em;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  opacity: 0.95;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logoutButton {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.logoutButton:hover {
+  background: white;
+  color: #8b7fc4;
+  transform: translateY(-2px);
+}
+
+.homeLink {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  background: white;
+  color: #8b7fc4;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.homeLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.cardIcon {
+  font-size: 2em;
+}
+
+.cardTitle {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.cardContent {
+  color: #7f8c8d;
+  line-height: 1.6;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.infoValue {
+  color: #7f8c8d;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listItem:last-child {
+  border-bottom: none;
+}
+
+.orderNumber {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.orderAmount {
+  font-weight: 600;
+  color: #8b7fc4;
+}
+
+.orderStatus {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.statusPending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.statusCompleted {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.button {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.3);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.muted {
+  color: #95a5a6;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+.note {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 32px;
+  text-align: center;
+  border: 1px solid #ffd54f;
+}
+
+.note p {
+  margin: 0;
+  color: #856404;
+  font-weight: 500;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  color: #95a5a6;
+}
+
+.emptyIcon {
+  font-size: 4em;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: 1.1em;
+  color: #7f8c8d;
+}
+
+/* Responsive design */
+@media (max-width: 968px) {
+  .headerContent {
+    padding: 0 30px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .content {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 30px 0;
+  }
+
+  .headerContent {
+    padding: 0 20px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .logoutButton,
+  .homeLink {
+    width: 100%;
+    justify-content: center;
+  }
+}
