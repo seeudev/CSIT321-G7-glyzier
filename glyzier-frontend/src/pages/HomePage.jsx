@@ -2,21 +2,22 @@
  * HomePage Component
  * 
  * This is the landing page of the Glyzier application.
- * It will display:
+ * It displays:
  * - A welcome message
- * - Featured products (to be implemented in Module 7)
+ * - A grid of all available products fetched from the backend
  * - Navigation to login/register for guests or dashboard for logged-in users
  * 
- * In Module 7, this page will be updated to show a grid of products
- * fetched from the backend API.
+ * Products are public and can be viewed by anyone.
+ * Each product card links to its detail page.
  * 
  * @author Glyzier Team
- * @version 2.0 (Module 6 - Added authentication awareness)
+ * @version 3.0 (Module 7 - Product listing implementation)
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { getAllProducts } from '../services/productService';
 
 /**
  * HomePage functional component
@@ -27,6 +28,35 @@ function HomePage() {
   // Get authentication state and functions from context
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // State for products
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  /**
+   * Fetch products on component mount
+   * 
+   * Uses the getAllProducts function from productService
+   * to fetch the complete product list from the backend.
+   */
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllProducts();
+        setProducts(data);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+        setError('Failed to load products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProducts();
+  }, []); // Empty dependency array = run once on mount
   
   /**
    * Handle logout
@@ -101,8 +131,64 @@ function HomePage() {
         </div>
       </div>
       
-      <div style={styles.comingSoon}>
-        <p>🎨 Product catalog coming soon (Module 7)...</p>
+      {/* Product Catalog Section */}
+      <div style={styles.catalogSection}>
+        <h2 style={styles.catalogTitle}>Available Artwork</h2>
+        
+        {/* Loading state */}
+        {loading && (
+          <div style={styles.message}>
+            <p>Loading products...</p>
+          </div>
+        )}
+        
+        {/* Error state */}
+        {error && (
+          <div style={{...styles.message, color: '#d32f2f'}}>
+            <p>{error}</p>
+          </div>
+        )}
+        
+        {/* Products grid */}
+        {!loading && !error && products.length === 0 && (
+          <div style={styles.message}>
+            <p>No products available yet. Check back soon!</p>
+          </div>
+        )}
+        
+        {!loading && !error && products.length > 0 && (
+          <div style={styles.productGrid}>
+            {products.map((product) => (
+              <Link 
+                key={product.pid} 
+                to={`/products/${product.pid}`}
+                style={styles.productCard}
+              >
+                {/* Product Image Placeholder */}
+                <div style={styles.productImage}>
+                  <span style={styles.imagePlaceholder}>🎨</span>
+                  <p style={styles.imageText}>Product Image</p>
+                </div>
+                
+                {/* Product Info */}
+                <div style={styles.productInfo}>
+                  <h3 style={styles.productName}>{product.productname}</h3>
+                  <p style={styles.productDescription}>
+                    {product.productdescription && product.productdescription.length > 100
+                      ? `${product.productdescription.substring(0, 100)}...`
+                      : product.productdescription || 'No description available'}
+                  </p>
+                  <div style={styles.productFooter}>
+                    <span style={styles.productPrice}>₱{product.price.toFixed(2)}</span>
+                    <span style={styles.productSeller}>
+                      by {product.sellerDisplayname || 'Unknown Seller'}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -148,6 +234,8 @@ const styles = {
     fontWeight: 'bold',
     transition: 'transform 0.2s',
     display: 'inline-block',
+    border: 'none',
+    cursor: 'pointer',
   },
   buttonSecondary: {
     backgroundColor: 'transparent',
@@ -170,12 +258,90 @@ const styles = {
     borderRadius: '8px',
     textAlign: 'center',
   },
-  comingSoon: {
+  catalogSection: {
+    marginTop: '40px',
+  },
+  catalogTitle: {
+    fontSize: '2em',
+    marginBottom: '30px',
     textAlign: 'center',
-    padding: '20px',
-    backgroundColor: '#fff3cd',
-    borderRadius: '5px',
+    color: '#333',
+  },
+  message: {
+    textAlign: 'center',
+    padding: '40px',
     fontSize: '1.1em',
+    color: '#666',
+  },
+  productGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: '25px',
+    marginTop: '20px',
+  },
+  productCard: {
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+    textDecoration: 'none',
+    color: 'inherit',
+    cursor: 'pointer',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+    },
+  },
+  productImage: {
+    height: '200px',
+    background: 'linear-gradient(135deg, #b8afe8 0%, #9b8dd4 100%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+  },
+  imagePlaceholder: {
+    fontSize: '4em',
+    marginBottom: '10px',
+  },
+  imageText: {
+    fontSize: '1.1em',
+    fontWeight: '500',
+  },
+  productInfo: {
+    padding: '20px',
+  },
+  productName: {
+    fontSize: '1.3em',
+    marginBottom: '10px',
+    color: '#2c3e50',
+    fontWeight: '600',
+  },
+  productDescription: {
+    fontSize: '0.95em',
+    color: '#7f8c8d',
+    marginBottom: '15px',
+    lineHeight: '1.5',
+    minHeight: '60px',
+  },
+  productFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTop: '1px solid #e0e0e0',
+    paddingTop: '15px',
+  },
+  productPrice: {
+    fontSize: '1.4em',
+    fontWeight: 'bold',
+    color: '#667eea',
+  },
+  productSeller: {
+    fontSize: '0.9em',
+    color: '#95a5a6',
+    fontStyle: 'italic',
   },
 };
 

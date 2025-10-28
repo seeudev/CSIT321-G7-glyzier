@@ -9,6 +9,7 @@
  * - / : Home page (public)
  * - /login : Login page (public)
  * - /register : Registration page (public)
+ * - /products/:pid : Product detail page (public)
  * - /dashboard : User dashboard (protected - requires authentication)
  * 
  * Module 6 implementation includes:
@@ -16,13 +17,18 @@
  * - ProtectedRoute component for authenticated-only pages
  * - Automatic token-based authentication with localStorage
  * 
- * In Module 7-8, we will add:
- * - Product listing and detail pages
- * - Seller dashboard
+ * Module 7 implementation includes:
+ * - Product listing on home page
+ * - Product detail page with Buy Now button
+ * - ProductService for API calls
+ * 
+ * In Module 8, we will add:
  * - Order placement functionality
+ * - Seller dashboard
+ * - Seller registration
  * 
  * @author Glyzier Team
- * @version 2.0 (Module 6 - Full Authentication Implementation)
+ * @version 3.0 (Module 7 - Product Views Implementation)
  */
 
 import React from 'react';
@@ -39,6 +45,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 /**
  * App functional component
@@ -71,6 +78,9 @@ function App() {
           {/* Register page - new user registration */}
           <Route path="/register" element={<RegisterPage />} />
           
+          {/* Product detail page - view individual product (PUBLIC) */}
+          <Route path="/products/:pid" element={<ProductDetailPage />} />
+          
           {/* Protected routes - require authentication */}
           
           {/* Dashboard - user's personal dashboard (PROTECTED) */}
@@ -85,10 +95,8 @@ function App() {
           
           {/* 
             Additional routes to be added in later modules:
-            - /products - Product listing (Module 7)
-            - /products/:pid - Product detail page (Module 7)
             - /seller/dashboard - Seller dashboard (Module 8, PROTECTED)
-            - /orders/:orderid - Order details (Module 8, PROTECTED)
+            - /orders/:orderid - Order details (Future module, PROTECTED)
           */}
         </Routes>
       </BrowserRouter>
