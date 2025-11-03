@@ -1,0 +1,589 @@
+/**
+ * SellerDashboard CSS Module
+ * 
+ * Styles for the seller dashboard page with product management functionality.
+ * Implements a clean, modern design consistent with the application aesthetic.
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Module 8)
+ */
+
+.container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.5em;
+  color: #667eea;
+}
+
+.header {
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  padding: 40px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.welcomeSection {
+  flex: 1;
+}
+
+.title {
+  font-size: 2.5em;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  opacity: 0.95;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logoutButton,
+.homeLink,
+.dashboardLink {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.logoutButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  backdrop-filter: blur(10px);
+}
+
+.logoutButton:hover {
+  background: white;
+  color: #8b7fc4;
+  transform: translateY(-2px);
+}
+
+.homeLink,
+.dashboardLink {
+  background: white;
+  color: #8b7fc4;
+}
+
+.homeLink:hover,
+.dashboardLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.cardIcon {
+  font-size: 2em;
+}
+
+.cardTitle {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
+}
+
+.createButton {
+  padding: 10px 20px;
+  font-size: 0.95em;
+  font-weight: 600;
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.3);
+}
+
+.cardContent {
+  color: #7f8c8d;
+  line-height: 1.6;
+}
+
+.cardContent h3 {
+  font-size: 1.2em;
+  color: #2c3e50;
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.infoValue {
+  color: #7f8c8d;
+  text-align: right;
+}
+
+.muted {
+  color: #95a5a6;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+/* Product Form Styles */
+.productForm {
+  margin: 20px 0;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.productForm h3 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 1.3em;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.formGroup {
+  margin-bottom: 0;
+}
+
+.formLabel {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+}
+
+.required {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: #8b7fc4;
+}
+
+.formInput:disabled,
+.formTextarea:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  flex: 1;
+  min-width: 120px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border: 2px solid #e0e0e0;
+  flex: 1;
+  min-width: 120px;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Products List Styles */
+.productsList {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.productCard {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.2s;
+}
+
+.productCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.productInfo {
+  margin-bottom: 16px;
+}
+
+.productName {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.productDescription {
+  color: #7f8c8d;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.productMeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.productPrice {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #8b7fc4;
+}
+
+.productCategory,
+.productType {
+  padding: 4px 12px;
+  background: #e9ecef;
+  color: #2c3e50;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.productStatus {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.statusAvailable {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusUnavailable {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.productDetails {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9em;
+  color: #95a5a6;
+  margin-top: 8px;
+}
+
+.productActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.editButton,
+.deleteButton,
+.saveButton,
+.cancelButtonSmall {
+  padding: 8px 16px;
+  font-size: 0.9em;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.editButton {
+  background: #667eea;
+  color: white;
+  flex: 1;
+}
+
+.editButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.deleteButton {
+  background: #dc3545;
+  color: white;
+  flex: 1;
+}
+
+.deleteButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.saveButton {
+  background: #28a745;
+  color: white;
+  flex: 1;
+}
+
+.saveButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelButtonSmall {
+  background: #6c757d;
+  color: white;
+  flex: 1;
+}
+
+.cancelButtonSmall:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.cancelButtonSmall:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Edit Form within Product Card */
+.editForm {
+  background: white;
+  padding: 16px;
+  border-radius: 6px;
+  margin: -4px 0;
+}
+
+.editForm .formGrid {
+  margin-bottom: 12px;
+}
+
+.editForm .formGroup {
+  margin-bottom: 0;
+}
+
+.editForm .formLabel {
+  font-size: 0.85em;
+  margin-bottom: 6px;
+}
+
+.editForm .formInput,
+.editForm .formTextarea {
+  padding: 8px;
+  font-size: 0.95em;
+}
+
+.editForm .productActions {
+  margin-top: 16px;
+}
+
+/* Responsive design */
+@media (max-width: 968px) {
+  .headerContent {
+    padding: 0 30px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .content {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 30px 0;
+  }
+
+  .headerContent {
+    padding: 0 20px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .logoutButton,
+  .homeLink,
+  .dashboardLink {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .productMeta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .formActions,
+  .productActions {
+    flex-direction: column;
+  }
+
+  .formActions button,
+  .productActions button {
+    width: 100%;
+  }
+}
