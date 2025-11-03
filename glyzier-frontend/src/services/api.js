@@ -5,38 +5,30 @@
  * HTTP requests to the Glyzier backend API.
  * 
  * Key features:
- * - Base URL configured to point to the Spring Boot backend (http://localhost:8080)
+ * - Base URL is empty (relative URLs) since frontend and backend served from same origin
  * - Request interceptor to automatically add JWT token to Authorization header
  * - Response interceptor for global error handling
  * - Timeout configuration
  * 
  * Usage:
  * import api from './services/api';
- * const response = await api.get('/products');
+ * const response = await api.get('/api/products');
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0 - Simplified architecture
  */
 
 import axios from 'axios';
 
 /**
- * Base URL for the backend API
- * This should match the Spring Boot server's address and port
- * 
- * In production, this would be replaced with the actual deployed backend URL
- * (e.g., https://api.glyzier.com)
- */
-const BASE_URL = 'http://localhost:8080';
-
-/**
  * Create an Axios instance with pre-configured settings
  * 
- * This instance will be used throughout the application instead of
- * the default axios instance to ensure consistent configuration
+ * No baseURL needed - we use relative URLs since Spring Boot serves
+ * both the React app and the API from the same origin (localhost:8080).
+ * 
+ * This eliminates CORS issues and simplifies deployment.
  */
 const api = axios.create({
-  baseURL: BASE_URL,
   timeout: 10000, // 10 seconds timeout for requests
   headers: {
     'Content-Type': 'application/json',
