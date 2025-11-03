@@ -82,7 +82,9 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 
 ---
 
-##  Project Structure
+## 🏗️ Project Structure
+
+**Simplified Architecture**: Spring Boot serves both REST API and React frontend from a single server.
 
 ```
 CSIT321-G7-glyzier/
@@ -92,72 +94,38 @@ CSIT321-G7-glyzier/
 ├── doc/                                # Documentation
 │   └── API_DOCUMENTATION.md            # Complete API reference
 │
-├── glyzier-backend/                    # Spring Boot Backend
+├── glyzier-backend/                    # Spring Boot Backend (serves everything)
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/glyzier/
 │   │   │   │   ├── config/            # Security & App configuration
-│   │   │   │   │   └── SecurityConfig.java
+│   │   │   │   │   └── SecurityConfig.java (NO CORS - same origin)
 │   │   │   │   │
 │   │   │   │   ├── controller/        # REST API Controllers
 │   │   │   │   │   ├── AuthController.java
 │   │   │   │   │   ├── UserController.java
 │   │   │   │   │   ├── SellerController.java
 │   │   │   │   │   ├── ProductController.java
-│   │   │   │   │   └── OrderController.java
+│   │   │   │   │   ├── OrderController.java
+│   │   │   │   │   └── SpaController.java    # Routes React app
 │   │   │   │   │
 │   │   │   │   ├── dto/               # Data Transfer Objects
-│   │   │   │   │   ├── RegisterRequest.java
-│   │   │   │   │   ├── LoginRequest.java
-│   │   │   │   │   ├── AuthResponse.java
-│   │   │   │   │   ├── ProductRequest.java
-│   │   │   │   │   ├── ProductResponse.java
-│   │   │   │   │   ├── InventoryRequest.java
-│   │   │   │   │   ├── PlaceOrderRequest.java
-│   │   │   │   │   ├── OrderItemRequest.java
-│   │   │   │   │   └── OrderResponse.java
-│   │   │   │   │
 │   │   │   │   ├── model/             # JPA Entities
-│   │   │   │   │   ├── Users.java
-│   │   │   │   │   ├── Seller.java
-│   │   │   │   │   ├── Products.java
-│   │   │   │   │   ├── ProductFiles.java
-│   │   │   │   │   ├── Orders.java
-│   │   │   │   │   ├── OrderProducts.java
-│   │   │   │   │   └── Inventory.java
-│   │   │   │   │
 │   │   │   │   ├── repository/        # Spring Data JPA Repositories
-│   │   │   │   │   ├── UserRepository.java
-│   │   │   │   │   ├── SellerRepository.java
-│   │   │   │   │   ├── ProductRepository.java
-│   │   │   │   │   ├── ProductFilesRepository.java
-│   │   │   │   │   ├── OrderRepository.java
-│   │   │   │   │   ├── OrderProductsRepository.java
-│   │   │   │   │   └── InventoryRepository.java
-│   │   │   │   │
 │   │   │   │   ├── security/          # JWT & Auth components
-│   │   │   │   │   ├── JwtUtil.java
-│   │   │   │   │   ├── JwtAuthFilter.java
-│   │   │   │   │   └── CustomUserDetailsService.java
-│   │   │   │   │
 │   │   │   │   ├── service/           # Business Logic Services
-│   │   │   │   │   ├── AuthService.java
-│   │   │   │   │   ├── UserService.java
-│   │   │   │   │   ├── SellerService.java
-│   │   │   │   │   ├── ProductService.java
-│   │   │   │   │   └── OrderService.java
-│   │   │   │   │
 │   │   │   │   └── glyzier_backend/
 │   │   │   │       └── GlyzierApplication.java  # Main Spring Boot App
 │   │   │   │
 │   │   │   └── resources/
-│   │   │       └── application.properties       # Configuration
+│   │   │       ├── application.properties       # Configuration
+│   │   │       └── static/            # Built React app goes here (auto-copied)
 │   │   │
 │   │   └── test/                      # Unit Tests
 │   │
-│   └── pom.xml                        # Maven dependencies
+│   └── pom.xml                        # Maven builds backend + frontend
 │
-└── glyzier-frontend/                  # React Frontend
+└── glyzier-frontend/                  # React Frontend (source code)
     ├── src/
     │   ├── components/
     │   │   └── ProtectedRoute.jsx     # Route guard
@@ -169,26 +137,30 @@ CSIT321-G7-glyzier/
     │   │   ├── HomePage.jsx           # Product listing
     │   │   ├── LoginPage.jsx          # Login form
     │   │   ├── RegisterPage.jsx       # Registration form
-    │   │   └── DashboardPage.jsx      # User dashboard
+    │   │   ├── DashboardPage.jsx      # User dashboard
+    │   │   └── SellerDashboard.jsx    # Seller management
     │   │
     │   ├── services/
-    │   │   ├── api.js                 # Axios instance
-    │   │   └── authService.js         # Auth API calls
-    │   │
-    │   ├── styles/
-    │   │   └── common.js              # Shared styles
+    │   │   ├── api.js                 # Axios instance (relative URLs)
+    │   │   ├── authService.js         # Auth API calls
+    │   │   ├── productService.js      # Product API calls
+    │   │   ├── sellerService.js       # Seller API calls
+    │   │   └── orderService.js        # Order API calls
     │   │
     │   ├── App.jsx                    # Main app component
     │   ├── main.jsx                   # Entry point
     │   └── index.css                  # Global styles
     │
     ├── package.json                   # Node dependencies
-    └── vite.config.js                 # Vite configuration
+    ├── vite.config.js                 # Vite configuration
+    └── dist/                          # Production build (created by npm run build)
 ```
+
+**Key Point**: In production, Maven builds the React app and copies it to `glyzier-backend/target/classes/static/`, so Spring Boot serves everything from port 8080. No separate frontend server needed!
 
 ---
 
-##  Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -196,9 +168,10 @@ Before running the application, ensure you have the following installed:
 
 - **Java 17** or higher ([Download](https://www.oracle.com/java/technologies/downloads/))
 - **MySQL 8.0** or higher ([Download](https://dev.mysql.com/downloads/mysql/))
-- **Node.js 18+** and npm ([Download](https://nodejs.org/))
 - **Maven** (or use the included Maven wrapper `./mvnw`)
 - **Git** ([Download](https://git-scm.com/))
+
+**Note**: Node.js and npm are **NOT** required manually - Maven will install them automatically during the build process.
 
 ### 1. Clone the Repository
 
@@ -234,44 +207,50 @@ cd CSIT321-G7-glyzier
    spring.datasource.password=YOUR_MYSQL_PASSWORD
    ```
 
-### 3. Run the Backend
+### 3. Build and Run (Production Mode - Simplified)
+
+**Single command builds everything** (backend + frontend):
 
 ```bash
 cd glyzier-backend
+./mvnw clean package spring-boot:run
+```
 
-# Build the project
-./mvnw clean install
+This Maven command will:
+1. ✅ Install Node.js v20.11.0 and npm (if not already present)
+2. ✅ Run `npm install` in `glyzier-frontend/`
+3. ✅ Run `npm run build` to create production React build
+4. ✅ Copy React build from `dist/` to `target/classes/static/`
+5. ✅ Compile Spring Boot application
+6. ✅ Package everything into a single JAR
+7. ✅ Start the server on `http://localhost:8080`
 
-# Run the application
+**Access the application**: Open your browser and navigate to **http://localhost:8080**
+
+✨ **That's it!** The React app and API are both served from the same Spring Boot server.
+
+### 4. Development Mode (Optional - for hot reload)
+
+If you want to actively develop the frontend with hot reload:
+
+**Terminal 1** - Start backend:
+```bash
+cd glyzier-backend
 ./mvnw spring-boot:run
 ```
 
-The backend will start on **http://localhost:8080**
-
-**Verify backend is running**:
-```bash
-curl http://localhost:8080/api/auth/login
-# Should return: {"error":"Method 'GET' is not supported"}
-# (This is expected - the endpoint requires POST)
-```
-
-### 4. Run the Frontend
-
-Open a **new terminal** window:
-
+**Terminal 2** - Start frontend dev server:
 ```bash
 cd glyzier-frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+npm install  # First time only
+npm run dev  # Starts on port 5173
 ```
 
-The frontend will start on **http://localhost:5173**
+Access options:
+- **http://localhost:8080** - Production build (no hot reload)
+- **http://localhost:5173** - Development server (hot reload enabled)
 
-Open your browser and navigate to: **http://localhost:5173**
+The Vite dev server automatically proxies `/api` requests to Spring Boot on port 8080.
 
 ---
 
@@ -551,16 +530,45 @@ Error: 401 Unauthorized
 - Verify token hasn't expired (24 hour limit)
 - Login again to get a fresh token
 
+#### Frontend Build Fails
+```
+Error during npm build
+```
+**Solution**:
+```bash
+# Clean and rebuild
+cd glyzier-frontend
+rm -rf node_modules dist
+npm install
+npm run build
+```
+
+#### React Routes Return 404
+```
+Error: Cannot GET /dashboard
+```
+**Solution**:
+- Verify `SpaController.java` exists in backend
+- Check Spring Boot started successfully
+- Rebuild: `./mvnw clean package spring-boot:run`
+
 ### Frontend Issues
 
-#### CORS Error
+#### CORS Error (Development Mode)
 ```
 Error: CORS policy: No 'Access-Control-Allow-Origin' header
 ```
 **Solution**:
-- Verify backend `SecurityConfig.java` includes your frontend URL
-- Check frontend is running on port 5173 or 3000
-- Clear browser cache
+- This shouldn't happen in production (same origin)
+- In development, check `vite.config.js` has proxy configured:
+```javascript
+proxy: {
+  '/api': {
+    target: 'http://localhost:8080',
+    changeOrigin: true,
+  }
+}
+```
 
 #### API Calls Failing
 ```
@@ -568,8 +576,27 @@ Error: Network Error
 ```
 **Solution**:
 - Verify backend is running on `http://localhost:8080`
-- Check `baseURL` in `src/services/api.js`
+- Check `src/services/api.js` uses relative URLs (no baseURL)
 - Inspect browser DevTools Network tab
+
+#### Assets Not Loading
+```
+404 errors for CSS/JS files
+```
+**Solution**:
+- Rebuild frontend: `cd glyzier-backend && ./mvnw clean package`
+- Check `target/classes/static/` contains built React files
+- Verify Maven copied files correctly
+
+### Build Issues
+
+#### Maven Build Fails
+```
+Error: Node.js installation failed
+```
+**Solution**:
+- Clear Maven cache: `rm -rf ~/.m2/repository/com/github/eirslett`
+- Run: `./mvnw clean package -U`
 
 #### npm install Fails
 ```
@@ -577,26 +604,62 @@ Error: Cannot find module
 ```
 **Solution**:
 ```bash
-# Clear npm cache
+# In glyzier-frontend directory
 npm cache clean --force
-
-# Delete node_modules and package-lock.json
 rm -rf node_modules package-lock.json
-
-# Reinstall
 npm install
 ```
 
 ---
 
-## Notes
+## 📖 Notes
+
+### Learning Outcomes
+
 1. **Full-Stack Development**: Experience building both backend and frontend
 2. **RESTful API Design**: Proper HTTP methods, status codes, and response formats
 3. **Database Design**: Normalized schema with proper relationships
-4. **Security**: JWT authentication, password encryption, CORS
+4. **Security**: JWT authentication, password encryption
 5. **Modern Frameworks**: Spring Boot and React ecosystem
 6. **Git Workflow**: Proper commits, branching, and version control
 7. **Code Documentation**: Extensive comments for educational clarity
+8. **Build Automation**: Maven integration of frontend and backend
+9. **Simplified Architecture**: Single-server deployment strategy
+
+### Architecture Simplification
+
+This project demonstrates a simplified, production-ready architecture:
+
+**Traditional Approach (Complex)**:
+- Separate frontend and backend servers
+- CORS configuration required
+- Multiple environment configurations
+- Complex deployment process
+- Higher infrastructure costs
+
+**Our Approach (Simplified)**:
+- ✅ Single application server (Spring Boot)
+- ✅ No CORS complexity
+- ✅ One command to build and deploy
+- ✅ Same-origin policy satisfied automatically
+- ✅ Single JAR deployment
+- ✅ Reduced operational complexity
+
+**How It Works**:
+1. Maven builds React app during backend build process
+2. React production files copied to Spring Boot's `static/` folder
+3. Spring Boot serves both React app and API from port 8080
+4. `SpaController` forwards client-side routes to `index.html`
+5. React Router handles navigation on the client side
+
+**Benefits**:
+- Simpler deployment (one artifact)
+- No cross-origin issues
+- Easier for students to understand
+- Production-ready architecture
+- Lower infrastructure requirements
+
+**Trade-off**: Frontend hot reload requires running separate Vite dev server (optional for development).
 
 ### Simulation Notes
 
