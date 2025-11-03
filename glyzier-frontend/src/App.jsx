@@ -11,6 +11,7 @@
  * - /register : Registration page (public)
  * - /products/:pid : Product detail page (public)
  * - /dashboard : User dashboard (protected - requires authentication)
+ * - /seller/dashboard : Seller dashboard (protected - requires authentication + seller status)
  * 
  * Module 6 implementation includes:
  * - AuthProvider wrapping the entire app for global auth state
@@ -22,13 +23,14 @@
  * - Product detail page with Buy Now button
  * - ProductService for API calls
  * 
- * In Module 8, we will add:
+ * Module 8 implementation includes:
  * - Order placement functionality
- * - Seller dashboard
- * - Seller registration
+ * - Real order history on dashboard
+ * - Seller registration and dashboard
+ * - Product management (CRUD operations)
  * 
  * @author Glyzier Team
- * @version 3.0 (Module 7 - Product Views Implementation)
+ * @version 4.0 (Module 8 - User & Seller Dashboards)
  */
 
 import React from 'react';
@@ -46,6 +48,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import SellerDashboard from './pages/SellerDashboard';
 
 /**
  * App functional component
@@ -93,10 +96,20 @@ function App() {
             } 
           />
           
+          {/* Seller Dashboard - seller's product management dashboard (PROTECTED) */}
+          <Route 
+            path="/seller/dashboard" 
+            element={
+              <ProtectedRoute>
+                <SellerDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
           {/* 
-            Additional routes to be added in later modules:
-            - /seller/dashboard - Seller dashboard (Module 8, PROTECTED)
+            Additional routes to be added in future modules:
             - /orders/:orderid - Order details (Future module, PROTECTED)
+            - /sellers/:sid - Public seller profile page (Future module, PUBLIC)
           */}
         </Routes>
       </BrowserRouter>

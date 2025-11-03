@@ -20,6 +20,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
+import { placeOrder } from '../services/orderService';
 import { useAuth } from '../context/AuthContext';
 
 /**
@@ -37,6 +38,7 @@ function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orderLoading, setOrderLoading] = useState(false);
   
   /**
    * Fetch product details on component mount or when pid changes
@@ -65,18 +67,58 @@ function ProductDetailPage() {
   /**
    * Handle Buy Now button click
    * 
-   * In Module 7, this is just a placeholder.
-   * In Module 8, this will be wired to the order placement functionality.
-   * For now, it checks authentication and shows an alert.
+   * Module 8 implementation:
+   * - Checks authentication status
+   * - Places order with quantity 1
+   * - Shows confirmation or error message
+   * - Redirects to dashboard to view order history on success
    */
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
+    // Check if user is authenticated
     if (!isAuthenticated) {
-      // Redirect to login if not authenticated
       alert('Please login to purchase products.');
       navigate('/login');
-    } else {
-      // Placeholder for Module 8
-      alert('Order functionality will be implemented in Module 8!');
+      return;
+    }
+    
+    // Prevent duplicate orders while processing
+    if (orderLoading) {
+      return;
+    }
+    
+    try {
+      setOrderLoading(true);
+      
+      // Prepare order data with single product, quantity 1
+      const orderData = {
+        items: [
+          {
+            pid: product.pid,
+            quantity: 1
+          }
+        ]
+      };
+      
+      // Call the orderService to place the order
+      const result = await placeOrder(orderData);
+      
+      // Show success message
+      alert(`Order placed successfully! Order #${result.order.orderid}\n` +
+            `Total: ₱${result.order.total.toFixed(2)}\n\n` +
+            `You will be redirected to your dashboard to view order history.`);
+      
+      // Redirect to dashboard to view order history
+      navigate('/dashboard');
+      
+    } catch (err) {
+      console.error('Error placing order:', err);
+      
+      // Show user-friendly error message
+      const errorMessage = err.message || 'Failed to place order. Please try again.';
+      alert(`Order failed: ${errorMessage}`);
+      
+    } finally {
+      setOrderLoading(false);
     }
   };
   
@@ -188,10 +230,17 @@ function ProductDetailPage() {
           <div style={styles.actionSection}>
             <button 
               onClick={handleBuyNow}
-              style={styles.buyButton}
-              disabled={!product.stockQuantity || product.stockQuantity <= 0}
+              style={{
+                ...styles.buyButton,
+                ...(orderLoading || !product.stockQuantity || product.stockQuantity <= 0 ? styles.buyButtonDisabled : {})
+              }}
+              disabled={orderLoading || !product.stockQuantity || product.stockQuantity <= 0}
             >
-              {product.stockQuantity > 0 ? '🛒 Buy Now' : 'Out of Stock'}
+              {orderLoading 
+                ? '⏳ Processing...' 
+                : product.stockQuantity > 0 
+                  ? '🛒 Buy Now' 
+                  : 'Out of Stock'}
             </button>
             
             {!isAuthenticated && (
@@ -372,6 +421,11 @@ const styles = {
     borderRadius: '8px',
     cursor: 'pointer',
     transition: 'background-color 0.2s',
+  },
+  buyButtonDisabled: {
+    backgroundColor: '#ccc',
+    cursor: 'not-allowed',
+    opacity: 0.6,
   },
   loginNote: {
     marginTop: '15px',
