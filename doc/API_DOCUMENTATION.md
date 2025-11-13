@@ -4,6 +4,13 @@ Base URL: `http://localhost:8080/api`
 Authentication: JWT Bearer Token in Authorization header  
 Content-Type: `application/json`
 
+**Modules Implemented**: 
+- Module 1-2: Authentication & User Management
+- Module 3-5: Seller Management
+- Module 7: Products & Inventory
+- Module 8: Orders
+- **Module 9: Shopping Cart** ⭐ NEW
+
 ---
 
 ## Authentication
@@ -625,6 +632,251 @@ curl -X POST http://localhost:8080/api/orders/place \
 # Check order history
 curl -X GET http://localhost:8080/api/orders/my-history \
   -H "Authorization: Bearer $BUYER_TOKEN"
+
+# MODULE 9: SHOPPING CART
+
+# Add product to cart
+curl -X POST http://localhost:8080/api/cart/add \
+  -H "Authorization: Bearer $BUYER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"pid":1,"quantity":2}'
+
+# View cart
+curl -X GET http://localhost:8080/api/cart \
+  -H "Authorization: Bearer $BUYER_TOKEN"
+
+# Update cart item quantity
+curl -X PUT http://localhost:8080/api/cart/update/1 \
+  -H "Authorization: Bearer $BUYER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"quantity":3}'
+
+# Remove item from cart
+curl -X DELETE http://localhost:8080/api/cart/remove/1 \
+  -H "Authorization: Bearer $BUYER_TOKEN"
+
+# Get cart item count (for badge)
+curl -X GET http://localhost:8080/api/cart/count \
+  -H "Authorization: Bearer $BUYER_TOKEN"
+
+# Place order from cart
+curl -X POST http://localhost:8080/api/orders/place-from-cart \
+  -H "Authorization: Bearer $BUYER_TOKEN"
+
+# Clear cart
+curl -X DELETE http://localhost:8080/api/cart/clear \
+  -H "Authorization: Bearer $BUYER_TOKEN"
+```
+
+---
+
+## Module 9: Shopping Cart
+
+### GET /cart
+
+Get current user's shopping cart.
+
+**Authentication**: Required
+
+**Response 200**:
+```json
+{
+  "cartid": 1,
+  "userid": 2,
+  "items": [
+    {
+      "cartItemid": 1,
+      "pid": 1,
+      "productname": "Sunset Painting",
+      "type": "Print",
+      "status": "Available",
+      "sellerId": 1,
+      "sellerName": "Art Studio",
+      "quantity": 2,
+      "priceSnapshot": 25.00,
+      "currentPrice": 25.00,
+      "lineTotal": 50.00,
+      "availableStock": 98
+    }
+  ],
+  "totalItemCount": 2,
+  "totalPrice": 50.00
+}
+```
+
+---
+
+### POST /cart/add
+
+Add product to cart or increase quantity if already exists.
+
+**Authentication**: Required
+
+**Request**:
+```json
+{
+  "pid": 1,
+  "quantity": 2
+}
+```
+
+**Validation**:
+- pid: required
+- quantity: min 1, required
+
+**Response 200**:
+```json
+{
+  "message": "Product added to cart successfully",
+  "cart": { /* CartResponse */ }
+}
+```
+
+**Error 400**:
+```json
+{
+  "error": "Insufficient stock for product: Sunset Painting. Available: 5, Requested: 10"
+}
+```
+
+---
+
+### PUT /cart/update/{pid}
+
+Update quantity of a cart item.
+
+**Authentication**: Required
+
+**Path Parameters**:
+- pid: Product ID to update
+
+**Request**:
+```json
+{
+  "quantity": 3
+}
+```
+
+**Validation**:
+- quantity: min 1, required
+
+**Response 200**:
+```json
+{
+  "message": "Cart item updated successfully",
+  "cart": { /* CartResponse */ }
+}
+```
+
+**Error 400**:
+```json
+{
+  "error": "Product not found in cart"
+}
+```
+
+---
+
+### DELETE /cart/remove/{pid}
+
+Remove a product from the cart.
+
+**Authentication**: Required
+
+**Path Parameters**:
+- pid: Product ID to remove
+
+**Response 200**:
+```json
+{
+  "message": "Product removed from cart successfully",
+  "cart": { /* CartResponse */ }
+}
+```
+
+**Error 404**:
+```json
+{
+  "error": "Product not found in cart"
+}
+```
+
+---
+
+### DELETE /cart/clear
+
+Remove all items from the cart.
+
+**Authentication**: Required
+
+**Response 200**:
+```json
+{
+  "message": "Cart cleared successfully",
+  "cart": {
+    "cartid": 1,
+    "userid": 2,
+    "items": [],
+    "totalItemCount": 0,
+    "totalPrice": 0.00
+  }
+}
+```
+
+---
+
+### GET /cart/count
+
+Get total item count for cart badge.
+
+**Authentication**: Required
+
+**Response 200**:
+```json
+{
+  "count": 5
+}
+```
+
+Returns 0 if cart is empty or on error.
+
+---
+
+### POST /orders/place-from-cart
+
+Place order from all items in cart. Cart is cleared after successful order.
+
+**Authentication**: Required
+
+**Request**: No body required
+
+**Response 201**:
+```json
+{
+  "message": "Order placed successfully from cart",
+  "order": {
+    "orderid": 1,
+    "total": 75.00,
+    "status": "Pending",
+    "placedAt": "2024-11-13T14:30:00Z",
+    "items": [
+      {
+        "pid": 1,
+        "productNameSnapshot": "Sunset Painting",
+        "unitPrice": 25.00,
+        "quantity": 3,
+        "lineTotal": 75.00
+      }
+    ]
+  }
+}
+```
+
+**Error 400**:
+```json
+{
+  "error": "Cart is empty"
+}
 ```
 
 ---

@@ -141,6 +141,9 @@ public class SecurityConfig {
                 // Public seller viewing (GET only)
                 .requestMatchers(HttpMethod.GET, "/api/sellers/{sid}").permitAll()
                 
+                // Cart endpoints require authentication (Module 9)
+                .requestMatchers("/api/cart/**").authenticated()
+                
                 // All other /api endpoints require authentication
                 .requestMatchers("/api/**").authenticated()
                 

@@ -63,18 +63,27 @@ export const AuthProvider = ({ children }) => {
    * token and user info in localStorage. If so, it restores the session.
    */
   useEffect(() => {
-    // Check if user is already logged in (token in localStorage)
-    const token = localStorage.getItem('token');
-    const userInfo = authService.getCurrentUser();
-    
-    if (token && userInfo) {
-      // User has a token and user info, restore the session
-      setUser(userInfo);
-      setIsAuthenticated(true);
+    try {
+      console.log('AuthContext: Checking authentication...');
+      // Check if user is already logged in (token in localStorage)
+      const token = localStorage.getItem('token');
+      const userInfo = authService.getCurrentUser();
+      
+      if (token && userInfo) {
+        // User has a token and user info, restore the session
+        console.log('AuthContext: User authenticated', userInfo);
+        setUser(userInfo);
+        setIsAuthenticated(true);
+      } else {
+        console.log('AuthContext: No authentication found');
+      }
+      
+      // Set loading to false after checking
+      setLoading(false);
+    } catch (error) {
+      console.error('AuthContext: Error during auth check', error);
+      setLoading(false);
     }
-    
-    // Set loading to false after checking
-    setLoading(false);
   }, []); // Empty dependency array = run only once on mount
   
   /**
@@ -198,22 +207,8 @@ export const AuthProvider = ({ children }) => {
     logout,            // Function to log out
   };
   
-  // Show a loading screen while checking initial authentication status
-  // This prevents a flash of "not logged in" content while checking
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        fontSize: '1.5em',
-        color: '#667eea',
-      }}>
-        Loading...
-      </div>
-    );
-  }
+  // Removed blocking loading screen to allow HomePage to render immediately
+  // The loading state is still available for components that need it
   
   // Provide the context value to all child components
   return (

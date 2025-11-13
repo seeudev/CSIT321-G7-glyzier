@@ -36,8 +36,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Import context provider
+// Import context providers
 import { AuthProvider } from './context/AuthContext.jsx';
+import { CartProvider } from './context/CartContext.jsx';
 
 // Import components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -49,6 +50,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
+import CartPage from './pages/CartPage';
 
 /**
  * App functional component
@@ -62,27 +64,27 @@ import SellerDashboard from './pages/SellerDashboard';
  */
 function App() {
   return (
-    // Wrap everything in AuthProvider to provide auth state globally
-    <AuthProvider>
-      <BrowserRouter>
-        {/* 
-          Routes component contains all route definitions
-          Each Route maps a URL path to a component
-        */}
-        <Routes>
-          {/* Public routes - accessible to everyone */}
-          
-          {/* Home page - landing page with product showcase */}
-          <Route path="/" element={<HomePage />} />
-          
-          {/* Login page - user authentication */}
-          <Route path="/login" element={<LoginPage />} />
-          
-          {/* Register page - new user registration */}
-          <Route path="/register" element={<RegisterPage />} />
-          
-          {/* Product detail page - view individual product (PUBLIC) */}
-          <Route path="/products/:pid" element={<ProductDetailPage />} />
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          {/* 
+            Routes component contains all route definitions
+            Each Route maps a URL path to a component
+          */}
+          <Routes>
+            {/* Public routes - accessible to everyone */}
+            
+            {/* Home page - landing page with product showcase */}
+            <Route path="/" element={<HomePage />} />
+            
+            {/* Login page - user authentication */}
+            <Route path="/login" element={<LoginPage />} />
+            
+            {/* Register page - new user registration */}
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Product detail page - view individual product (PUBLIC) */}
+            <Route path="/products/:pid" element={<ProductDetailPage />} />
           
           {/* Protected routes - require authentication */}
           
@@ -106,14 +108,25 @@ function App() {
             } 
           />
           
+          {/* Shopping Cart page - view and manage cart (PROTECTED - Module 9) */}
+          <Route 
+            path="/cart" 
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            } 
+          />
+          
           {/* 
             Additional routes to be added in future modules:
             - /orders/:orderid - Order details (Future module, PROTECTED)
             - /sellers/:sid - Public seller profile page (Future module, PUBLIC)
           */}
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          </Routes>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
