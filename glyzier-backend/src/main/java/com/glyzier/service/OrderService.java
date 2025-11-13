@@ -53,6 +53,9 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CartService cartService;
+
     /**
      * Place an order for the authenticated user (SIMULATED)
      * 
@@ -253,5 +256,51 @@ public class OrderService {
         order = ordersRepository.save(order);
 
         return new OrderResponse(order, true);
+    }
+
+    /**
+     * Place an order from the user's shopping cart (Module 9)
+     * 
+     * This method replaces the single-product checkout with cart-based checkout.
+     * It validates the cart, converts all cart items to order items, and clears the cart.
+     * 
+     * Process:
+     * 1. Validates cart is not empty and all items are valid
+     * 2. Converts cart items to order items
+     * 3. Processes the order (same as regular placeOrder)
+     * 4. Clears the cart after successful order
+     * 
+     * @param userId The authenticated user's ID
+     * @return OrderResponse DTO containing the created order details
+     * @throws IllegalArgumentException if cart is empty, invalid, or order fails
+     */
+    @Transactional
+    public OrderResponse placeOrderFromCart(Long userId) {
+        // Step 1: Validate cart before checkout
+        cartService.validateCartForCheckout(userId);
+
+        // Step 2: Get cart details
+        com.glyzier.dto.CartResponse cartResponse = cartService.getCart(userId);
+
+        // Step 3: Convert cart items to order item requests
+        PlaceOrderRequest orderRequest = new PlaceOrderRequest();
+        java.util.List<OrderItemRequest> orderItems = new java.util.ArrayList<>();
+
+        for (com.glyzier.dto.CartItemResponse cartItem : cartResponse.getItems()) {
+            OrderItemRequest orderItem = new OrderItemRequest();
+            orderItem.setPid(cartItem.getPid());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItems.add(orderItem);
+        }
+
+        orderRequest.setItems(orderItems);
+
+        // Step 4: Place the order using the existing method
+        OrderResponse orderResponse = placeOrder(userId, orderRequest);
+
+        // Step 5: Clear the cart after successful order
+        cartService.clearCart(userId);
+
+        return orderResponse;
     }
 }

@@ -238,6 +238,67 @@ public class OrderController {
         }
     }
 
+    /**
+     * Place an order from the shopping cart (Module 9)
+     * 
+     * Endpoint: POST /api/orders/place-from-cart
+     * Access: Authenticated users only
+     * 
+     * This endpoint allows a logged-in user to place an order from their shopping cart.
+     * All items in the cart are converted to an order, and the cart is cleared afterward.
+     * 
+     * Process:
+     * 1. Validates the cart (not empty, products available, stock sufficient)
+     * 2. Converts cart items to order items
+     * 3. Places the order
+     * 4. Clears the cart
+     * 
+     * No request body needed - the cart is automatically retrieved.
+     * 
+     * Response includes:
+     * - Order ID
+     * - Total amount
+     * - Status
+     * - Timestamp
+     * - List of items with snapshot data
+     * 
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity with OrderResponse and HTTP 201 (Created)
+     */
+    @PostMapping("/place-from-cart")
+    public ResponseEntity<?> placeOrderFromCart(Authentication authentication) {
+        try {
+            // Get the authenticated user's email
+            String email = authentication.getName();
+            
+            // Find the user by email
+            Users user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+            
+            // Place order from cart through the service
+            OrderResponse order = orderService.placeOrderFromCart(user.getUserid());
+            
+            // Return success response
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Order placed successfully from cart");
+            response.put("order", order);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors (e.g., empty cart, product not found, insufficient stock)
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            
+        } catch (Exception e) {
+            // Handle unexpected errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "An error occurred while placing order from cart: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
     // ==================== OPTIONAL: ADMIN/FUTURE ENDPOINTS ====================
     // These endpoints are not required for Module 4 but are included for potential future use
 

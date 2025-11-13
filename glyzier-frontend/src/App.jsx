@@ -36,8 +36,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Import context provider
+// Import context providers
 import { AuthProvider } from './context/AuthContext.jsx';
+import { CartProvider } from './context/CartContext.jsx';
 
 // Import components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -49,6 +50,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
+import CartPage from './pages/CartPage';
 
 /**
  * App functional component
@@ -62,9 +64,10 @@ import SellerDashboard from './pages/SellerDashboard';
  */
 function App() {
   return (
-    // Wrap everything in AuthProvider to provide auth state globally
+    // Wrap everything in AuthProvider and CartProvider for global state
     <AuthProvider>
-      <BrowserRouter>
+      <CartProvider>
+        <BrowserRouter>
         {/* 
           Routes component contains all route definitions
           Each Route maps a URL path to a component
@@ -106,6 +109,16 @@ function App() {
             } 
           />
           
+          {/* Shopping Cart page - view and manage cart (PROTECTED - Module 9) */}
+          <Route 
+            path="/cart" 
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            } 
+          />
+          
           {/* 
             Additional routes to be added in future modules:
             - /orders/:orderid - Order details (Future module, PROTECTED)
@@ -113,6 +126,7 @@ function App() {
           */}
         </Routes>
       </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

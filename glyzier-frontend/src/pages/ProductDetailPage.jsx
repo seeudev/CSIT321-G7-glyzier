@@ -21,7 +21,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 import { placeOrder } from '../services/orderService';
+import { addToCart } from '../services/cartService';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 /**
  * ProductDetailPage functional component
@@ -33,12 +35,14 @@ function ProductDetailPage() {
   const { pid } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { refreshCart, updateCartCount } = useCart();
   
   // State management
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   
   /**
    * Fetch product details on component mount or when pid changes
@@ -65,13 +69,60 @@ function ProductDetailPage() {
   }, [pid]); // Re-fetch if product ID changes
   
   /**
-   * Handle Buy Now button click
+   * Handle Add to Cart button click (Module 9)
    * 
-   * Module 8 implementation:
-   * - Checks authentication status
-   * - Places order with quantity 1
-   * - Shows confirmation or error message
-   * - Redirects to dashboard to view order history on success
+   * Adds the product to the user's shopping cart with quantity 1.
+   * Updates cart count badge in navbar.
+   */
+  const handleAddToCart = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      alert('Please login to add items to your cart.');
+      navigate('/login');
+      return;
+    }
+    
+    // Prevent duplicate requests while processing
+    if (cartLoading) {
+      return;
+    }
+    
+    try {
+      setCartLoading(true);
+      
+      // Add product to cart with quantity 1
+      await addToCart(product.pid, 1);
+      
+      // Update cart count badge
+      await updateCartCount();
+      
+      // Show success message with option to go to cart
+      const goToCart = window.confirm(
+        `${product.productname} added to cart!\n\n` +
+        `Would you like to view your cart?`
+      );
+      
+      if (goToCart) {
+        navigate('/cart');
+      }
+      
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      
+      // Show user-friendly error message
+      const errorMessage = err.response?.data?.error || 'Failed to add to cart. Please try again.';
+      alert(`Error: ${errorMessage}`);
+      
+    } finally {
+      setCartLoading(false);
+    }
+  };
+
+  /**
+   * Handle Buy Now button click (Module 8)
+   * 
+   * For quick single-product purchase (legacy support).
+   * Users can still use the cart for multi-product orders.
    */
   const handleBuyNow = async () => {
     // Check if user is authenticated
@@ -104,7 +155,7 @@ function ProductDetailPage() {
       
       // Show success message
       alert(`Order placed successfully! Order #${result.order.orderid}\n` +
-            `Total: ₱${result.order.total.toFixed(2)}\n\n` +
+            `Total: $${result.order.total.toFixed(2)}\n\n` +
             `You will be redirected to your dashboard to view order history.`);
       
       // Redirect to dashboard to view order history
@@ -114,7 +165,7 @@ function ProductDetailPage() {
       console.error('Error placing order:', err);
       
       // Show user-friendly error message
-      const errorMessage = err.message || 'Failed to place order. Please try again.';
+      const errorMessage = err.response?.data?.error || 'Failed to place order. Please try again.';
       alert(`Order failed: ${errorMessage}`);
       
     } finally {
@@ -226,8 +277,25 @@ function ProductDetailPage() {
             </div>
           </div>
           
-          {/* Action Buttons */}
+          {/* Action Buttons (Module 9 - Cart Integration) */}
           <div style={styles.actionSection}>
+            {/* Add to Cart Button (Primary Action) */}
+            <button 
+              onClick={handleAddToCart}
+              style={{
+                ...styles.addToCartButton,
+                ...(cartLoading || !product.stockQuantity || product.stockQuantity <= 0 ? styles.buyButtonDisabled : {})
+              }}
+              disabled={cartLoading || !product.stockQuantity || product.stockQuantity <= 0}
+            >
+              {cartLoading 
+                ? '⏳ Adding...' 
+                : product.stockQuantity > 0 
+                  ? '🛒 Add to Cart' 
+                  : 'Out of Stock'}
+            </button>
+
+            {/* Buy Now Button (Quick Purchase - Legacy Support) */}
             <button 
               onClick={handleBuyNow}
               style={{
@@ -239,13 +307,13 @@ function ProductDetailPage() {
               {orderLoading 
                 ? '⏳ Processing...' 
                 : product.stockQuantity > 0 
-                  ? '🛒 Buy Now' 
+                  ? '⚡ Buy Now' 
                   : 'Out of Stock'}
             </button>
             
             {!isAuthenticated && (
               <p style={styles.loginNote}>
-                * You must be logged in to purchase
+                * You must be logged in to add to cart or purchase
               </p>
             )}
           </div>
@@ -409,23 +477,40 @@ const styles = {
   },
   actionSection: {
     marginTop: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
   },
-  buyButton: {
+  addToCartButton: {
     width: '100%',
     padding: '18px',
     fontSize: '1.3em',
     fontWeight: 'bold',
-    backgroundColor: '#667eea',
+    background: 'linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%)',
     color: 'white',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
-    transition: 'background-color 0.2s',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+  },
+  buyButton: {
+    width: '100%',
+    padding: '15px',
+    fontSize: '1.1em',
+    fontWeight: '600',
+    backgroundColor: 'white',
+    color: '#7c6fb8',
+    border: '2px solid #7c6fb8',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
   },
   buyButtonDisabled: {
     backgroundColor: '#ccc',
     cursor: 'not-allowed',
     opacity: 0.6,
+    border: 'none',
+    color: '#666',
   },
   loginNote: {
     marginTop: '15px',

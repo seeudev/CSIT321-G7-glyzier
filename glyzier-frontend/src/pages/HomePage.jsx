@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useCart } from '../context/CartContext.jsx';
 import { getAllProducts } from '../services/productService';
 
 /**
@@ -27,6 +28,7 @@ import { getAllProducts } from '../services/productService';
 function HomePage() {
   // Get authentication state and functions from context
   const { isAuthenticated, user, logout } = useAuth();
+  const { cartCount } = useCart();
   const navigate = useNavigate();
   
   // State for products
@@ -83,6 +85,9 @@ function HomePage() {
             <>
               <Link to="/dashboard" style={styles.button}>
                 My Dashboard
+              </Link>
+              <Link to="/cart" style={styles.cartButton}>
+                🛒 Cart {cartCount > 0 && <span style={styles.cartBadge}>{cartCount}</span>}
               </Link>
               <button 
                 onClick={handleLogout} 
@@ -223,6 +228,7 @@ const styles = {
     gap: '15px',
     justifyContent: 'center',
     flexWrap: 'wrap',
+    alignItems: 'center',
   },
   button: {
     padding: '12px 30px',
@@ -241,6 +247,34 @@ const styles = {
     backgroundColor: 'transparent',
     color: 'white',
     border: '2px solid white',
+  },
+  cartButton: {
+    padding: '12px 30px',
+    fontSize: '1.1em',
+    backgroundColor: '#8b7fc4',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '5px',
+    fontWeight: 'bold',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    position: 'relative',
+    cursor: 'pointer',
+  },
+  cartBadge: {
+    backgroundColor: '#e74c3c',
+    color: 'white',
+    borderRadius: '50%',
+    width: '24px',
+    height: '24px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '0.85em',
+    fontWeight: 'bold',
+    marginLeft: '5px',
   },
   info: {
     padding: '20px',
