@@ -22,12 +22,20 @@ const CartContext = createContext();
  * Hook to use cart context
  * 
  * @returns {Object} Cart context value
- * @throws {Error} If used outside CartProvider
+ * Returns default values if used outside CartProvider (for safety)
  */
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    // Return safe defaults instead of throwing error
+    return {
+      cart: null,
+      cartCount: 0,
+      loading: false,
+      refreshCart: () => {},
+      updateCartCount: () => {},
+      clearCartState: () => {}
+    };
   }
   return context;
 };
@@ -51,7 +59,7 @@ export const CartProvider = ({ children }) => {
    * Called after cart operations (add, remove, update).
    */
   const refreshCart = async () => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || authLoading) {
       setCart(null);
       setCartCount(0);
       return;
@@ -64,7 +72,7 @@ export const CartProvider = ({ children }) => {
       setCartCount(cartData.totalItemCount || 0);
     } catch (error) {
       console.error('Error refreshing cart:', error);
-      setCart(null);
+      // Don't set to null on error, just log it
       setCartCount(0);
     } finally {
       setLoading(false);
@@ -102,10 +110,23 @@ export const CartProvider = ({ children }) => {
 
   // Load cart when user logs in
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      refreshCart();
-    } else if (!isAuthenticated) {
-      clearCartState();
+    try {
+      console.log('CartContext: Auth loading:', authLoading, 'Authenticated:', isAuthenticated);
+      // Wait for auth to finish loading before doing anything
+      if (authLoading) {
+        console.log('CartContext: Waiting for auth to finish loading');
+        return;
+      }
+      
+      if (isAuthenticated) {
+        console.log('CartContext: Loading cart for authenticated user');
+        refreshCart();
+      } else {
+        console.log('CartContext: Clearing cart for non-authenticated user');
+        clearCartState();
+      }
+    } catch (error) {
+      console.error('CartContext: Error in useEffect', error);
     }
   }, [isAuthenticated, authLoading]);
 

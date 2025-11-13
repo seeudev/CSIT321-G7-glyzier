@@ -206,11 +206,58 @@
 }
 
 .artTitle {
-  font-size: 1.5em;
+  font-size: 3em;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Divider for "or" text */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: #95a5a6;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.divider span {
+  padding: 0 15px;
+  font-size: 0.9em;
+}
+
+/* Google Sign In button */
+.googleButton {
+  padding: 14px;
+  background: white;
+  color: #2c3e50;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.05em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  font-style: italic;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.googleButton:hover {
+  background-color: #f9f9f9;
+  border-color: #d0d0d0;
+}
+
+.googleIcon {
+  font-weight: bold;
+  color: #4285f4;
+  font-size: 1.2em;
 }
 
 /* Responsive design */

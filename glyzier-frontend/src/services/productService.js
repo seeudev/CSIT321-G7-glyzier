@@ -25,10 +25,19 @@ import api from './api';
 export const getAllProducts = async () => {
   try {
     const response = await api.get('/products');
-    return response.data;
+    // Ensure we always return an array
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data && Array.isArray(data.data)) {
+      return data.data;
+    } else {
+      console.warn('getAllProducts: Unexpected response format', data);
+      return [];
+    }
   } catch (error) {
     console.error('Error fetching all products:', error);
-    throw error;
+    return []; // Return empty array on error instead of throwing
   }
 };
 

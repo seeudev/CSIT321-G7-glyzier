@@ -38,7 +38,7 @@ function LoginPage() {
   
   // Get location to redirect back to where user was trying to go
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || '/';
   
   // State for form inputs
   const [formData, setFormData] = useState({
@@ -112,7 +112,7 @@ function LoginPage() {
           <div className={styles.logo}>Glyzier</div>
           
           <h1 className={styles.title}>Sign in</h1>
-          <p className={styles.subtitle}>Your journey starts here.</p>
+          <p className={styles.subtitle}>Your journey starts here!!! Sign in.</p>
           
           {/* Error message display */}
           {error && (
@@ -140,7 +140,6 @@ function LoginPage() {
             
             {/* Password input */}
             <div className={styles.formGroup}>
-              <label htmlFor="password" className={styles.label}>Password</label>
               <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -158,7 +157,7 @@ function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label="Toggle password visibility"
                 >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? '👁️' : '�'}
                 </button>
               </div>
             </div>
@@ -182,6 +181,17 @@ function LoginPage() {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+            
+            {/* Divider */}
+            <div className={styles.divider}>
+              <span>or</span>
+            </div>
+            
+            {/* Google Sign In */}
+            <button type="button" className={styles.googleButton}>
+              <span className={styles.googleIcon}>G</span>
+              Sign in with Google
+            </button>
           </form>
           
           {/* Link to register page */}
@@ -196,7 +206,7 @@ function LoginPage() {
       {/* Right side - Decorative art background */}
       <div className={styles.artSection}>
         <div className={styles.artContent}>
-          <p className={styles.artTitle}>(Artwork carousel - coming soon)</p>
+          <h2 className={styles.artTitle}>Random Arts Here</h2>
         </div>
       </div>
     </div>

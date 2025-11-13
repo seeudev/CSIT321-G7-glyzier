@@ -64,28 +64,27 @@ import CartPage from './pages/CartPage';
  */
 function App() {
   return (
-    // Wrap everything in AuthProvider and CartProvider for global state
-    <AuthProvider>
-      <CartProvider>
-        <BrowserRouter>
-        {/* 
-          Routes component contains all route definitions
-          Each Route maps a URL path to a component
-        */}
-        <Routes>
-          {/* Public routes - accessible to everyone */}
-          
-          {/* Home page - landing page with product showcase */}
-          <Route path="/" element={<HomePage />} />
-          
-          {/* Login page - user authentication */}
-          <Route path="/login" element={<LoginPage />} />
-          
-          {/* Register page - new user registration */}
-          <Route path="/register" element={<RegisterPage />} />
-          
-          {/* Product detail page - view individual product (PUBLIC) */}
-          <Route path="/products/:pid" element={<ProductDetailPage />} />
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          {/* 
+            Routes component contains all route definitions
+            Each Route maps a URL path to a component
+          */}
+          <Routes>
+            {/* Public routes - accessible to everyone */}
+            
+            {/* Home page - landing page with product showcase */}
+            <Route path="/" element={<HomePage />} />
+            
+            {/* Login page - user authentication */}
+            <Route path="/login" element={<LoginPage />} />
+            
+            {/* Register page - new user registration */}
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Product detail page - view individual product (PUBLIC) */}
+            <Route path="/products/:pid" element={<ProductDetailPage />} />
           
           {/* Protected routes - require authentication */}
           
@@ -124,10 +123,10 @@ function App() {
             - /orders/:orderid - Order details (Future module, PROTECTED)
             - /sellers/:sid - Public seller profile page (Future module, PUBLIC)
           */}
-        </Routes>
-      </BrowserRouter>
-      </CartProvider>
-    </AuthProvider>
+          </Routes>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

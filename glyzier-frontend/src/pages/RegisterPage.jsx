@@ -1,22 +1,15 @@
 /**
  * RegisterPage Component
  * 
- * This page provides a registration form for new users.
- * 
- * Functionality:
- * - Display name, email, date of birth, and password input fields
- * - Client-side form validation
- * - Calls the backend API to create a new user account via AuthContext
- * - Redirects to login page after successful registration
- * - Shows success message before redirect
- * 
- * Design:
- * - Split-screen layout following Figma wireframe
- * - Form on left, decorative art background on right
- * - Uses CSS modules for styling
+ * Registration form for new users based on UI wireframes.
+ * Features:
+ * - Display name, email, date of birth, password fields
+ * - Client-side validation
+ * - Split-screen layout with form and decorative art section
+ * - Google sign-in option (placeholder)
  * 
  * @author Glyzier Team
- * @version 3.0 (Figma wireframe implementation with CSS modules)
+ * @version 4.0 (UI Wireframe implementation)
  */
 
 import React, { useState } from 'react';
@@ -133,7 +126,7 @@ function RegisterPage() {
           <div className={styles.logo}>Glyzier</div>
           
           <h1 className={styles.title}>Sign up</h1>
-          <p className={styles.subtitle}>Sign up to enjoy the features of Glyzier</p>
+          <p className={styles.subtitle}>Sign up to enjoy the feature of Revolutie</p>
           
           {/* Error message display */}
           {error && (
@@ -256,12 +249,23 @@ function RegisterPage() {
             >
               {loading ? 'Creating Account...' : 'Sign up'}
             </button>
+            
+            {/* Divider */}
+            <div className={styles.divider}>
+              <span>or</span>
+            </div>
+            
+            {/* Google Sign Up */}
+            <button type="button" className={styles.googleButton}>
+              <span className={styles.googleIcon}>G</span>
+              Continue with Google
+            </button>
           </form>
           
           {/* Link to login page */}
           <div className={styles.footer}>
             <p>
-              Already have an account? <Link to="/login">Sign in</Link>
+              Already have an account?? <Link to="/login">Sign in</Link>
             </p>
           </div>
         </div>
@@ -270,7 +274,7 @@ function RegisterPage() {
       {/* Right side - Decorative art background */}
       <div className={styles.artSection}>
         <div className={styles.artContent}>
-          <p className={styles.artTitle}>(Artwork carousel - coming soon)</p>
+          <h2 className={styles.artTitle}>Random Arts Here</h2>
         </div>
       </div>
     </div>
