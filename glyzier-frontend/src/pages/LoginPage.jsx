@@ -112,7 +112,7 @@ function LoginPage() {
           <div className={styles.logo}>Glyzier</div>
           
           <h1 className={styles.title}>Sign in</h1>
-          <p className={styles.subtitle}>Your journey starts here!!! Sign in.</p>
+          <p className={styles.subtitle}>Your journey starts here, Sign in.</p>
           
           {/* Error message display */}
           {error && (
@@ -134,7 +134,7 @@ function LoginPage() {
                 onChange={handleChange}
                 required
                 className={styles.input}
-                placeholder="your.email.here@gmail.com"
+                placeholder="Enter your Email"
               />
             </div>
             
@@ -149,7 +149,7 @@ function LoginPage() {
                   onChange={handleChange}
                   required
                   className={styles.input}
-                  placeholder="••••••••••••••"
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
@@ -197,7 +197,7 @@ function LoginPage() {
           {/* Link to register page */}
           <div className={styles.footer}>
             <p>
-              Need an account? <Link to="/register">Create one</Link>
+              Need an account? <Link to="/register">Register Here</Link>
             </p>
           </div>
         </div>
@@ -206,7 +206,7 @@ function LoginPage() {
       {/* Right side - Decorative art background */}
       <div className={styles.artSection}>
         <div className={styles.artContent}>
-          <h2 className={styles.artTitle}>Random Arts Here</h2>
+          <h2 className={styles.artTitle}>Random Artworks Here</h2>
         </div>
       </div>
     </div>
