@@ -71,6 +71,7 @@ public class ProductService {
                 request.getType(),
                 request.getPrice(),
                 request.getStatus() != null ? request.getStatus() : "Available",
+                request.getScreenshotPreviewUrl(),
                 seller
         );
 
@@ -132,6 +133,7 @@ public class ProductService {
         product.setProductname(request.getProductname());
         product.setType(request.getType());
         product.setPrice(request.getPrice());
+        product.setScreenshotPreviewUrl(request.getScreenshotPreviewUrl());
         
         if (request.getStatus() != null) {
             product.setStatus(request.getStatus());

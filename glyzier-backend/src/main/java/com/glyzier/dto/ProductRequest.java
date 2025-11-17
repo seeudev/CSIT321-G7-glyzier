@@ -49,6 +49,14 @@ public class ProductRequest {
     private String status;
 
     /**
+     * Screenshot preview URL for the product
+     * Used as a thumbnail in hero sections, product cards, and carousels
+     * Optional field for product visual representation
+     */
+    @Size(max = 2048, message = "Screenshot preview URL must not exceed 2048 characters")
+    private String screenshotPreviewUrl;
+
+    /**
      * List of file keys for product images/files
      * This is a simulated file upload - we just accept string keys
      * In a real system, these would be S3 keys or file paths
@@ -124,6 +132,14 @@ public class ProductRequest {
         this.fileKeys = fileKeys;
     }
 
+    public String getScreenshotPreviewUrl() {
+        return screenshotPreviewUrl;
+    }
+
+    public void setScreenshotPreviewUrl(String screenshotPreviewUrl) {
+        this.screenshotPreviewUrl = screenshotPreviewUrl;
+    }
+
     @Override
     public String toString() {
         return "ProductRequest{" +
@@ -131,6 +147,7 @@ public class ProductRequest {
                 ", type='" + type + '\'' +
                 ", price=" + price +
                 ", status='" + status + '\'' +
+                ", screenshotPreviewUrl='" + screenshotPreviewUrl + '\'' +
                 ", fileKeys=" + fileKeys +
                 '}';
     }

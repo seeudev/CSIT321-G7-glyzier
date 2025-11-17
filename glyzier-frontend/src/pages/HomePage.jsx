@@ -117,7 +117,17 @@ function HomePage() {
               {products.length > 0 ? (
                 products.map((product) => (
                   <Link key={product.pid} to={`/products/${product.pid}`} className={styles.hotArtCard}>
-                    <div className={styles.hotArtImage}>[Image here]</div>
+                    <div className={styles.hotArtImage}>
+                      {product.screenshotPreviewUrl ? (
+                        <img 
+                          src={product.screenshotPreviewUrl} 
+                          alt={product.productname}
+                          className={styles.productImage}
+                        />
+                      ) : (
+                        <span>[No Image]</span>
+                      )}
+                    </div>
                     <p>{product.productname}</p>
                   </Link>
                 ))

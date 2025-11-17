@@ -61,7 +61,8 @@ function SellerDashboard() {
     price: '',
     category: '',
     type: '',
-    status: 'Available'
+    status: 'Available',
+    screenshotPreviewUrl: ''
   });
   const [createFormLoading, setCreateFormLoading] = useState(false);
   
@@ -176,7 +177,8 @@ function SellerDashboard() {
         price: parseFloat(createFormData.price),
         category: createFormData.category.trim() || 'Uncategorized',
         type: createFormData.type.trim() || 'General',
-        status: createFormData.status
+        status: createFormData.status,
+        screenshotPreviewUrl: createFormData.screenshotPreviewUrl.trim() || null
       };
       
       // Call the productService to create product
@@ -192,7 +194,8 @@ function SellerDashboard() {
         price: '',
         category: '',
         type: '',
-        status: 'Available'
+        status: 'Available',
+        screenshotPreviewUrl: ''
       });
       setShowCreateForm(false);
       
@@ -219,7 +222,8 @@ function SellerDashboard() {
       price: product.price.toString(),
       category: product.category || '',
       type: product.type || '',
-      status: product.status
+      status: product.status,
+      screenshotPreviewUrl: product.screenshotPreviewUrl || ''
     });
   };
   
@@ -259,7 +263,8 @@ function SellerDashboard() {
         price: parseFloat(editFormData.price),
         category: editFormData.category.trim() || 'Uncategorized',
         type: editFormData.type.trim() || 'General',
-        status: editFormData.status
+        status: editFormData.status,
+        screenshotPreviewUrl: editFormData.screenshotPreviewUrl.trim() || null
       };
       
       // Call the productService to update product
@@ -502,6 +507,25 @@ function SellerDashboard() {
               </div>
               
               <div className={styles.formGroup}>
+                <label htmlFor="screenshotPreviewUrl" className={styles.formLabel}>
+                  Screenshot Preview URL
+                </label>
+                <input
+                  type="url"
+                  id="screenshotPreviewUrl"
+                  name="screenshotPreviewUrl"
+                  className={styles.formInput}
+                  placeholder="https://example.com/image.jpg"
+                  value={createFormData.screenshotPreviewUrl}
+                  onChange={handleCreateFormChange}
+                  disabled={createFormLoading}
+                />
+                <small className={styles.formHint}>
+                  Image URL for product thumbnail (used in cards and galleries)
+                </small>
+              </div>
+              
+              <div className={styles.formGroup}>
                 <label htmlFor="productdescription" className={styles.formLabel}>
                   Description
                 </label>
@@ -623,6 +647,22 @@ function SellerDashboard() {
                               <option value="Coming Soon">Coming Soon</option>
                             </select>
                           </div>
+                        </div>
+                        
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel}>Screenshot Preview URL</label>
+                          <input
+                            type="url"
+                            name="screenshotPreviewUrl"
+                            className={styles.formInput}
+                            placeholder="https://example.com/image.jpg"
+                            value={editFormData.screenshotPreviewUrl}
+                            onChange={handleEditFormChange}
+                            disabled={editFormLoading}
+                          />
+                          <small className={styles.formHint}>
+                            Image URL for product thumbnail
+                          </small>
                         </div>
                         
                         <div className={styles.formGroup}>

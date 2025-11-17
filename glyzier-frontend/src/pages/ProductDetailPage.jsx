@@ -218,11 +218,21 @@ function ProductDetailPage() {
         {/* Product Image Section */}
         <div style={styles.imageSection}>
           <div style={styles.productImage}>
-            <span style={styles.imagePlaceholder}>🎨</span>
-            <p style={styles.imageText}>Product Image</p>
-            <p style={styles.imageSubtext}>
-              (Simulated - In a real app, this would show the actual product image)
-            </p>
+            {product.screenshotPreviewUrl ? (
+              <img 
+                src={product.screenshotPreviewUrl} 
+                alt={product.productname}
+                style={styles.productImageImg}
+              />
+            ) : (
+              <>
+                <span style={styles.imagePlaceholder}>🎨</span>
+                <p style={styles.imageText}>Product Image</p>
+                <p style={styles.imageSubtext}>
+                  (No preview image available)
+                </p>
+              </>
+            )}
           </div>
         </div>
         
@@ -385,6 +395,12 @@ const styles = {
     justifyContent: 'center',
     color: 'white',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+  },
+  productImageImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
   },
   imagePlaceholder: {
     fontSize: '6em',
