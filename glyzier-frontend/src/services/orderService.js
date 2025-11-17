@@ -46,7 +46,7 @@ import api from './api';
  */
 export const placeOrder = async (orderData) => {
   try {
-    const response = await api.post('/orders/place', orderData);
+    const response = await api.post('/api/orders/place', orderData);
     return response.data;
   } catch (error) {
     console.error('Error placing order:', error);
@@ -88,7 +88,7 @@ export const placeOrder = async (orderData) => {
  */
 export const getMyHistory = async () => {
   try {
-    const response = await api.get('/orders/my-history');
+    const response = await api.get('/api/orders/my-history');
     return response.data;
   } catch (error) {
     console.error('Error fetching order history:', error);
@@ -120,7 +120,7 @@ export const getMyHistory = async () => {
  */
 export const getOrderById = async (orderid) => {
   try {
-    const response = await api.get(`/orders/${orderid}`);
+    const response = await api.get(`/api/orders/${orderid}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching order ${orderid}:`, error);

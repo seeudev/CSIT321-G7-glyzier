@@ -12,10 +12,40 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import { getAllProducts } from '../services/productService'; // We will use this for the "Hot Arts" section
 import styles from './HomePage.module.css';
+
+/**
+ * Custom hook for auto-rotating carousel
+ * @param {number} totalSlides - Total number of slides
+ * @param {number} interval - Rotation interval in milliseconds
+ * @returns {Object} Current index, next/prev handlers, and setter
+ */
+const useCarousel = (totalSlides, interval = 5000) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (totalSlides <= 1) return; // Don't auto-rotate if only 1 slide
+    
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % totalSlides);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [totalSlides, interval]);
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % totalSlides);
+  };
+
+  const goToPrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  return { currentIndex, goToNext, goToPrev, setCurrentIndex };
+};
 
 // --- Hardcoded data for mockup sections ---
 // In a real application, this data would also come from an API.
@@ -40,9 +70,13 @@ const categories = [
  * @returns {JSX.Element} The redesigned home page component
  */
 function HomePage() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]); // This will be used for "Hot Arts"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Hero carousel (auto-rotates through first 5 products every 5 seconds)
+  const { currentIndex: heroIndex, goToNext: heroNext, goToPrev: heroPrev, setCurrentIndex: setHeroIndex } = useCarousel(Math.min(products.length, 5), 5000);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -66,25 +100,71 @@ function HomePage() {
     <div className={styles.page}>
       <Navigation />
 
-      {/* Hero Carousel Section */}
+      {/* Hero Carousel Section - Auto-rotates through first 5 products */}
       <header className={styles.heroSection}>
-        <div className={styles.carouselArrow}>&lt;</div>
+        <button 
+          className={styles.carouselArrow} 
+          onClick={heroPrev}
+          aria-label="Previous product"
+        >
+          &lt;
+        </button>
         
-        {/* --- NEW CONTENT WRAPPER --- */}
         <div className={styles.heroContent}>
-          <div className={styles.heroText}>
-            <h1>Eye in Abstract</h1>
-            <p>A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look.</p>
-            <button>GET IT NOW</button>
-          </div>
-          <div className={styles.heroImage}>
-            <div className={styles.heroImagePlaceholder}>[Image here]</div>
-            <button className={styles.detailsButton}>DETAILS</button>
-          </div>
+          {products.length > 0 ? (
+            <>
+              <div className={styles.heroText}>
+                <h1>{products[heroIndex]?.productname || "Eye in Abstract"}</h1>
+                <p>{products[heroIndex]?.productdesc || "A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look."}</p>
+                <button onClick={() => products[heroIndex] && navigate(`/products/${products[heroIndex].pid}`)}>GET IT NOW</button>
+              </div>
+              <div className={styles.heroImage}>
+                {products[heroIndex]?.screenshotPreviewUrl ? (
+                  <img 
+                    src={products[heroIndex].screenshotPreviewUrl} 
+                    alt={products[heroIndex].productname}
+                    className={styles.heroImageDisplay}
+                  />
+                ) : (
+                  <div className={styles.heroImagePlaceholder}>[Image here]</div>
+                )}
+                <button 
+                  className={styles.detailsButton} 
+                  onClick={() => products[heroIndex] && navigate(`/products/${products[heroIndex].pid}`)}
+                >
+                  DETAILS
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className={styles.heroText}>
+              <h1>Welcome to Glyzier</h1>
+              <p>Discover amazing art from talented artists</p>
+            </div>
+          )}
+          
+          {/* Carousel indicators */}
+          {products.length > 1 && (
+            <div className={styles.carouselIndicators}>
+              {products.slice(0, 5).map((_, index) => (
+                <span
+                  key={index}
+                  className={`${styles.indicator} ${index === heroIndex ? styles.active : ''}`}
+                  onClick={() => setHeroIndex(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        {/* --- END CONTENT WRAPPER --- */}
 
-        <div className={styles.carouselArrow}>&gt;</div>
+        <button 
+          className={styles.carouselArrow} 
+          onClick={heroNext}
+          aria-label="Next product"
+        >
+          &gt;
+        </button>
       </header>
 
       <main>
@@ -93,12 +173,20 @@ function HomePage() {
           <h2>Artist of the Month</h2>
           <p className={styles.sectionSubtitle}>Ranked Popular this Month</p>
           <div className={styles.artistGrid}>
-            {artists.map((artist) => (
-              <div key={artist.name} className={styles.artistCard}>
-                <div className={styles.artistImage}>[Image here]</div>
+            {products.slice(1, 5).map((product, index) => (
+              <div key={product.pid} className={styles.artistCard}>
+                {product.screenshotPreviewUrl ? (
+                  <img 
+                    src={product.screenshotPreviewUrl} 
+                    alt={product.productname}
+                    className={styles.artistImage}
+                  />
+                ) : (
+                  <div className={styles.artistImage}>[Image here]</div>
+                )}
                 <div className={styles.artistInfo}>
-                  <h3>{artist.name}</h3>
-                  <p>Age: {artist.age}</p>
+                  <h3>{product.sellerName || "Artist"}</h3>
+                  <p>{product.productname}</p>
                 </div>
               </div>
             ))}

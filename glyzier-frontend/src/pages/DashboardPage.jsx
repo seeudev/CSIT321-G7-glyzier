@@ -23,6 +23,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getMyHistory } from '../services/orderService';
 import { registerAsSeller, checkIfSeller } from '../services/sellerService';
+import Navigation from '../components/Navigation';
 import styles from './DashboardPage.module.css';
 
 /**
@@ -61,11 +62,13 @@ function DashboardPage() {
       try {
         setOrdersLoading(true);
         const data = await getMyHistory();
-        setOrders(data);
+        // Ensure data is an array
+        setOrders(Array.isArray(data) ? data : []);
         setOrdersError(null);
       } catch (err) {
         console.error('Failed to fetch orders:', err);
         setOrdersError('Failed to load order history');
+        setOrders([]); // Set empty array on error
       } finally {
         setOrdersLoading(false);
       }
@@ -173,21 +176,15 @@ function DashboardPage() {
   };
   
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
+      <Navigation />
+      
       {/* Header Section */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.welcomeSection}>
             <h1 className={styles.title}>User Dashboard</h1>
             <p className={styles.subtitle}>Welcome back, {user.displayname}!</p>
-          </div>
-          <div className={styles.headerActions}>
-            <Link to="/" className={styles.homeLink}>
-              ← Home
-            </Link>
-            <button onClick={handleLogout} className={styles.logoutButton}>
-              Logout
-            </button>
           </div>
         </div>
       </div>
@@ -228,7 +225,7 @@ function DashboardPage() {
                 <p className={styles.muted}>Loading orders...</p>
               ) : ordersError ? (
                 <p style={{ color: '#d32f2f' }}>{ordersError}</p>
-              ) : orders.length === 0 ? (
+              ) : !Array.isArray(orders) || orders.length === 0 ? (
                 <p className={styles.muted}>No orders yet. Start shopping to see your order history!</p>
               ) : (
                 <ul className={styles.list}>

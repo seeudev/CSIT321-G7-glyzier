@@ -8,6 +8,11 @@
  * @version 1.0 (Module 8)
  */
 
+.page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
 .container {
   min-height: 100vh;
   background-color: #f8f9fa;

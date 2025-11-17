@@ -10,6 +10,11 @@
  * @version 4.0 (Module 8 - Added seller form and order details styles)
  */
 
+.page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
 .container {
   min-height: 100vh;
   background-color: #f8f9fa;

@@ -13,10 +13,11 @@
  * @version 1.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { checkIfSeller } from '../services/sellerService';
 import styles from './Navigation.module.css';
 
 /**
@@ -38,6 +39,34 @@ function Navigation() {
   
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
+  const [checkingSeller, setCheckingSeller] = useState(true);
+
+  /**
+   * Check if user is a seller on component mount
+   */
+  useEffect(() => {
+    const checkSellerStatus = async () => {
+      if (!isAuthenticated) {
+        setIsSeller(false);
+        setCheckingSeller(false);
+        return;
+      }
+
+      try {
+        setCheckingSeller(true);
+        const status = await checkIfSeller();
+        setIsSeller(status.isSeller);
+      } catch (error) {
+        console.error('Error checking seller status:', error);
+        setIsSeller(false);
+      } finally {
+        setCheckingSeller(false);
+      }
+    };
+
+    checkSellerStatus();
+  }, [isAuthenticated]);
 
   /**
    * Handle logout
@@ -148,13 +177,15 @@ function Navigation() {
                     >
                       My Dashboard
                     </Link>
-                    <Link 
-                      to="/seller/dashboard" 
-                      className={styles.dropdownItem}
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      Seller Dashboard
-                    </Link>
+                    {!checkingSeller && isSeller && (
+                      <Link 
+                        to="/seller/dashboard" 
+                        className={styles.dropdownItem}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Seller Dashboard
+                      </Link>
+                    )}
                     <div className={styles.dropdownDivider}></div>
                     <button 
                       className={styles.dropdownItem}

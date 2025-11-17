@@ -39,7 +39,7 @@ import api from './api';
  */
 export const registerAsSeller = async (sellerData) => {
   try {
-    const response = await api.post('/sellers/register', sellerData);
+    const response = await api.post('/api/sellers/register', sellerData);
     return response.data;
   } catch (error) {
     console.error('Error registering as seller:', error);
@@ -74,7 +74,7 @@ export const registerAsSeller = async (sellerData) => {
  */
 export const checkIfSeller = async () => {
   try {
-    const response = await api.get('/sellers/check');
+    const response = await api.get('/api/sellers/check');
     return response.data;
   } catch (error) {
     console.error('Error checking seller status:', error);
@@ -103,7 +103,7 @@ export const checkIfSeller = async () => {
  */
 export const getMySellerProfile = async () => {
   try {
-    const response = await api.get('/sellers/me');
+    const response = await api.get('/api/sellers/me');
     return response.data;
   } catch (error) {
     console.error('Error fetching seller profile:', error);
@@ -140,7 +140,7 @@ export const getMySellerProfile = async () => {
  */
 export const getSellerById = async (sid) => {
   try {
-    const response = await api.get(`/sellers/${sid}`);
+    const response = await api.get(`/api/sellers/${sid}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching seller ${sid}:`, error);
