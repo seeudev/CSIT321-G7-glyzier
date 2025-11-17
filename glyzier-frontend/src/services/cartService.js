@@ -20,7 +20,7 @@ import api from './api';
  */
 export const getCart = async () => {
   try {
-    const response = await api.get('/cart');
+    const response = await api.get('/api/cart');
     return response.data;
   } catch (error) {
     console.error('Error fetching cart:', error.response?.data || error.message);
@@ -41,7 +41,7 @@ export const getCart = async () => {
  */
 export const addToCart = async (pid, quantity = 1) => {
   try {
-    const response = await api.post('/cart/add', { pid, quantity });
+    const response = await api.post('/api/cart/add', { pid, quantity });
     return response.data;
   } catch (error) {
     console.error('Error adding to cart:', error.response?.data || error.message);
@@ -61,7 +61,7 @@ export const addToCart = async (pid, quantity = 1) => {
  */
 export const updateCartItem = async (pid, quantity) => {
   try {
-    const response = await api.put(`/cart/update/${pid}`, { quantity });
+    const response = await api.put(`/api/cart/update/${pid}`, { quantity });
     return response.data;
   } catch (error) {
     console.error('Error updating cart item:', error.response?.data || error.message);
@@ -80,7 +80,7 @@ export const updateCartItem = async (pid, quantity) => {
  */
 export const removeFromCart = async (pid) => {
   try {
-    const response = await api.delete(`/cart/remove/${pid}`);
+    const response = await api.delete(`/api/cart/remove/${pid}`);
     return response.data;
   } catch (error) {
     console.error('Error removing from cart:', error.response?.data || error.message);
@@ -98,7 +98,7 @@ export const removeFromCart = async (pid) => {
  */
 export const clearCart = async () => {
   try {
-    const response = await api.delete('/cart/clear');
+    const response = await api.delete('/api/cart/clear');
     return response.data;
   } catch (error) {
     console.error('Error clearing cart:', error.response?.data || error.message);
@@ -116,7 +116,7 @@ export const clearCart = async () => {
  */
 export const getCartItemCount = async () => {
   try {
-    const response = await api.get('/cart/count');
+    const response = await api.get('/api/cart/count');
     return response.data.count || 0;
   } catch (error) {
     console.error('Error fetching cart count:', error.response?.data || error.message);
@@ -134,7 +134,7 @@ export const getCartItemCount = async () => {
  */
 export const placeOrderFromCart = async () => {
   try {
-    const response = await api.post('/orders/place-from-cart');
+    const response = await api.post('/api/orders/place-from-cart');
     return response.data;
   } catch (error) {
     console.error('Error placing order from cart:', error.response?.data || error.message);

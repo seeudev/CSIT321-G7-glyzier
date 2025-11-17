@@ -31,6 +31,7 @@ import {
   deleteProduct, 
   getProductsBySeller 
 } from '../services/productService';
+import Navigation from '../components/Navigation';
 import styles from './SellerDashboard.module.css';
 
 /**
@@ -94,6 +95,7 @@ function SellerDashboard() {
         
         // Fetch seller profile
         const profile = await getMySellerProfile();
+        console.log('Seller profile received:', profile);
         setSellerProfile(profile);
         
       } catch (err) {
@@ -339,29 +341,21 @@ function SellerDashboard() {
    * Main render
    */
   return (
-    <div className={styles.container}>
-      {/* Header Section */}
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.welcomeSection}>
-            <h1 className={styles.title}>Seller Dashboard</h1>
-            <p className={styles.subtitle}>
-              {sellerProfile ? `${sellerProfile.sellername}` : 'Loading...'}
-            </p>
-          </div>
-          <div className={styles.headerActions}>
-            <Link to="/dashboard" className={styles.dashboardLink}>
-              ← User Dashboard
-            </Link>
-            <Link to="/" className={styles.homeLink}>
-              Home
-            </Link>
-            <button onClick={handleLogout} className={styles.logoutButton}>
-              Logout
-            </button>
+    <div className={styles.page}>
+      <Navigation />
+      
+      <div className={styles.container}>
+        {/* Header Section */}
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.title}>Seller Dashboard</h1>
+              <p className={styles.subtitle}>
+                {sellerProfile?.sellername || 'Loading...'}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
       
       {/* Main Content */}
       <div className={styles.content}>
@@ -372,15 +366,15 @@ function SellerDashboard() {
             <h2 className={styles.cardTitle}>Seller Information</h2>
           </div>
           <div className={styles.cardContent}>
-            {sellerProfile && (
+            {sellerProfile ? (
               <>
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Seller ID</span>
-                  <span className={styles.infoValue}>{sellerProfile.sid}</span>
+                  <span className={styles.infoValue}>{sellerProfile.sid || sellerId || 'N/A'}</span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Shop Name</span>
-                  <span className={styles.infoValue}>{sellerProfile.sellername}</span>
+                  <span className={styles.infoValue}>{sellerProfile.sellername || 'N/A'}</span>
                 </div>
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Bio</span>
@@ -393,6 +387,10 @@ function SellerDashboard() {
                   <span className={styles.infoValue}>{products.length}</span>
                 </div>
               </>
+            ) : (
+              <div className={styles.infoRow}>
+                <span className={styles.infoValue}>Loading seller information...</span>
+              </div>
             )}
           </div>
         </div>
@@ -746,6 +744,7 @@ function SellerDashboard() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

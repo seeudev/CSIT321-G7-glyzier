@@ -12,9 +12,10 @@
  * @version 4.0 (UI Wireframe implementation)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { getAllProducts } from '../services/productService';
 import styles from './RegisterPage.module.css';
 
 /**
@@ -50,6 +51,34 @@ function RegisterPage() {
   // State for password visibility toggle
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // State for carousel products
+  const [carouselProducts, setCarouselProducts] = useState([]);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  
+  // Fetch products for carousel
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setCarouselProducts(data.slice(0, 5)); // Get first 5 products for carousel
+      } catch (err) {
+        console.error('Failed to fetch carousel products:', err);
+      }
+    };
+    fetchProducts();
+  }, []);
+  
+  // Auto-rotate carousel every 4 seconds
+  useEffect(() => {
+    if (carouselProducts.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % carouselProducts.length);
+    }, 4000);
+    
+    return () => clearInterval(timer);
+  }, [carouselProducts.length]);
   
   /**
    * Handle input changes
@@ -125,8 +154,8 @@ function RegisterPage() {
         <div className={styles.formWrapper}>
           <div className={styles.logo}>Glyzier</div>
           
-          <h1 className={styles.title}>Sign up</h1>
-          <p className={styles.subtitle}>Sign up to enjoy the feature of Revolutie</p>
+          <h1 className={styles.title}>Create Account</h1>
+          <p className={styles.subtitle}>Join Glyzier and discover amazing artworks</p>
           
           {/* Error message display */}
           {error && (
@@ -146,7 +175,7 @@ function RegisterPage() {
           <form onSubmit={handleSubmit} className={styles.form}>
             {/* Display name input */}
             <div className={styles.formGroup}>
-              <label htmlFor="displayname" className={styles.label}>Your Name</label>
+              <label htmlFor="displayname" className={styles.label}>Full Name</label>
               <input
                 type="text"
                 id="displayname"
@@ -157,26 +186,13 @@ function RegisterPage() {
                 minLength={3}
                 maxLength={100}
                 className={styles.input}
-                placeholder="Juan Dela Cruz"
-              />
-            </div>
-            
-            {/* Date of Birth input */}
-            <div className={styles.formGroup}>
-              <label htmlFor="dateOfBirth" className={styles.label}>Date of Birth</label>
-              <input
-                type="date"
-                id="dateOfBirth"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                className={styles.input}
+                placeholder="Enter your full name"
               />
             </div>
             
             {/* Email input */}
             <div className={styles.formGroup}>
-              <label htmlFor="email" className={styles.label}>Email</label>
+              <label htmlFor="email" className={styles.label}>Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -185,7 +201,7 @@ function RegisterPage() {
                 onChange={handleChange}
                 required
                 className={styles.input}
-                placeholder="juan.delacruz@cit.edu"
+                placeholder="Enter your email"
               />
             </div>
             
@@ -202,7 +218,7 @@ function RegisterPage() {
                   required
                   minLength={6}
                   className={styles.input}
-                  placeholder="Password"
+                  placeholder="Create a password"
                 />
                 <button
                   type="button"
@@ -213,7 +229,7 @@ function RegisterPage() {
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
               </div>
-              <small className={styles.hint}>Minimum 6 characters</small>
+              <small className={styles.hint}>Must be at least 6 characters</small>
             </div>
             
             {/* Confirm password input */}
@@ -228,7 +244,7 @@ function RegisterPage() {
                   onChange={handleChange}
                   required
                   className={styles.input}
-                  placeholder="Re-enter your password"
+                  placeholder="Confirm your password"
                 />
                 <button
                   type="button"
@@ -247,35 +263,38 @@ function RegisterPage() {
               disabled={loading}
               className={styles.submitButton}
             >
-              {loading ? 'Creating Account...' : 'Sign up'}
-            </button>
-            
-            {/* Divider */}
-            <div className={styles.divider}>
-              <span>or</span>
-            </div>
-            
-            {/* Google Sign Up */}
-            <button type="button" className={styles.googleButton}>
-              <span className={styles.googleIcon}>G</span>
-              Continue with Google
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
           
           {/* Link to login page */}
           <div className={styles.footer}>
             <p>
-              Already have an account?? <Link to="/login">Sign in</Link>
+              Already have an account? <Link to="/login">Sign in</Link>
             </p>
           </div>
         </div>
       </div>
       
-      {/* Right side - Decorative art background */}
+      {/* Right side - Full-screen cycling showcase with zoom effect */}
       <div className={styles.artSection}>
-        <div className={styles.artContent}>
-          <h2 className={styles.artTitle}>Random Arts Here</h2>
-        </div>
+        {carouselProducts.length > 0 && carouselProducts[carouselIndex]?.screenshotPreviewUrl ? (
+          <div className={styles.fullscreenCarousel}>
+            <img 
+              key={carouselIndex}
+              src={carouselProducts[carouselIndex].screenshotPreviewUrl} 
+              alt={carouselProducts[carouselIndex].productname}
+              className={styles.fullscreenImage}
+            />
+            <div className={styles.carouselOverlay}>
+              <h3>{carouselProducts[carouselIndex].productname}</h3>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.fullscreenCarousel}>
+            <div className={styles.loadingText}>Loading featured artworks...</div>
+          </div>
+        )}
       </div>
     </div>
   );

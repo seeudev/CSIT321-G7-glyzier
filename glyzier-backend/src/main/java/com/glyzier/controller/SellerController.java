@@ -142,15 +142,23 @@ public class SellerController {
      * Useful for the frontend to determine whether to show seller-specific UI elements.
      * 
      * @param authentication The Spring Security authentication object
-     * @return ResponseEntity with a boolean indicating seller status
+     * @return ResponseEntity with seller status and ID (if seller)
      */
     @GetMapping("/check")
     public ResponseEntity<?> checkSellerStatus(Authentication authentication) {
         String email = authentication.getName();
-        boolean isSeller = sellerService.isUserSeller(email);
         
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isSeller", isSeller);
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            Seller seller = sellerService.getSellerByUserEmail(email);
+            response.put("isSeller", true);
+            response.put("sid", seller.getSid());
+        } catch (IllegalArgumentException e) {
+            // User is not a seller
+            response.put("isSeller", false);
+            response.put("sid", null);
+        }
         
         return ResponseEntity.ok(response);
     }

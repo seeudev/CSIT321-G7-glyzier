@@ -11,6 +11,7 @@
 
 /* --- Hero Section --- */
 .heroSection {
+  position: relative;
   display: flex;
   align-items: center; /* This is the key property for vertical centering */
   justify-content: space-between; /* CHANGED BACK: to space-between */
@@ -34,6 +35,18 @@
 .heroText {
   flex: 1;
   max-width: 500px;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .heroText h1 {
@@ -81,6 +94,27 @@
   border-radius: 10px;
 }
 
+.heroImageDisplay {
+  width: 100%;
+  max-width: 500px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .detailsButton {
   position: absolute;
   bottom: -20px;
@@ -93,10 +127,39 @@
 }
 
 .carouselArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 2rem;
   font-weight: bold;
   cursor: pointer;
   padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 10;
+  color: #474787;
+}
+
+.carouselArrow:first-of-type {
+  left: 20px;
+}
+
+.carouselArrow:last-of-type {
+  right: 20px;
+}
+
+.carouselArrow:hover {
+  background-color: #474787;
+  color: white;
+  transform: translateY(-50%) scale(1.1);
 }
 
 
@@ -149,6 +212,7 @@
   align-items: center;
   font-weight: bold;
   color: #555;
+  object-fit: cover;
 }
 
 .artistInfo h3 {
@@ -355,3 +419,33 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* --- Carousel Indicators --- */
+.carouselIndicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.indicator.active {
+  background-color: #8b7fc4;
+  width: 30px;
+  border-radius: 6px;
+}
+

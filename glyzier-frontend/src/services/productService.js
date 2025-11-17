@@ -24,11 +24,14 @@ import api from './api';
  */
 export const getAllProducts = async () => {
   try {
-    const response = await api.get('/products');
+    const response = await api.get('/api/products');
     // Ensure we always return an array
     const data = response.data;
     if (Array.isArray(data)) {
       return data;
+    } else if (data && Array.isArray(data.content)) {
+      // Handle paginated response from Spring Boot
+      return data.content;
     } else if (data && Array.isArray(data.data)) {
       return data.data;
     } else {
@@ -53,7 +56,7 @@ export const getAllProducts = async () => {
  */
 export const getProductById = async (pid) => {
   try {
-    const response = await api.get(`/products/${pid}`);
+    const response = await api.get(`/api/products/${pid}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching product ${pid}:`, error);
@@ -74,7 +77,7 @@ export const getProductById = async (pid) => {
  */
 export const getProductsBySeller = async (sid) => {
   try {
-    const response = await api.get(`/products/seller/${sid}`);
+    const response = await api.get(`/api/products/seller/${sid}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching products for seller ${sid}:`, error);
@@ -95,7 +98,7 @@ export const getProductsBySeller = async (sid) => {
  */
 export const createProduct = async (productData) => {
   try {
-    const response = await api.post('/products', productData);
+    const response = await api.post('/api/products', productData);
     return response.data;
   } catch (error) {
     console.error('Error creating product:', error);
@@ -117,7 +120,7 @@ export const createProduct = async (productData) => {
  */
 export const updateProduct = async (pid, productData) => {
   try {
-    const response = await api.put(`/products/${pid}`, productData);
+    const response = await api.put(`/api/products/${pid}`, productData);
     return response.data;
   } catch (error) {
     console.error(`Error updating product ${pid}:`, error);
@@ -138,7 +141,7 @@ export const updateProduct = async (pid, productData) => {
  */
 export const deleteProduct = async (pid) => {
   try {
-    await api.delete(`/products/${pid}`);
+    await api.delete(`/api/products/${pid}`);
   } catch (error) {
     console.error(`Error deleting product ${pid}:`, error);
     throw error;

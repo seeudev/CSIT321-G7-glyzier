@@ -19,9 +19,10 @@
  * @version 3.0 (Figma wireframe implementation with CSS modules)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { getAllProducts } from '../services/productService';
 import styles from './LoginPage.module.css';
 
 /**
@@ -57,6 +58,34 @@ function LoginPage() {
   
   // State for remember me checkbox
   const [rememberMe, setRememberMe] = useState(false);
+  
+  // State for carousel products
+  const [carouselProducts, setCarouselProducts] = useState([]);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  
+  // Fetch products for carousel
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setCarouselProducts(data.slice(0, 5)); // Get first 5 products for carousel
+      } catch (err) {
+        console.error('Failed to fetch carousel products:', err);
+      }
+    };
+    fetchProducts();
+  }, []);
+  
+  // Auto-rotate carousel every 4 seconds
+  useEffect(() => {
+    if (carouselProducts.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % carouselProducts.length);
+    }, 4000);
+    
+    return () => clearInterval(timer);
+  }, [carouselProducts.length]);
   
   /**
    * Handle input changes
@@ -111,8 +140,8 @@ function LoginPage() {
         <div className={styles.formWrapper}>
           <div className={styles.logo}>Glyzier</div>
           
-          <h1 className={styles.title}>Sign in</h1>
-          <p className={styles.subtitle}>Your journey starts here!!! Sign in.</p>
+          <h1 className={styles.title}>Welcome Back</h1>
+          <p className={styles.subtitle}>Sign in to continue your creative journey</p>
           
           {/* Error message display */}
           {error && (
@@ -125,7 +154,7 @@ function LoginPage() {
           <form onSubmit={handleSubmit} className={styles.form}>
             {/* Email input */}
             <div className={styles.formGroup}>
-              <label htmlFor="email" className={styles.label}>Email</label>
+              <label htmlFor="email" className={styles.label}>Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -134,12 +163,13 @@ function LoginPage() {
                 onChange={handleChange}
                 required
                 className={styles.input}
-                placeholder="your.email.here@gmail.com"
+                placeholder="Enter your email"
               />
             </div>
             
             {/* Password input */}
             <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.label}>Password</label>
               <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -149,7 +179,7 @@ function LoginPage() {
                   onChange={handleChange}
                   required
                   className={styles.input}
-                  placeholder="••••••••••••••"
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
@@ -157,7 +187,7 @@ function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label="Toggle password visibility"
                 >
-                  {showPassword ? '👁️' : '�'}
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
               </div>
             </div>
@@ -170,7 +200,7 @@ function LoginPage() {
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
-              <label htmlFor="rememberMe">Keep me logged in</label>
+              <label htmlFor="rememberMe">Keep me signed in</label>
             </div>
             
             {/* Submit button */}
@@ -179,18 +209,7 @@ function LoginPage() {
               disabled={loading}
               className={styles.submitButton}
             >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
-            
-            {/* Divider */}
-            <div className={styles.divider}>
-              <span>or</span>
-            </div>
-            
-            {/* Google Sign In */}
-            <button type="button" className={styles.googleButton}>
-              <span className={styles.googleIcon}>G</span>
-              Sign in with Google
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
           
@@ -203,11 +222,25 @@ function LoginPage() {
         </div>
       </div>
       
-      {/* Right side - Decorative art background */}
+      {/* Right side - Full-screen cycling showcase with zoom effect */}
       <div className={styles.artSection}>
-        <div className={styles.artContent}>
-          <h2 className={styles.artTitle}>Random Arts Here</h2>
-        </div>
+        {carouselProducts.length > 0 && carouselProducts[carouselIndex]?.screenshotPreviewUrl ? (
+          <div className={styles.fullscreenCarousel}>
+            <img 
+              key={carouselIndex}
+              src={carouselProducts[carouselIndex].screenshotPreviewUrl} 
+              alt={carouselProducts[carouselIndex].productname}
+              className={styles.fullscreenImage}
+            />
+            <div className={styles.carouselOverlay}>
+              <h3>{carouselProducts[carouselIndex].productname}</h3>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.fullscreenCarousel}>
+            <div className={styles.loadingText}>Loading featured artworks...</div>
+          </div>
+        )}
       </div>
     </div>
   );
