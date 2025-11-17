@@ -1,247 +1,350 @@
 /**
  * HomePage Component Styles
- * Based on UI wireframes
+ * Redesigned based on the UI Mockup
  */
 
 .page {
-  min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #fff;
+  font-family: sans-serif;
+  color: #333;
 }
 
-/* Hero Section */
-.hero {
-  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 100%);
-  padding: 80px 20px;
-  text-align: center;
-  color: #2c3e50;
-}
-
-.heroContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.heroTitle {
-  font-size: 3em;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #2c3e50;
-}
-
-.heroSubtitle {
-  font-size: 1.3em;
-  color: #2c3e50;
-  opacity: 0.9;
-}
-
-/* Container */
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 60px 20px;
-}
-
-/* Section Title */
-.sectionTitle {
-  font-size: 2.5em;
-  font-weight: 700;
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 40px;
-}
-
-/* Messages */
-.message {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 1.2em;
-  color: #7f8c8d;
-}
-
-.errorMessage {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 1.2em;
-  color: #e74c3c;
-}
-
-/* Product Grid */
-.productGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 20px;
-}
-
-/* Product Card */
-.productCard {
-  background-color: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  text-decoration: none;
-  color: inherit;
+/* --- Hero Section --- */
+.heroSection {
   display: flex;
-  flex-direction: column;
+  align-items: center; /* This is the key property for vertical centering */
+  justify-content: space-between; /* CHANGED BACK: to space-between */
+  background-color: #e6e0f8;
+  padding: 2rem 5%; /* Adjusted padding */
+  gap: 2rem;
+  min-height: 500px; /* Added a minimum height to ensure proper centering */
 }
 
-.productCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-/* Product Image */
-.productImage {
-  height: 250px;
-  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 100%);
+/* --- NEW STYLE FOR THE WRAPPER --- */
+.heroContent {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2c3e50;
-  font-size: 1.2em;
-  font-weight: 500;
-  position: relative;
+  gap: 2rem; /* This sets the space between the text and image */
+  flex: 1; /* Allows the content to fill the middle space */
+  max-width: 1024px; /* Optional: prevents text/image from getting too large */
 }
 
-.imagePlaceholder {
-  font-size: 1.2em;
-  color: #2c3e50;
-}
 
-/* Product Info */
-.productInfo {
-  padding: 20px;
+.heroText {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  max-width: 500px;
 }
 
-.productName {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 10px;
+.heroText h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #2c2c54;
+  margin-bottom: 1rem;
 }
 
-.productDescription {
-  font-size: 0.9em;
-  color: #7f8c8d;
-  margin-bottom: 15px;
+.heroText p {
+  font-size: 1.1rem;
   line-height: 1.6;
-  flex: 1;
+  margin-bottom: 2rem;
 }
 
-.productPrice {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-top: auto;
-}
-
-/* Contact Button */
-.contactButton {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  padding: 15px 30px;
-  background-color: #2c3e50;
+.heroText button {
+  background-color: #474787;
   color: white;
   border: none;
-  border-radius: 25px;
-  font-size: 1em;
-  font-weight: 600;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
-  transition: all 0.3s ease;
-  z-index: 999;
 }
 
-.contactButton:hover {
-  background-color: #34495e;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+.heroImage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Responsive Design */
-@media (max-width: 968px) {
-  .heroTitle {
-    font-size: 2.5em;
+.heroImagePlaceholder {
+  width: 100%;
+  max-width: 500px;
+  height: 350px;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+  border-radius: 10px;
+}
+
+.detailsButton {
+  position: absolute;
+  bottom: -20px;
+  background-color: #474787;
+  color: white;
+  border: 1px solid #e6e0f8;
+  padding: 0.8rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.carouselArrow {
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+
+/* --- General Section Styles --- */
+.sectionSubtitle {
+  color: #888;
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+.seeAllLink {
+  display: block;
+  margin-top: 2rem;
+  color: #474787;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- Artist of the Month Section --- */
+.artistsSection {
+  text-align: center;
+  padding: 6rem 5%;
+}
+
+.artistsSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.artistGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.artistCard {
+  text-align: center;
+}
+
+.artistImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.artistInfo h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.artistInfo p {
+  color: #888;
+}
+
+/* --- Hot Arts Section --- */
+.hotArtsSection {
+  background-color: #f2effb;
+  padding: 6rem 5%;
+  text-align: center;
+  border-radius: 30px;
+  margin: 0 5%;
+}
+
+.hotArtsSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hotArtsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hotArtCard {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hotArtImage {
+  width: 100%;
+  height: 220px;
+  background-color: #ccc;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.hotArtCard p {
+  font-weight: bold;
+}
+
+/* --- Category Section --- */
+.categorySection {
+  padding: 6rem 5%;
+  text-align: center;
+}
+
+.categorySection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Changed to 5 columns */
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.categoryCard {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 250px; /* Adjust height as needed */
+  color: white;
+}
+
+.categoryImage {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.categoryInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  text-align: left;
+}
+
+.categoryInfo h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.2rem 0;
+}
+.categoryInfo p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+
+/* --- Partners & Footer --- */
+.partnersSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  padding: 4rem 5%;
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.partnerLogo {
+  width: 150px;
+  height: 50px;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.footer {
+  padding: 2rem 5%;
+  text-align: center;
+}
+
+.socialIcons a {
+  margin: 0 0.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: #333;
+}
+
+.errorMessage {
+  color: #e74c3c;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 1200px) {
+  .categoryGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .heroSection {
+    flex-direction: column;
+    text-align: center;
   }
   
-  .heroSubtitle {
-    font-size: 1.1em;
+  /* --- NEW RULE FOR RESPONSIVE --- */
+  .heroContent {
+    flex-direction: column;
   }
   
-  .sectionTitle {
-    font-size: 2em;
+  .artistGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .productGrid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hotArtsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .hero {
-    padding: 60px 20px;
+  .heroText h1 {
+    font-size: 2.5rem;
   }
-  
-  .heroTitle {
-    font-size: 2em;
-  }
-  
-  .heroSubtitle {
-    font-size: 1em;
-  }
-  
-  .container {
-    padding: 40px 15px;
-  }
-  
-  .sectionTitle {
-    font-size: 1.8em;
-  }
-  
-  .productGrid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-  }
-  
-  .contactButton {
-    bottom: 20px;
-    left: 20px;
-    padding: 12px 24px;
-    font-size: 0.95em;
+  .partnersSection {
+    flex-wrap: wrap;
+    gap: 2rem;
   }
 }
 
-@media (max-width: 480px) {
-  .heroTitle {
-    font-size: 1.6em;
-  }
-  
-  .heroSubtitle {
-    font-size: 0.9em;
-  }
-  
-  .sectionTitle {
-    font-size: 1.5em;
-  }
-  
-  .productGrid {
+@media (max-width: 576px) {
+  .artistGrid, .categoryGrid {
     grid-template-columns: 1fr;
   }
-  
-  .productImage {
-    height: 200px;
-  }
-  
-  .contactButton {
-    bottom: 15px;
-    left: 15px;
-    padding: 10px 20px;
-    font-size: 0.9em;
+  .hotArtsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
