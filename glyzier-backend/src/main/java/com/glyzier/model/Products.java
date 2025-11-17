@@ -81,9 +81,13 @@ public class Products {
      * Many-to-One relationship with Seller entity
      * Foreign key reference to the seller who offers this product
      * A product "is offered by" one seller
+     * 
+     * @JsonIgnoreProperties prevents circular reference when serializing
+     * We ignore the "products" field of the seller to avoid infinite loop
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sid", referencedColumnName = "sid", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"products"})
     private Seller seller;
 
     /**

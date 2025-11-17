@@ -1,5 +1,6 @@
 package com.glyzier.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -57,9 +58,14 @@ public class Seller {
      * One-to-One relationship with Users entity
      * Foreign key reference to the user who owns this seller account
      * The seller "is owned by" one user
+     * 
+     * @JsonBackReference prevents infinite recursion during JSON serialization
+     * This is the "child" side of the bidirectional relationship
+     * The user field will be excluded from JSON output
      */
     @OneToOne
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
+    @JsonBackReference
     private Users user;
 
     /**

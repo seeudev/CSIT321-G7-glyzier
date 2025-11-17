@@ -1,5 +1,6 @@
 package com.glyzier.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -61,8 +62,12 @@ public class Users {
      * One-to-One relationship with Seller entity
      * A user may optionally own one seller account
      * mappedBy indicates that the Seller entity owns the relationship
+     * 
+     * @JsonManagedReference prevents infinite recursion during JSON serialization
+     * This is the "parent" side of the bidirectional relationship
      */
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Seller seller;
 
     // Constructors
