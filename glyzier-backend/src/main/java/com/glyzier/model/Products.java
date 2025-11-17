@@ -62,6 +62,14 @@ public class Products {
     private String status;
 
     /**
+     * Screenshot preview URL for the product
+     * Used as a thumbnail in hero sections, product cards, and carousels
+     * This provides a visual preview of the product to customers
+     */
+    @Column(name = "screenshot_preview_url", length = 2048)
+    private String screenshotPreviewUrl;
+
+    /**
      * Timestamp of when the product was created/added
      * Automatically set when the entity is first persisted
      */
@@ -121,6 +129,25 @@ public class Products {
         this.seller = seller;
     }
 
+    /**
+     * Constructor with all fields including screenshot preview URL
+     * 
+     * @param productname Name of the product
+     * @param type Type/category of the product
+     * @param price Price of the product
+     * @param status Status of the product
+     * @param screenshotPreviewUrl Screenshot preview URL for thumbnails
+     * @param seller The seller offering this product
+     */
+    public Products(String productname, String type, BigDecimal price, String status, String screenshotPreviewUrl, Seller seller) {
+        this.productname = productname;
+        this.type = type;
+        this.price = price;
+        this.status = status;
+        this.screenshotPreviewUrl = screenshotPreviewUrl;
+        this.seller = seller;
+    }
+
     // Getters and Setters
 
     public Long getPid() {
@@ -161,6 +188,14 @@ public class Products {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getScreenshotPreviewUrl() {
+        return screenshotPreviewUrl;
+    }
+
+    public void setScreenshotPreviewUrl(String screenshotPreviewUrl) {
+        this.screenshotPreviewUrl = screenshotPreviewUrl;
     }
 
     public Timestamp getCreatedAt() {

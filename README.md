@@ -2,10 +2,12 @@
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-19.1.1-blue.svg)](https://reactjs.org/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue.svg)](https://supabase.com/)
 [![Java](https://img.shields.io/badge/Java-17-red.svg)](https://www.oracle.com/java/)
 
 Full-stack web application for artists to showcase and sell their work. Built for CSIT321 App-Dev and CSIT340 Elective final project.
+
+> **🆕 Database Migration**: Now using **Supabase PostgreSQL** (migrated from MySQL). See [Database Migration Guide](doc/DATABASE_MIGRATION.md) for details.
 
 ---
 
@@ -47,7 +49,7 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 
 -  **JWT Authentication**: Stateless, secure token-based authentication
 -  **RESTful API**: Clean, well-documented REST endpoints
--  **Relational Database**: Properly normalized MySQL schema
+-  **Relational Database**: Properly normalized PostgreSQL schema (Supabase)
 -  **Responsive Frontend**: React-based SPA with React Router
 -  **CORS Enabled**: Frontend-backend communication configured
 -  **Extensive Comments**: Every component heavily documented
@@ -61,7 +63,7 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 - **Framework**: Spring Boot 3.5.6
 - **Language**: Java 17
 - **Security**: Spring Security + JWT (jjwt 0.11.5)
-- **Database**: MySQL 8.0
+- **Database**: PostgreSQL (Supabase managed)
 - **ORM**: Spring Data JPA / Hibernate
 - **Build Tool**: Maven
 - **Dev Tools**: Spring Boot DevTools
@@ -78,7 +80,7 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 
 - **Version Control**: Git + GitHub
 - **IDE**: VS Code (recommended)
-- **Database Tool**: MySQL Workbench / CLI
+- **Database Tool**: Supabase Dashboard / pgAdmin / psql CLI
 
 ---
 
@@ -167,7 +169,7 @@ CSIT321-G7-glyzier/
 Before running the application, ensure you have the following installed:
 
 - **Java 17** or higher ([Download](https://www.oracle.com/java/technologies/downloads/))
-- **MySQL 8.0** or higher ([Download](https://dev.mysql.com/downloads/mysql/))
+- **Supabase Account** ([Sign up](https://supabase.com)) - Database is cloud-hosted
 - **Maven** (or use the included Maven wrapper `./mvnw`)
 - **Git** ([Download](https://git-scm.com/))
 
@@ -180,32 +182,34 @@ git clone https://github.com/seeudev/CSIT321-G7-glyzier.git
 cd CSIT321-G7-glyzier
 ```
 
-### 2. Setup Database
+### 2. Setup Database (Supabase PostgreSQL)
 
-1. **Start MySQL Server**:
-   ```bash
-   sudo systemctl start mysql  # Linux
-   # or
-   brew services start mysql    # macOS
-   ```
+> **Note**: The application now uses Supabase PostgreSQL. For detailed migration information, see [Database Migration Guide](doc/DATABASE_MIGRATION.md).
 
-2. **Create Database**:
-   ```bash
-   mysql -u root -p
-   ```
-   ```sql
-   CREATE DATABASE glyzier_db;
-   EXIT;
-   ```
+1. **Get Supabase Credentials**:
+   - Project is already configured with Supabase
+   - Connection details are in team documentation
 
-3. **Configure Database Credentials**:
+2. **Configure Database Connection**:
    
-   Edit `glyzier-backend/src/main/resources/application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/glyzier_db
-   spring.datasource.username=YOUR_MYSQL_USERNAME
-   spring.datasource.password=YOUR_MYSQL_PASSWORD
+   Create `glyzier-backend/src/main/resources/application-supabase.properties`:
+   ```bash
+   cd glyzier-backend/src/main/resources
+   cp application-supabase.properties.template application-supabase.properties
    ```
+   
+   Edit `application-supabase.properties` with your Supabase connection details:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://YOUR_SUPABASE_HOST:5432/postgres
+   spring.datasource.username=postgres.YOUR_PROJECT_ID
+   spring.datasource.password=YOUR_PASSWORD
+   ```
+   
+   **Important**: This file is gitignored and contains sensitive credentials. Never commit it!
+
+3. **Verify Configuration**:
+   - The application uses `spring.profiles.active=supabase` by default
+   - Schema will be auto-created on first run via Hibernate DDL
 
 ### 3. Build and Run (Production Mode - Simplified)
 

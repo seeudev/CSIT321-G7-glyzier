@@ -66,12 +66,8 @@ public class SellerService {
             throw new IllegalArgumentException("User is already registered as a seller");
         }
 
-        // Check if sellername is already taken
-        if (sellerRepository.findBySellername(request.getSellername()).isPresent()) {
-            throw new IllegalArgumentException("Seller name is already taken: " + request.getSellername());
-        }
-
-        // Create new Seller entity
+        // Create new Seller entity without checking sellername uniqueness
+        // This allows multiple sellers with same name (which is fine for a marketplace)
         Seller seller = new Seller(
                 request.getSellername(),
                 request.getStorebio(),

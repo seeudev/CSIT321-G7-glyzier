@@ -27,6 +27,7 @@ public class ProductResponse {
     private String type;
     private BigDecimal price;
     private String status;
+    private String screenshotPreviewUrl;
     private Timestamp createdAt;
     
     // Seller information
@@ -112,6 +113,7 @@ public class ProductResponse {
         this.type = product.getType();
         this.price = product.getPrice();
         this.status = product.getStatus();
+        this.screenshotPreviewUrl = product.getScreenshotPreviewUrl();
         this.createdAt = product.getCreatedAt();
         
         // Set seller information
@@ -187,6 +189,14 @@ public class ProductResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getScreenshotPreviewUrl() {
+        return screenshotPreviewUrl;
+    }
+
+    public void setScreenshotPreviewUrl(String screenshotPreviewUrl) {
+        this.screenshotPreviewUrl = screenshotPreviewUrl;
     }
 
     public Timestamp getCreatedAt() {

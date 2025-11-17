@@ -61,9 +61,11 @@ glyzier-backend/bin/
 # Spring Boot
 glyzier-backend/spring-boot-starter-parent.iml
 
-# Application properties with sensitive data (optional)
-# Uncomment if you don't want to commit credentials
-# glyzier-backend/src/main/resources/application-local.properties
+# Application properties with sensitive data
+# IMPORTANT: Never commit database credentials to Git!
+glyzier-backend/src/main/resources/application-local.properties
+glyzier-backend/src/main/resources/application-supabase.properties
+glyzier-backend/src/main/resources/application-*.properties
 
 ### React Frontend ###
 

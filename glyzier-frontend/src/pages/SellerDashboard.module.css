@@ -268,6 +268,14 @@
   min-height: 80px;
 }
 
+.formHint {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85em;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
 .formActions {
   display: flex;
   gap: 12px;
