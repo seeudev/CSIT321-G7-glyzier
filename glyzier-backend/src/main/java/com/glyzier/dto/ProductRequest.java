@@ -49,12 +49,33 @@ public class ProductRequest {
     private String status;
 
     /**
+     * Product description
+     * Detailed description of the product shown on product detail pages
+     */
+    @Size(max = 5000, message = "Product description must not exceed 5000 characters")
+    private String productdesc;
+
+    /**
      * Screenshot preview URL for the product
      * Used as a thumbnail in hero sections, product cards, and carousels
      * Optional field for product visual representation
      */
     @Size(max = 2048, message = "Screenshot preview URL must not exceed 2048 characters")
     private String screenshotPreviewUrl;
+
+    /**
+     * Quantity on hand (available stock)
+     * Inventory management field - if null, default inventory will be created
+     */
+    @Min(value = 0, message = "Quantity on hand must be 0 or greater")
+    private Integer qtyonhand;
+
+    /**
+     * Quantity reserved (stock held for pending orders)
+     * Inventory management field - if null, defaults to 0
+     */
+    @Min(value = 0, message = "Quantity reserved must be 0 or greater")
+    private Integer qtyreserved;
 
     /**
      * List of file keys for product images/files
@@ -138,6 +159,30 @@ public class ProductRequest {
 
     public void setScreenshotPreviewUrl(String screenshotPreviewUrl) {
         this.screenshotPreviewUrl = screenshotPreviewUrl;
+    }
+
+    public String getProductdesc() {
+        return productdesc;
+    }
+
+    public void setProductdesc(String productdesc) {
+        this.productdesc = productdesc;
+    }
+
+    public Integer getQtyonhand() {
+        return qtyonhand;
+    }
+
+    public void setQtyonhand(Integer qtyonhand) {
+        this.qtyonhand = qtyonhand;
+    }
+
+    public Integer getQtyreserved() {
+        return qtyreserved;
+    }
+
+    public void setQtyreserved(Integer qtyreserved) {
+        this.qtyreserved = qtyreserved;
     }
 
     @Override

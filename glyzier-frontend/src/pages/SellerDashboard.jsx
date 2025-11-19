@@ -31,6 +31,7 @@ import {
   deleteProduct, 
   getProductsBySeller 
 } from '../services/productService';
+import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import Navigation from '../components/Navigation';
 import styles from './SellerDashboard.module.css';
 
@@ -58,12 +59,14 @@ function SellerDashboard() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [createFormData, setCreateFormData] = useState({
     productname: '',
-    productdescription: '',
+    productdesc: '',
     price: '',
     category: '',
     type: '',
     status: 'Available',
-    screenshotPreviewUrl: ''
+    screenshotPreviewUrl: '',
+    qtyonhand: '10',
+    qtyreserved: '0'
   });
   const [createFormLoading, setCreateFormLoading] = useState(false);
   
@@ -85,8 +88,8 @@ function SellerDashboard() {
         const sellerStatus = await checkIfSeller();
         
         if (!sellerStatus.isSeller) {
-          alert('You must be a seller to access this page. Please register as a seller first.');
-          navigate('/dashboard');
+          showInfo('You must be a seller to access this page. Please register as a seller first.');
+          setTimeout(() => navigate('/dashboard'), 2000);
           return;
         }
         
@@ -100,8 +103,8 @@ function SellerDashboard() {
         
       } catch (err) {
         console.error('Failed to verify seller status:', err);
-        alert('Failed to verify seller status. Redirecting to dashboard.');
-        navigate('/dashboard');
+        showError('Failed to verify seller status. Redirecting to dashboard.');
+        setTimeout(() => navigate('/dashboard'), 2000);
       } finally {
         setVerifying(false);
       }
@@ -160,12 +163,22 @@ function SellerDashboard() {
     
     // Basic validation
     if (!createFormData.productname.trim()) {
-      alert('Product name is required');
+      showError('Product name is required');
       return;
     }
     
     if (!createFormData.price || parseFloat(createFormData.price) <= 0) {
-      alert('Price must be greater than 0');
+      showError('Price must be greater than 0');
+      return;
+    }
+    
+    if (createFormData.qtyonhand && parseInt(createFormData.qtyonhand) < 0) {
+      showError('Quantity on hand cannot be negative');
+      return;
+    }
+    
+    if (createFormData.qtyreserved && parseInt(createFormData.qtyreserved) < 0) {
+      showError('Quantity reserved cannot be negative');
       return;
     }
     
@@ -175,29 +188,33 @@ function SellerDashboard() {
       // Prepare product data
       const productData = {
         productname: createFormData.productname.trim(),
-        productdescription: createFormData.productdescription.trim() || null,
+        productdesc: createFormData.productdesc.trim() || null,
         price: parseFloat(createFormData.price),
         category: createFormData.category.trim() || 'Uncategorized',
         type: createFormData.type.trim() || 'General',
         status: createFormData.status,
-        screenshotPreviewUrl: createFormData.screenshotPreviewUrl.trim() || null
+        screenshotPreviewUrl: createFormData.screenshotPreviewUrl.trim() || null,
+        qtyonhand: createFormData.qtyonhand ? parseInt(createFormData.qtyonhand) : 10,
+        qtyreserved: createFormData.qtyreserved ? parseInt(createFormData.qtyreserved) : 0
       };
       
       // Call the productService to create product
       const result = await createProduct(productData);
       
       // Show success message
-      alert(`Product created successfully!\nProduct ID: ${result.pid}`);
+      showSuccess(`Product "${result.productname}" created successfully!`);
       
       // Reset form
       setCreateFormData({
         productname: '',
-        productdescription: '',
+        productdesc: '',
         price: '',
         category: '',
         type: '',
         status: 'Available',
-        screenshotPreviewUrl: ''
+        screenshotPreviewUrl: '',
+        qtyonhand: '10',
+        qtyreserved: '0'
       });
       setShowCreateForm(false);
       
@@ -207,7 +224,7 @@ function SellerDashboard() {
       
     } catch (err) {
       console.error('Error creating product:', err);
-      alert(`Failed to create product: ${err.message}`);
+      showError(`Failed to create product: ${err.response?.data?.message || err.message}`);
     } finally {
       setCreateFormLoading(false);
     }
@@ -220,12 +237,14 @@ function SellerDashboard() {
     setEditingProductId(product.pid);
     setEditFormData({
       productname: product.productname,
-      productdescription: product.productdescription || '',
+      productdesc: product.productdesc || '',
       price: product.price.toString(),
       category: product.category || '',
       type: product.type || '',
       status: product.status,
-      screenshotPreviewUrl: product.screenshotPreviewUrl || ''
+      screenshotPreviewUrl: product.screenshotPreviewUrl || '',
+      qtyonhand: product.qtyonhand?.toString() || '0',
+      qtyreserved: product.qtyreserved?.toString() || '0'
     });
   };
   
@@ -246,12 +265,22 @@ function SellerDashboard() {
   const handleUpdateProduct = async (pid) => {
     // Basic validation
     if (!editFormData.productname.trim()) {
-      alert('Product name is required');
+      showError('Product name is required');
       return;
     }
     
     if (!editFormData.price || parseFloat(editFormData.price) <= 0) {
-      alert('Price must be greater than 0');
+      showError('Price must be greater than 0');
+      return;
+    }
+    
+    if (editFormData.qtyonhand && parseInt(editFormData.qtyonhand) < 0) {
+      showError('Quantity on hand cannot be negative');
+      return;
+    }
+    
+    if (editFormData.qtyreserved && parseInt(editFormData.qtyreserved) < 0) {
+      showError('Quantity reserved cannot be negative');
       return;
     }
     
@@ -261,19 +290,21 @@ function SellerDashboard() {
       // Prepare product data
       const productData = {
         productname: editFormData.productname.trim(),
-        productdescription: editFormData.productdescription.trim() || null,
+        productdesc: editFormData.productdesc.trim() || null,
         price: parseFloat(editFormData.price),
         category: editFormData.category.trim() || 'Uncategorized',
         type: editFormData.type.trim() || 'General',
         status: editFormData.status,
-        screenshotPreviewUrl: editFormData.screenshotPreviewUrl.trim() || null
+        screenshotPreviewUrl: editFormData.screenshotPreviewUrl.trim() || null,
+        qtyonhand: editFormData.qtyonhand ? parseInt(editFormData.qtyonhand) : 0,
+        qtyreserved: editFormData.qtyreserved ? parseInt(editFormData.qtyreserved) : 0
       };
       
       // Call the productService to update product
       await updateProduct(pid, productData);
       
       // Show success message
-      alert('Product updated successfully!');
+      showSuccess('Product updated successfully!');
       
       // Clear editing state
       setEditingProductId(null);
@@ -285,7 +316,7 @@ function SellerDashboard() {
       
     } catch (err) {
       console.error('Error updating product:', err);
-      alert(`Failed to update product: ${err.message}`);
+      showError(`Failed to update product: ${err.response?.data?.message || err.message}`);
     } finally {
       setEditFormLoading(false);
     }
@@ -295,8 +326,8 @@ function SellerDashboard() {
    * Handle product deletion
    */
   const handleDeleteProduct = async (pid, productName) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone.`
+    const confirmed = await showConfirm(
+      `Are you sure you want to delete "${productName}"? This action cannot be undone.`
     );
     
     if (!confirmed) return;
@@ -304,7 +335,7 @@ function SellerDashboard() {
     try {
       await deleteProduct(pid);
       
-      alert('Product deleted successfully!');
+      showSuccess(`Product "${productName}" deleted successfully!`);
       
       // Refresh product list
       const updatedProducts = await getProductsBySeller(sellerId);
@@ -312,7 +343,7 @@ function SellerDashboard() {
       
     } catch (err) {
       console.error('Error deleting product:', err);
-      alert(`Failed to delete product: ${err.message}`);
+      showError(`Failed to delete product: ${err.response?.data?.message || err.message}`);
     }
   };
   
@@ -523,16 +554,54 @@ function SellerDashboard() {
                 </small>
               </div>
               
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="qtyonhand" className={styles.formLabel}>
+                    Quantity On Hand
+                  </label>
+                  <input
+                    type="number"
+                    id="qtyonhand"
+                    name="qtyonhand"
+                    className={styles.formInput}
+                    placeholder="10"
+                    value={createFormData.qtyonhand}
+                    onChange={handleCreateFormChange}
+                    min="0"
+                    disabled={createFormLoading}
+                  />
+                  <small className={styles.formHint}>Available stock</small>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="qtyreserved" className={styles.formLabel}>
+                    Quantity Reserved
+                  </label>
+                  <input
+                    type="number"
+                    id="qtyreserved"
+                    name="qtyreserved"
+                    className={styles.formInput}
+                    placeholder="0"
+                    value={createFormData.qtyreserved}
+                    onChange={handleCreateFormChange}
+                    min="0"
+                    disabled={createFormLoading}
+                  />
+                  <small className={styles.formHint}>Reserved for pending orders</small>
+                </div>
+              </div>
+              
               <div className={styles.formGroup}>
-                <label htmlFor="productdescription" className={styles.formLabel}>
+                <label htmlFor="productdesc" className={styles.formLabel}>
                   Description
                 </label>
                 <textarea
-                  id="productdescription"
-                  name="productdescription"
+                  id="productdesc"
+                  name="productdesc"
                   className={styles.formTextarea}
                   placeholder="Describe your product..."
-                  value={createFormData.productdescription}
+                  value={createFormData.productdesc}
                   onChange={handleCreateFormChange}
                   rows={4}
                   disabled={createFormLoading}
@@ -663,12 +732,42 @@ function SellerDashboard() {
                           </small>
                         </div>
                         
+                        <div className={styles.formGrid}>
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Quantity On Hand</label>
+                            <input
+                              type="number"
+                              name="qtyonhand"
+                              className={styles.formInput}
+                              value={editFormData.qtyonhand}
+                              onChange={handleEditFormChange}
+                              disabled={editFormLoading}
+                              min="0"
+                            />
+                            <small className={styles.formHint}>Available stock</small>
+                          </div>
+                          
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Quantity Reserved</label>
+                            <input
+                              type="number"
+                              name="qtyreserved"
+                              className={styles.formInput}
+                              value={editFormData.qtyreserved}
+                              onChange={handleEditFormChange}
+                              disabled={editFormLoading}
+                              min="0"
+                            />
+                            <small className={styles.formHint}>Reserved for pending orders</small>
+                          </div>
+                        </div>
+                        
                         <div className={styles.formGroup}>
                           <label className={styles.formLabel}>Description</label>
                           <textarea
-                            name="productdescription"
+                            name="productdesc"
                             className={styles.formTextarea}
-                            value={editFormData.productdescription}
+                            value={editFormData.productdesc}
                             onChange={handleEditFormChange}
                             disabled={editFormLoading}
                             rows={3}
@@ -698,7 +797,7 @@ function SellerDashboard() {
                         <div className={styles.productInfo}>
                           <h4 className={styles.productName}>{product.productname}</h4>
                           <p className={styles.productDescription}>
-                            {product.productdescription || 'No description'}
+                            {product.productdesc || 'No description'}
                           </p>
                           <div className={styles.productMeta}>
                             <span className={styles.productPrice}>
@@ -718,7 +817,9 @@ function SellerDashboard() {
                           </div>
                           <div className={styles.productDetails}>
                             <span>ID: {product.pid}</span>
-                            <span>Stock: {product.stockQuantity || 0}</span>
+                            <span>Stock: {product.qtyonhand || 0}</span>
+                            <span>Reserved: {product.qtyreserved || 0}</span>
+                            <span>Available: {(product.qtyonhand || 0) - (product.qtyreserved || 0)}</span>
                           </div>
                         </div>
                         <div className={styles.productActions}>
