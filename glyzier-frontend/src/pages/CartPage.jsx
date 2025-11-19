@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { updateCartItem, removeFromCart, clearCart, placeOrderFromCart } from '../services/cartService';
+import { showSuccess, showError, showConfirm } from '../components/NotificationManager';
+import { CartIcon, ImageIcon, AlertIcon } from '../components/Icons';
 import styles from './CartPage.module.css';
 
 /**
@@ -179,7 +181,7 @@ const CartPage = () => {
       <div className={styles.cartPage}>
         <div className={styles.container}>
           <div className={styles.emptyCart}>
-            <div className={styles.emptyIcon}>🛒</div>
+            <div className={styles.emptyIcon}><CartIcon size={80} color="#95a5a6" /></div>
             <h2 className={styles.emptyTitle}>Your cart is empty</h2>
             <p className={styles.emptyText}>
               Looks like you haven't added anything to your cart yet.
@@ -229,7 +231,7 @@ const CartPage = () => {
               <div key={item.cartItemid} className={styles.cartItem}>
                 {/* Product image placeholder */}
                 <div className={styles.itemImage}>
-                  🎨
+                  <ImageIcon size={48} color="#8b7fc4" />
                 </div>
 
                 {/* Product details */}
@@ -254,7 +256,8 @@ const CartPage = () => {
 
                   {item.availableStock < item.quantity && (
                     <div className={styles.stockWarning}>
-                      ⚠️ Only {item.availableStock} available
+                      <AlertIcon size={16} color="#ff9800" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                      Only {item.availableStock} available
                     </div>
                   )}
                 </div>

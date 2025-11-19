@@ -24,6 +24,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { getMyHistory } from '../services/orderService';
 import { registerAsSeller, checkIfSeller } from '../services/sellerService';
 import Navigation from '../components/Navigation';
+import { UserIcon, PackageIcon, ArtIcon } from '../components/Icons';
 import styles from './DashboardPage.module.css';
 
 /**
@@ -195,7 +196,7 @@ function DashboardPage() {
           {/* User info card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <span className={styles.cardIcon}>👤</span>
+              <span className={styles.cardIcon}><UserIcon size={32} color="#8b7fc4" /></span>
               <h2 className={styles.cardTitle}>Your Information</h2>
             </div>
             <div className={styles.cardContent}>
@@ -217,7 +218,7 @@ function DashboardPage() {
           {/* Order history card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <span className={styles.cardIcon}>📦</span>
+              <span className={styles.cardIcon}><PackageIcon size={32} color="#8b7fc4" /></span>
               <h2 className={styles.cardTitle}>Order History</h2>
             </div>
             <div className={styles.cardContent}>
@@ -253,7 +254,7 @@ function DashboardPage() {
         {/* Seller features card - full width */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <span className={styles.cardIcon}>🎨</span>
+            <span className={styles.cardIcon}><ArtIcon size={32} color="#8b7fc4" /></span>
             <h2 className={styles.cardTitle}>Seller Features</h2>
           </div>
           <div className={styles.cardContent}>

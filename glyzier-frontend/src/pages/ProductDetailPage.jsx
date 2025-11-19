@@ -226,7 +226,7 @@ function ProductDetailPage() {
             {/* Stock Status */}
             <div className={styles.stockSection}>
               <span className={`${styles.stockBadge} ${isOutOfStock ? styles.outOfStock : styles.inStock}`}>
-                {isOutOfStock ? '❌ Out of Stock' : `✓ In Stock (${product.availableQuantity} available)`}
+                {isOutOfStock ? '❌ Out of Stock' : product.isUnlimited ? '✓ Unlimited - Digital Product' : `✓ In Stock (${product.availableQuantity} available)`}
               </span>
             </div>
             
