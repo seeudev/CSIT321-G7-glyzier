@@ -5,16 +5,18 @@
  * Matches the professional design of the app
  */
 
-/* Container for all notifications - positioned at bottom-right */
+/* Container for all notifications - positioned at top-right for better visibility */
 .notificationContainer {
   position: fixed;
-  bottom: 20px;
+  top: 80px;
   right: 20px;
   z-index: 10000;
   display: flex;
   flex-direction: column;
   gap: 12px;
   pointer-events: none;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
 }
 
 /* Individual notification */
@@ -251,7 +253,7 @@
 /* Responsive design */
 @media (max-width: 480px) {
   .notificationContainer {
-    bottom: 10px;
+    top: 70px;
     right: 10px;
     left: 10px;
   }
