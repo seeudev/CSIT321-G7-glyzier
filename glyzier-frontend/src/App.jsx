@@ -50,6 +50,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
+import ManageProducts from './pages/ManageProducts';
 import CartPage from './pages/CartPage';
 import ShopsPage from './pages/ShopsPage';
 import CommunityPage from './pages/CommunityPage';
@@ -112,6 +113,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <SellerDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Manage Products - dedicated product management page for sellers (PROTECTED) */}
+          <Route 
+            path="/seller/manage-products" 
+            element={
+              <ProtectedRoute>
+                <ManageProducts />
               </ProtectedRoute>
             } 
           />
