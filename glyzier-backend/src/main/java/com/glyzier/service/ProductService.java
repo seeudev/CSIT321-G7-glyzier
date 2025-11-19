@@ -104,7 +104,16 @@ public class ProductService {
         }
 
         // Create inventory record with values from request or defaults
-        Integer qtyonhand = request.getQtyonhand() != null ? request.getQtyonhand() : 0;
+        // For digital products (type = "Digital"), use -1 for unlimited inventory
+        Integer qtyonhand;
+        if ("Digital".equalsIgnoreCase(request.getType()) && request.getQtyonhand() == null) {
+            qtyonhand = -1; // Unlimited for digital products
+        } else if (request.getQtyonhand() != null) {
+            qtyonhand = request.getQtyonhand();
+        } else {
+            qtyonhand = 0; // Default for physical products
+        }
+        
         Integer qtyreserved = request.getQtyreserved() != null ? request.getQtyreserved() : 0;
         Inventory inventory = new Inventory(qtyonhand, qtyreserved, product);
         inventoryRepository.save(inventory);

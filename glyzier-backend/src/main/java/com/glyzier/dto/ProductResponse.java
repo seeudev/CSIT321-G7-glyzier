@@ -39,6 +39,7 @@ public class ProductResponse {
     private Integer qtyonhand;
     private Integer availableQuantity;
     private boolean inStock;
+    private boolean isUnlimited;
     
     // Product files (images)
     private List<ProductFileInfo> files;
@@ -128,12 +129,14 @@ public class ProductResponse {
         if (product.getInventory() != null) {
             Inventory inv = product.getInventory();
             this.qtyonhand = inv.getQtyonhand();
-            this.availableQuantity = inv.getAvailableQuantity();
+            this.isUnlimited = inv.isUnlimited();
+            this.availableQuantity = this.isUnlimited ? Integer.MAX_VALUE : inv.getAvailableQuantity();
             this.inStock = inv.isInStock();
         } else {
             this.qtyonhand = 0;
             this.availableQuantity = 0;
             this.inStock = false;
+            this.isUnlimited = false;
         }
         
         // Set product files
@@ -263,5 +266,13 @@ public class ProductResponse {
 
     public void setFiles(List<ProductFileInfo> files) {
         this.files = files;
+    }
+
+    public boolean isUnlimited() {
+        return isUnlimited;
+    }
+
+    public void setUnlimited(boolean unlimited) {
+        isUnlimited = unlimited;
     }
 }

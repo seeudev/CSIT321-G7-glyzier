@@ -134,10 +134,14 @@ public class Inventory {
     /**
      * Helper method to calculate available quantity
      * Available = On Hand - Reserved
+     * For digital products with unlimited inventory, qtyonhand = -1
      * 
-     * @return The quantity available for new orders
+     * @return The quantity available for new orders, or Integer.MAX_VALUE if unlimited
      */
     public Integer getAvailableQuantity() {
+        if (qtyonhand != null && qtyonhand == -1) {
+            return Integer.MAX_VALUE; // Unlimited
+        }
         if (qtyonhand != null && qtyreserved != null) {
             return qtyonhand - qtyreserved;
         }
@@ -146,21 +150,39 @@ public class Inventory {
 
     /**
      * Helper method to check if product is in stock
+     * For digital products with unlimited inventory (-1), always returns true
      * 
-     * @return true if available quantity > 0, false otherwise
+     * @return true if available quantity > 0 or unlimited, false otherwise
      */
     public boolean isInStock() {
+        if (qtyonhand != null && qtyonhand == -1) {
+            return true; // Unlimited stock
+        }
         return getAvailableQuantity() > 0;
+    }
+
+    /**
+     * Helper method to check if inventory is unlimited
+     * Digital products use -1 to represent unlimited stock
+     * 
+     * @return true if qtyonhand is -1 (unlimited), false otherwise
+     */
+    public boolean isUnlimited() {
+        return qtyonhand != null && qtyonhand == -1;
     }
 
     /**
      * Helper method to reserve stock for an order (simulated logic)
      * In a real system, this would be part of a transaction
+     * For unlimited inventory, reservations are not tracked
      * 
      * @param quantity Amount to reserve
      * @return true if successful, false if insufficient stock
      */
     public boolean reserveStock(Integer quantity) {
+        if (qtyonhand != null && qtyonhand == -1) {
+            return true; // Unlimited stock, always available
+        }
         if (getAvailableQuantity() >= quantity) {
             this.qtyreserved += quantity;
             return true;
@@ -181,10 +203,14 @@ public class Inventory {
     /**
      * Helper method to fulfill an order (simulated logic)
      * Decrements both reserved and on-hand quantities
+     * For unlimited inventory (-1), quantities remain unchanged
      * 
      * @param quantity Amount to fulfill
      */
     public void fulfillOrder(Integer quantity) {
+        if (qtyonhand != null && qtyonhand == -1) {
+            return; // Unlimited stock, no need to decrement
+        }
         this.qtyreserved = Math.max(0, this.qtyreserved - quantity);
         this.qtyonhand = Math.max(0, this.qtyonhand - quantity);
     }
