@@ -1,6 +1,7 @@
 package com.glyzier.controller;
 
 import com.glyzier.dto.SellerRegistrationRequest;
+import com.glyzier.dto.SellerResponse;
 import com.glyzier.model.Seller;
 import com.glyzier.service.SellerService;
 import jakarta.validation.Valid;
@@ -64,10 +65,10 @@ public class SellerController {
             // Call the service to register the user as a seller
             Seller seller = sellerService.registerAsSeller(email, request);
 
-            // Create a success response
+            // Create a success response with DTO (prevents circular references)
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Successfully registered as a seller");
-            response.put("seller", seller);
+            response.put("seller", new SellerResponse(seller));
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
             
@@ -96,7 +97,8 @@ public class SellerController {
     public ResponseEntity<?> getSellerById(@PathVariable Long sid) {
         try {
             Seller seller = sellerService.getSellerById(sid);
-            return ResponseEntity.ok(seller);
+            // Return DTO to prevent circular references
+            return ResponseEntity.ok(new SellerResponse(seller));
             
         } catch (IllegalArgumentException e) {
             Map<String, String> error = new HashMap<>();
@@ -123,7 +125,8 @@ public class SellerController {
         try {
             String email = authentication.getName();
             Seller seller = sellerService.getSellerByUserEmail(email);
-            return ResponseEntity.ok(seller);
+            // Return DTO to prevent circular references
+            return ResponseEntity.ok(new SellerResponse(seller));
             
         } catch (IllegalArgumentException e) {
             Map<String, String> error = new HashMap<>();

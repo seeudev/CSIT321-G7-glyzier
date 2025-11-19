@@ -51,6 +51,9 @@ import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
 import CartPage from './pages/CartPage';
+import ShopsPage from './pages/ShopsPage';
+import CommunityPage from './pages/CommunityPage';
+import MorePage from './pages/MorePage';
 
 /**
  * App functional component
@@ -85,6 +88,11 @@ function App() {
             
             {/* Product detail page - view individual product (PUBLIC) */}
             <Route path="/products/:pid" element={<ProductDetailPage />} />
+            
+            {/* Placeholder pages for navigation links (PUBLIC) */}
+            <Route path="/shops" element={<ShopsPage />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/more" element={<MorePage />} />
           
           {/* Protected routes - require authentication */}
           
