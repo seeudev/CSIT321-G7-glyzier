@@ -1,17 +1,17 @@
 /**
  * ProductDetailPage Component
  * 
- * Redesigned product detail page following UI wireframe with professional gradient theme.
+ * Product detail page with elegant animations and real database data.
  * Features:
- * - Modern glassmorphism design
+ * - Modern glassmorphism design with fade-in animations
  * - Seller name and shop name display
  * - Product description
- * - Rating and sold count
- * - Variant selection (simulated)
- * - Add to cart and buy now functionality
+ * - Real stock information from database
+ * - Beautiful notification system instead of alerts
+ * - Smooth transitions and loading states
  * 
  * @author Glyzier Team
- * @version 2.0 (Module 9 - Wireframe Implementation)
+ * @version 3.0 (Module 9 - Enhanced UX)
  */
 
 import React, { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ import { placeOrder } from '../services/orderService';
 import { addToCart } from '../services/cartService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import Navigation from '../components/Navigation';
 import styles from './ProductDetailPage.module.css';
 
@@ -36,7 +37,7 @@ function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState(0); // For demo purposes
+  const [contentVisible, setContentVisible] = useState(false);
   
   /**
    * Fetch product details on component mount
@@ -45,13 +46,18 @@ function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setContentVisible(false);
         const data = await getProductById(pid);
         console.log('Product data received:', data);
         setProduct(data);
         setError(null);
+        
+        // Trigger fade-in animation after data loads
+        setTimeout(() => setContentVisible(true), 50);
       } catch (err) {
         console.error('Failed to fetch product:', err);
         setError('Failed to load product details. The product may not exist.');
+        showError('Failed to load product details');
       } finally {
         setLoading(false);
       }
@@ -65,8 +71,8 @@ function ProductDetailPage() {
    */
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      alert('Please login to add items to your cart.');
-      navigate('/login');
+      showInfo('Please login to add items to your cart');
+      setTimeout(() => navigate('/login'), 1500);
       return;
     }
     
@@ -77,17 +83,17 @@ function ProductDetailPage() {
       await addToCart(product.pid, 1);
       await updateCartCount();
       
-      const goToCart = window.confirm(
-        `${product.productname} added to cart!\n\nWould you like to view your cart?`
-      );
+      showSuccess(`${product.productname} added to cart!`);
       
+      // Ask if user wants to go to cart
+      const goToCart = await showConfirm('Would you like to view your cart?');
       if (goToCart) {
         navigate('/cart');
       }
     } catch (err) {
       console.error('Error adding to cart:', err);
       const errorMessage = err.response?.data?.error || 'Failed to add to cart. Please try again.';
-      alert(`Error: ${errorMessage}`);
+      showError(errorMessage);
     } finally {
       setCartLoading(false);
     }
@@ -96,14 +102,17 @@ function ProductDetailPage() {
   /**
    * Handle Buy Now button click
    */
-  const handleBuyNow = async () {
+  const handleBuyNow = async () => {
     if (!isAuthenticated) {
-      alert('Please login to purchase products.');
-      navigate('/login');
+      showInfo('Please login to purchase products');
+      setTimeout(() => navigate('/login'), 1500);
       return;
     }
     
     if (orderLoading) return;
+    
+    const confirmed = await showConfirm(`Purchase ${product.productname} for ₱${product.price?.toFixed(2)}?`);
+    if (!confirmed) return;
     
     try {
       setOrderLoading(true);
@@ -117,15 +126,13 @@ function ProductDetailPage() {
       
       const result = await placeOrder(orderData);
       
-      alert(`Order placed successfully! Order #${result.order.orderid}\n` +
-            `Total: ₱${result.order.total.toFixed(2)}\n\n` +
-            `You will be redirected to your dashboard.`);
+      showSuccess(`Order #${result.order.orderid} placed successfully! Total: ₱${result.order.total.toFixed(2)}`);
       
-      navigate('/dashboard');
+      setTimeout(() => navigate('/dashboard'), 2000);
     } catch (err) {
       console.error('Error placing order:', err);
       const errorMessage = err.response?.data?.error || 'Failed to place order. Please try again.';
-      alert(`Order failed: ${errorMessage}`);
+      showError(errorMessage);
     } finally {
       setOrderLoading(false);
     }
@@ -166,22 +173,13 @@ function ProductDetailPage() {
     );
   }
   
-  // Demo variants (simulated)
-  const variants = [
-    { name: 'White', color: '#ffffff' },
-    { name: 'Red', color: '#ff0000' },
-    { name: 'Blue', color: '#0000ff' },
-  ];
-
-  const isOutOfStock = !product.qtyonhand || product.qtyonhand <= 0;
-  const soldCount = Math.floor(Math.random() * 200) + 50; // Simulated sold count
-  const rating = (Math.random() * 1.5 + 3.5).toFixed(1); // Simulated rating 3.5-5.0
+  const isOutOfStock = !product.availableQuantity || product.availableQuantity <= 0;
   
   return (
     <div className={styles.page}>
       <Navigation />
       
-      <div className={styles.container}>
+      <div className={`${styles.container} ${contentVisible ? styles.fadeIn : ''}`}>
         <div className={styles.productLayout}>
           {/* Left Side - Product Image */}
           <div className={styles.imageSection}>
@@ -211,47 +209,24 @@ function ProductDetailPage() {
             {/* Product Name */}
             <h1 className={styles.productName}>{product.productname}</h1>
             
-            {/* Price, Sold Count & Rating */}
-            <div className={styles.priceRatingRow}>
+            {/* Price */}
+            <div className={styles.priceSection}>
               <span className={styles.price}>₱ {product.price ? product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
-              <span className={styles.soldCount}>{soldCount} sold</span>
-              <div className={styles.rating}>
-                <span className={styles.ratingStar}>★</span>
-                <span>{rating}</span>
-              </div>
+              <span className={styles.productType}>{product.type}</span>
             </div>
             
             {/* Product Description */}
             <div className={styles.descriptionSection}>
               <div className={styles.descriptionTitle}>Product Description:</div>
               <div className={styles.descriptionText}>
-                {product.productdesc || 'This is a temporary product description. It is a great place to add more details about your product, such as its features, materials, and benefits.'}
-              </div>
-            </div>
-            
-            {/* Variant Selection (Simulated) */}
-            <div className={styles.variantSection}>
-              <div className={styles.variantLabel}>Variant: {variants[selectedVariant].name}</div>
-              <div className={styles.variantOptions}>
-                {variants.map((variant, index) => (
-                  <div
-                    key={index}
-                    className={`${styles.variantOption} ${selectedVariant === index ? styles.active : ''}`}
-                    style={{ 
-                      backgroundColor: variant.color,
-                      border: variant.color === '#ffffff' ? '2px solid #e0e0e0' : 'none'
-                    }}
-                    onClick={() => setSelectedVariant(index)}
-                    title={variant.name}
-                  />
-                ))}
+                {product.productdesc || 'No description available for this product.'}
               </div>
             </div>
             
             {/* Stock Status */}
-            <div>
+            <div className={styles.stockSection}>
               <span className={`${styles.stockBadge} ${isOutOfStock ? styles.outOfStock : styles.inStock}`}>
-                {isOutOfStock ? '❌ Out of Stock' : `✓ In Stock (${product.qtyonhand} available)`}
+                {isOutOfStock ? '❌ Out of Stock' : `✓ In Stock (${product.availableQuantity} available)`}
               </span>
             </div>
             

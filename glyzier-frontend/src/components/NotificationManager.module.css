@@ -1,0 +1,276 @@
+/**
+ * NotificationManager Styles
+ * 
+ * Beautiful toast notification system with gradient theme
+ * Matches the professional design of the app
+ */
+
+/* Container for all notifications - positioned at bottom-right */
+.notificationContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+/* Individual notification */
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  min-width: 300px;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  pointer-events: all;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
+  border-left: 4px solid;
+}
+
+.notification:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Success notification - green gradient */
+.notification.success {
+  border-left-color: #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+/* Error notification - red gradient */
+.notification.error {
+  border-left-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+/* Info notification - purple gradient (matching app theme) */
+.notification.info {
+  border-left-color: #8b7fc4;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+/* Icon wrapper */
+.iconWrapper {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.success .iconWrapper {
+  background: #10b981;
+  color: white;
+}
+
+.error .iconWrapper {
+  background: #ef4444;
+  color: white;
+}
+
+.info .iconWrapper {
+  background: #8b7fc4;
+  color: white;
+}
+
+.icon {
+  display: block;
+  line-height: 1;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2c3e50;
+  word-wrap: break-word;
+}
+
+/* Close button */
+.closeButton {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: #7f8c8d;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #2c3e50;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Confirmation Dialog Styles */
+.confirmOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  animation: fadeIn 0.2s ease;
+}
+
+.confirmDialog {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.confirmContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.confirmMessage {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.confirmButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.confirmButtonNo,
+.confirmButtonYes {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.confirmButtonNo {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.confirmButtonNo:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.confirmButtonYes {
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.3);
+}
+
+.confirmButtonYes:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 127, 196, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fadeOut {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .notificationContainer {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .notification {
+    min-width: auto;
+    max-width: none;
+  }
+
+  .confirmDialog {
+    padding: 24px;
+  }
+
+  .confirmButtons {
+    flex-direction: column;
+  }
+
+  .confirmButtonNo,
+  .confirmButtonYes {
+    width: 100%;
+  }
+}

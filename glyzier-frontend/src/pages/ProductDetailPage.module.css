@@ -1,11 +1,11 @@
 /**
  * ProductDetailPage CSS Module
  * 
- * Styles for the product detail page following the UI wireframe.
- * Features professional gradient theme and glassmorphism effects.
+ * Styles for the product detail page with elegant animations.
+ * Features professional gradient theme, glassmorphism effects, and smooth transitions.
  * 
  * @author Glyzier Team
- * @version 2.0
+ * @version 3.0
  */
 
 .page {
@@ -17,6 +17,14 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 40px 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.container.fadeIn {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Product Layout */
@@ -29,6 +37,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   border: 1px solid rgba(184, 175, 232, 0.1);
+  transition: all 0.3s ease;
 }
 
 /* Left Side - Image */
@@ -44,12 +53,14 @@
   overflow: hidden;
   box-shadow: 0 8px 30px rgba(139, 127, 196, 0.15);
   position: relative;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
 }
 
 .productImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  animation: fadeIn 0.6s ease;
 }
 
 .imagePlaceholder {
@@ -61,6 +72,33 @@
   justify-content: center;
   color: #9b8dd4;
   font-size: 4em;
+  animation: fadeIn 0.4s ease;
+}
+
+.imagePlaceholder p {
+  font-size: 0.3em;
+  margin-top: 20px;
+  color: #7f8c8d;
+}
+
+/* Skeleton loading animation */
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Right Side - Info */
@@ -100,11 +138,14 @@
   letter-spacing: -0.5px;
 }
 
-/* Price & Rating */
-.priceRatingRow {
+/* Price Section */
+.priceSection {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+  animation: slideInFromLeft 0.5s ease 0.2s both;
 }
 
 .price {
@@ -116,23 +157,25 @@
   background-clip: text;
 }
 
-.soldCount {
-  font-size: 0.95em;
-  color: #7f8c8d;
-  font-weight: 500;
+.productType {
+  font-size: 0.9em;
+  color: white;
+  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(139, 127, 196, 0.3);
 }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  color: #2c3e50;
-}
-
-.ratingStar {
-  color: #ffd700;
-  font-size: 1.2em;
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Product Description */
@@ -141,6 +184,7 @@
   padding: 24px;
   border-radius: 16px;
   border: 1px solid rgba(184, 175, 232, 0.1);
+  animation: slideInFromRight 0.5s ease 0.3s both;
 }
 
 .descriptionTitle {
@@ -156,43 +200,21 @@
   color: #555;
 }
 
-/* Variant Section */
-.variantSection {
-  padding: 20px 0;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.variantLabel {
-  font-size: 0.95em;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 12px;
-}
-
-.variantOptions {
-  display: flex;
-  gap: 12px;
-}
-
-.variantOption {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  border: 3px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.variantOption:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.variantOption.active {
-  border-color: #8b7fc4;
-  transform: scale(1.05);
+/* Stock Section */
+.stockSection {
+  padding: 16px 0;
+  animation: slideInFromLeft 0.5s ease 0.4s both;
 }
 
 /* Action Buttons */
@@ -200,6 +222,18 @@
   display: flex;
   gap: 16px;
   margin-top: auto;
+  animation: slideInFromBottom 0.5s ease 0.5s both;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .addToCartButton,
@@ -314,6 +348,7 @@
   justify-content: center;
   text-align: center;
   padding: 40px;
+  animation: fadeIn 0.4s ease;
 }
 
 .loading {
@@ -322,6 +357,19 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.loading p {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .error {

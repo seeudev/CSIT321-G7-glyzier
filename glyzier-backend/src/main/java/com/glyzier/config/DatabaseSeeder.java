@@ -154,8 +154,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         );
         product = productsRepository.save(product);
 
-        // Create inventory
-        Inventory inventory = new Inventory(quantity, quantity, product);
+        // Create inventory - qtyonhand is available stock, qtyreserved is 0 initially
+        Inventory inventory = new Inventory(quantity, 0, product);
         inventoryRepository.save(inventory);
         product.setInventory(inventory);
 
