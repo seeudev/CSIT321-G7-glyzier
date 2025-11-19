@@ -87,59 +87,57 @@ function Navigation() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        {/* Logo/Brand */}
+        {/* Brand (text only, no circle logo) */}
         <Link to="/" className={styles.brand}>
-          <div className={styles.logo}>
-            <span className={styles.logoIcon}>G</span>
-          </div>
           <span className={styles.brandText}>Glyzier</span>
         </Link>
 
-        {/* Search Bar */}
+        {/* Search Bar with SVG icon */}
         <div className={styles.searchContainer}>
-          <span className={styles.searchIcon}>🔍</span>
+          <div className={styles.searchIcon} aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search artworks, sellers..."
             className={styles.searchInput}
+            aria-label="Search"
           />
         </div>
 
-        {/* Navigation Tabs - Only show when authenticated */}
-        {isAuthenticated && (
-          <div className={styles.navTabs}>
-            <Link to="/" className={styles.navTab}>
-              Home
-            </Link>
-            <Link to="/shops" className={styles.navTab}>
-              Shops
-            </Link>
-            <Link to="/community" className={styles.navTab}>
-              Community
-            </Link>
-            <Link to="/more" className={styles.navTab}>
-              More
-            </Link>
-          </div>
-        )}
+        {/* Navigation Tabs - Show for all users */}
+        <div className={styles.navTabs}>
+          <Link to="/" className={styles.navTab}>
+            Home
+          </Link>
+          <Link to="/shops" className={styles.navTab}>
+            Shops
+          </Link>
+          <Link to="/community" className={styles.navTab}>
+            Community
+          </Link>
+          <Link to="/more" className={styles.navTab}>
+            More
+          </Link>
+        </div>
 
         {/* Action Icons */}
         <div className={styles.actions}>
           {isAuthenticated ? (
             <>
               {/* Messages Icon */}
-              <button className={styles.iconButton} title="Messages">
-                <span className={styles.icon}>💬</span>
+              <button className={styles.iconButton} title="Messages" aria-label="Messages">
+                <svg className={styles.iconSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
               </button>
 
               {/* Favorites Icon */}
-              <button className={styles.iconButton} title="Favorites">
-                <span className={styles.icon}>❤️</span>
+              <button className={styles.iconButton} title="Favorites" aria-label="Favorites">
+                <svg className={styles.iconSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
               </button>
 
               {/* Cart Icon with Badge */}
-              <Link to="/cart" className={styles.iconButton} title="Cart">
-                <span className={styles.icon}>🛒</span>
+              <Link to="/cart" className={styles.iconButton} title="Cart" aria-label="Cart">
+                <svg className={styles.iconSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 {cartCount > 0 && (
                   <span className={styles.badge}>{cartCount}</span>
                 )}

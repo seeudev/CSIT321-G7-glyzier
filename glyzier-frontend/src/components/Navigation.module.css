@@ -21,36 +21,20 @@
   gap: 20px;
 }
 
-/* Logo/Brand */
+/* Brand */
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   text-decoration: none;
   color: #2c3e50;
-  font-weight: bold;
-  font-size: 1.5em;
+  font-weight: 700;
+  font-size: 1.6em;
   flex-shrink: 0;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logoIcon {
-  color: white;
-  font-size: 1.3em;
-  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .brandText {
-  color: #8b7fc4;
+  background: linear-gradient(135deg, #8b7fc4, #7c6fb8);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 /* Search Bar */
@@ -65,8 +49,10 @@
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.2em;
-  color: #95a5a6;
+  color: #7f8c8d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .searchInput {
@@ -89,22 +75,24 @@
 /* Navigation Tabs */
 .navTabs {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .navTab {
-  padding: 8px 20px;
-  border-radius: 20px;
+  padding: 10px 24px;
+  border-radius: 25px;
   text-decoration: none;
   color: #2c3e50;
   font-weight: 500;
   transition: all 0.3s;
+  background-color: #e8e8e8;
+  font-size: 0.95em;
 }
 
 .navTab:hover {
-  background-color: #f5f5f5;
-  color: #8b7fc4;
+  background-color: #d0d0d0;
+  color: #2c3e50;
 }
 
 .navTab.active {
@@ -136,6 +124,18 @@
 
 .iconButton:hover {
   background-color: #f5f5f5;
+}
+
+.iconSvg {
+  width: 24px;
+  height: 24px;
+  stroke: #2c3e50;
+  transition: stroke 0.3s, transform 0.3s;
+}
+
+.iconButton:hover .iconSvg {
+  stroke: #8b7fc4;
+  transform: scale(1.08);
 }
 
 .icon {
