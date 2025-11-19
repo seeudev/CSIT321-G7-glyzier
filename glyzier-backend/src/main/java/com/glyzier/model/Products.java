@@ -62,6 +62,13 @@ public class Products {
     private String status;
 
     /**
+     * Product description
+     * Detailed information about the product features, materials, and benefits
+     */
+    @Column(name = "productdesc", columnDefinition = "TEXT")
+    private String productdesc;
+
+    /**
      * Screenshot preview URL for the product
      * Used as a thumbnail in hero sections, product cards, and carousels
      * This provides a visual preview of the product to customers
@@ -168,6 +175,14 @@ public class Products {
 
     public void setProductname(String productname) {
         this.productname = productname;
+    }
+
+    public String getProductdesc() {
+        return productdesc;
+    }
+
+    public void setProductdesc(String productdesc) {
+        this.productdesc = productdesc;
     }
 
     public String getType() {

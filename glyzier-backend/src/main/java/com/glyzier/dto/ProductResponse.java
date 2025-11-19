@@ -24,6 +24,7 @@ public class ProductResponse {
 
     private Long pid;
     private String productname;
+    private String productdesc;
     private String type;
     private BigDecimal price;
     private String status;
@@ -110,6 +111,7 @@ public class ProductResponse {
     public ProductResponse(Products product) {
         this.pid = product.getPid();
         this.productname = product.getProductname();
+        this.productdesc = product.getProductdesc();
         this.type = product.getType();
         this.price = product.getPrice();
         this.status = product.getStatus();
@@ -165,6 +167,14 @@ public class ProductResponse {
 
     public void setProductname(String productname) {
         this.productname = productname;
+    }
+
+    public String getProductdesc() {
+        return productdesc;
+    }
+
+    public void setProductdesc(String productdesc) {
+        this.productdesc = productdesc;
     }
 
     public String getType() {
