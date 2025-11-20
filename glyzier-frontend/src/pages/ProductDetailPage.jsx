@@ -37,7 +37,7 @@ function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const [contentVisible, setContentVisible] = useState(false);
+  const [contentVisible, setContentVisible] = useState(true);
   
   /**
    * Fetch product details on component mount
@@ -46,14 +46,10 @@ function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        setContentVisible(false);
         const data = await getProductById(pid);
         console.log('Product data received:', data);
         setProduct(data);
         setError(null);
-        
-        // Trigger fade-in animation after data loads
-        setTimeout(() => setContentVisible(true), 50);
       } catch (err) {
         console.error('Failed to fetch product:', err);
         setError('Failed to load product details. The product may not exist.');
@@ -173,13 +169,15 @@ function ProductDetailPage() {
     );
   }
   
-  const isOutOfStock = !product.availableQuantity || product.availableQuantity <= 0;
+  // Backend sends 'unlimited' field (Jackson removes 'is' prefix from boolean fields)
+  const isUnlimited = product.unlimited === true || product.isUnlimited === true;
+  const isOutOfStock = !isUnlimited && (!product.availableQuantity || product.availableQuantity <= 0);
   
   return (
     <div className={styles.page}>
       <Navigation />
       
-      <div className={`${styles.container} ${contentVisible ? styles.fadeIn : ''}`}>
+      <div className={styles.container}>
         <div className={styles.productLayout}>
           {/* Left Side - Product Image */}
           <div className={styles.imageSection}>
@@ -191,7 +189,7 @@ function ProductDetailPage() {
                 />
               ) : (
                 <div className={styles.imagePlaceholder}>
-                  <span>🎨</span>
+                  <ImageIcon size={64} color="#8b7fc4" />
                   <p>No Image Available</p>
                 </div>
               )}
@@ -226,7 +224,7 @@ function ProductDetailPage() {
             {/* Stock Status */}
             <div className={styles.stockSection}>
               <span className={`${styles.stockBadge} ${isOutOfStock ? styles.outOfStock : styles.inStock}`}>
-                {isOutOfStock ? '❌ Out of Stock' : product.isUnlimited ? '✓ Unlimited' : `✓ In Stock (${product.availableQuantity} available)`}
+                {isOutOfStock ? '❌ Out of Stock' : isUnlimited ? '✓ Unlimited' : `✓ In Stock (${product.availableQuantity} available)`}
               </span>
             </div>
             

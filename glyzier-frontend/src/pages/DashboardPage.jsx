@@ -25,6 +25,7 @@ import { getMyHistory } from '../services/orderService';
 import { registerAsSeller, checkIfSeller } from '../services/sellerService';
 import Navigation from '../components/Navigation';
 import { UserIcon, PackageIcon, ArtIcon } from '../components/Icons';
+import { showSuccess, showError } from '../components/NotificationManager';
 import styles from './DashboardPage.module.css';
 
 /**
@@ -128,12 +129,12 @@ function DashboardPage() {
     
     // Basic validation
     if (!sellerFormData.sellername.trim()) {
-      alert('Seller name is required');
+      showError('Seller name is required');
       return;
     }
     
     if (sellerFormData.sellername.trim().length < 3) {
-      alert('Seller name must be at least 3 characters');
+      showError('Seller name must be at least 3 characters');
       return;
     }
     
@@ -144,7 +145,7 @@ function DashboardPage() {
       const result = await registerAsSeller(sellerFormData);
       
       // Show success message
-      alert(`Successfully registered as a seller!\nSeller ID: ${result.seller.sid}\n\nYou can now access your seller dashboard.`);
+      showSuccess(`Successfully registered as a seller! Seller ID: ${result.seller.sid}. You can now access your seller dashboard.`);
       
       // Update seller status
       setIsSeller(true);
@@ -156,7 +157,8 @@ function DashboardPage() {
       
     } catch (err) {
       console.error('Error registering as seller:', err);
-      alert(`Failed to register as seller: ${err.message}`);
+      const errorMessage = err.response?.data?.error || err.message || 'Failed to register as seller';
+      showError(errorMessage);
     } finally {
       setSellerFormLoading(false);
     }
