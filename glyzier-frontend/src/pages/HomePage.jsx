@@ -226,14 +226,10 @@ function HomePage() {
             <>
               <div className={`${styles.heroText} ${isTransitioning ? styles.fadeOut : styles.fadeIn}`}>
                 <h1>
-                  {products[heroIndex]?.productname?.length > 50 
-                    ? products[heroIndex].productname.substring(0, 50) + '...' 
-                    : products[heroIndex]?.productname || "Eye in Abstract"}
+                  {products[heroIndex]?.productname || "Eye in Abstract"}
                 </h1>
                 <p>
-                  {products[heroIndex]?.productdesc?.length > 150 
-                    ? products[heroIndex].productdesc.substring(0, 150) + '...' 
-                    : products[heroIndex]?.productdesc || "A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look."}
+                  {products[heroIndex]?.productdesc || "A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look."}
                 </p>
                 <button 
                   className={styles.getItNowButton}

@@ -89,18 +89,52 @@ function ManageProducts() {
   // Form handlers
   const handleCreateFormChange = (e) => {
     const { name, value } = e.target;
-    setCreateFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setCreateFormData(prev => {
+      const updated = {
+        ...prev,
+        [name]: value
+      };
+      
+      // Auto-update qty fields when type changes
+      if (name === 'type') {
+        if (value === 'Digital') {
+          // Switching to Digital - clear qty fields (backend will set -1)
+          updated.qtyonhand = '';
+          updated.qtyreserved = '';
+        } else if (prev.type === 'Digital' && value !== 'Digital') {
+          // Switching from Digital to Physical - set default values
+          updated.qtyonhand = '10';
+          updated.qtyreserved = '0';
+        }
+      }
+      
+      return updated;
+    });
   };
   
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setEditFormData(prev => {
+      const updated = {
+        ...prev,
+        [name]: value
+      };
+      
+      // Auto-update qty fields when type changes
+      if (name === 'type') {
+        if (value === 'Digital') {
+          // Switching to Digital - clear qty fields (backend will set -1)
+          updated.qtyonhand = '';
+          updated.qtyreserved = '';
+        } else if (prev.type === 'Digital' && value !== 'Digital') {
+          // Switching from Digital to Physical - set default values
+          updated.qtyonhand = '10';
+          updated.qtyreserved = '0';
+        }
+      }
+      
+      return updated;
+    });
   };
   
   // Create product
