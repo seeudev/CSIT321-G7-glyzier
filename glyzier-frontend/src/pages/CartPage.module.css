@@ -237,36 +237,17 @@
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 32px;
   z-index: 100;
 }
 
-.selectAll {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.selectAll input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.selectAll label {
-  font-size: 1em;
-  color: #2c3e50;
-  cursor: pointer;
-  font-weight: 500;
-}
-
 .totalSection {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 16px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .totalLabel {

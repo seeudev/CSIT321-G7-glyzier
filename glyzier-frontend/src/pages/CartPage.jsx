@@ -280,18 +280,8 @@ const CartPage = () => {
           ))}
         </div>
 
-        {/* Bottom bar with select all, total, and checkout */}
+        {/* Bottom bar with total and checkout */}
         <div className={styles.bottomBar}>
-          <div className={styles.selectAll}>
-            <input 
-              type="checkbox" 
-              id="select-all" 
-              checked={true}
-              readOnly
-            />
-            <label htmlFor="select-all">Select All</label>
-          </div>
-
           <div className={styles.totalSection}>
             <span className={styles.totalLabel}>Total:</span>
             <span className={styles.totalPrice}>
