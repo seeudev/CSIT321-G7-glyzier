@@ -24,6 +24,7 @@ public class ProductResponse {
 
     private Long pid;
     private String productname;
+    private String productdesc;
     private String type;
     private BigDecimal price;
     private String status;
@@ -38,6 +39,7 @@ public class ProductResponse {
     private Integer qtyonhand;
     private Integer availableQuantity;
     private boolean inStock;
+    private boolean isUnlimited;
     
     // Product files (images)
     private List<ProductFileInfo> files;
@@ -110,6 +112,7 @@ public class ProductResponse {
     public ProductResponse(Products product) {
         this.pid = product.getPid();
         this.productname = product.getProductname();
+        this.productdesc = product.getProductdesc();
         this.type = product.getType();
         this.price = product.getPrice();
         this.status = product.getStatus();
@@ -126,12 +129,14 @@ public class ProductResponse {
         if (product.getInventory() != null) {
             Inventory inv = product.getInventory();
             this.qtyonhand = inv.getQtyonhand();
-            this.availableQuantity = inv.getAvailableQuantity();
+            this.isUnlimited = inv.isUnlimited();
+            this.availableQuantity = this.isUnlimited ? Integer.MAX_VALUE : inv.getAvailableQuantity();
             this.inStock = inv.isInStock();
         } else {
             this.qtyonhand = 0;
             this.availableQuantity = 0;
             this.inStock = false;
+            this.isUnlimited = false;
         }
         
         // Set product files
@@ -165,6 +170,14 @@ public class ProductResponse {
 
     public void setProductname(String productname) {
         this.productname = productname;
+    }
+
+    public String getProductdesc() {
+        return productdesc;
+    }
+
+    public void setProductdesc(String productdesc) {
+        this.productdesc = productdesc;
     }
 
     public String getType() {
@@ -253,5 +266,13 @@ public class ProductResponse {
 
     public void setFiles(List<ProductFileInfo> files) {
         this.files = files;
+    }
+
+    public boolean isUnlimited() {
+        return isUnlimited;
+    }
+
+    public void setUnlimited(boolean unlimited) {
+        isUnlimited = unlimited;
     }
 }

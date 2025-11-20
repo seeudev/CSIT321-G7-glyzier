@@ -126,21 +126,26 @@ public class OrderService {
             Inventory inventory = inventoryRepository.findByProductPid(product.getPid())
                     .orElseThrow(() -> new IllegalArgumentException("No inventory record found for product: " + product.getProductname()));
 
-            // Check if enough stock is available
-            // Available = qtyonhand - qtyreserved
-            int availableQuantity = inventory.getQtyonhand() - inventory.getQtyreserved();
+            // Check if enough stock is available (skip for unlimited inventory)
+            boolean isUnlimited = inventory.isUnlimited();
             
-            if (availableQuantity < itemRequest.getQuantity()) {
-                throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
-                        ". Available: " + availableQuantity + ", Requested: " + itemRequest.getQuantity());
-            }
+            if (!isUnlimited) {
+                // Available = qtyonhand - qtyreserved
+                int availableQuantity = inventory.getQtyonhand() - inventory.getQtyreserved();
+                
+                if (availableQuantity < itemRequest.getQuantity()) {
+                    throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
+                            ". Available: " + availableQuantity + ", Requested: " + itemRequest.getQuantity());
+                }
 
-            // Decrement inventory (SIMULATED - no race condition handling)
-            // In a real system, you would:
-            // - Use database locks or optimistic locking
-            // - Reserve stock first, then confirm after payment
-            // - Handle concurrent orders properly
-            inventory.setQtyonhand(inventory.getQtyonhand() - itemRequest.getQuantity());
+                // Decrement inventory (SIMULATED - no race condition handling)
+                // In a real system, you would:
+                // - Use database locks or optimistic locking
+                // - Reserve stock first, then confirm after payment
+                // - Handle concurrent orders properly
+                inventory.setQtyonhand(inventory.getQtyonhand() - itemRequest.getQuantity());
+            }
+            // For unlimited inventory (digital products), skip decrement
             inventoryRepository.save(inventory);
 
             // Step 5: Create Order_Products entity with snapshot data

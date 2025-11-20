@@ -225,8 +225,12 @@ function HomePage() {
           {products.length > 0 ? (
             <>
               <div className={`${styles.heroText} ${isTransitioning ? styles.fadeOut : styles.fadeIn}`}>
-                <h1>{products[heroIndex]?.productname || "Eye in Abstract"}</h1>
-                <p>{products[heroIndex]?.productdesc || "A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look."}</p>
+                <h1>
+                  {products[heroIndex]?.productname || "Eye in Abstract"}
+                </h1>
+                <p>
+                  {products[heroIndex]?.productdesc || "A vibrant, colorful abstract painting of a human eye with splashes and drips of paint, creating an expressive and energetic look."}
+                </p>
                 <button 
                   className={styles.getItNowButton}
                   onClick={() => products[heroIndex] && navigate(`/products/${products[heroIndex].pid}`)}

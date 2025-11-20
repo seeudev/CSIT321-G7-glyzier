@@ -126,6 +126,7 @@ public class CartService {
                 .orElseThrow(() -> new IllegalArgumentException("No inventory record found for product: " + product.getProductname()));
 
         int availableStock = inventory.getAvailableQuantity();
+        boolean isUnlimited = inventory.isUnlimited();
         
         // Get or create cart
         Cart cart = cartRepository.findByUserUserid(userId)
@@ -144,8 +145,8 @@ public class CartService {
             // Product already in cart - increase quantity
             int newQuantity = existingItem.getQuantity() + quantity;
             
-            // Validate total quantity against stock
-            if (newQuantity > availableStock) {
+            // Validate total quantity against stock (skip check for unlimited inventory)
+            if (!isUnlimited && newQuantity > availableStock) {
                 throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
                         ". Available: " + availableStock + ", Requested: " + newQuantity);
             }
@@ -155,8 +156,8 @@ public class CartService {
         } else {
             // New product - create cart item
             
-            // Validate quantity against stock
-            if (quantity > availableStock) {
+            // Validate quantity against stock (skip check for unlimited inventory)
+            if (!isUnlimited && quantity > availableStock) {
                 throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
                         ". Available: " + availableStock + ", Requested: " + quantity);
             }
@@ -210,8 +211,10 @@ public class CartService {
                 .orElseThrow(() -> new IllegalArgumentException("No inventory record found"));
 
         int availableStock = inventory.getAvailableQuantity();
+        boolean isUnlimited = inventory.isUnlimited();
         
-        if (newQuantity > availableStock) {
+        // Skip stock validation for unlimited inventory
+        if (!isUnlimited && newQuantity > availableStock) {
             throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
                     ". Available: " + availableStock + ", Requested: " + newQuantity);
         }
@@ -337,8 +340,10 @@ public class CartService {
                     .orElseThrow(() -> new IllegalArgumentException("No inventory record found for: " + product.getProductname()));
 
             int availableStock = inventory.getAvailableQuantity();
+            boolean isUnlimited = inventory.isUnlimited();
             
-            if (cartItem.getQuantity() > availableStock) {
+            // Skip stock validation for unlimited inventory
+            if (!isUnlimited && cartItem.getQuantity() > availableStock) {
                 throw new IllegalArgumentException("Insufficient stock for product: " + product.getProductname() + 
                         ". Available: " + availableStock + ", In cart: " + cartItem.getQuantity());
             }

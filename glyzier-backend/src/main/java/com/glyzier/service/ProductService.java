@@ -74,6 +74,11 @@ public class ProductService {
                 request.getScreenshotPreviewUrl(),
                 seller
         );
+        
+        // Set product description if provided
+        if (request.getProductdesc() != null) {
+            product.setProductdesc(request.getProductdesc());
+        }
 
         // Save the product first to get its ID
         product = productsRepository.save(product);
@@ -98,8 +103,19 @@ public class ProductService {
             product = productsRepository.save(product);
         }
 
-        // Create inventory record with initial stock of 0
-        Inventory inventory = new Inventory(0, 0, product);
+        // Create inventory record with values from request or defaults
+        // For digital products (type = "Digital"), use -1 for unlimited inventory
+        Integer qtyonhand;
+        if ("Digital".equalsIgnoreCase(request.getType()) && request.getQtyonhand() == null) {
+            qtyonhand = -1; // Unlimited for digital products
+        } else if (request.getQtyonhand() != null) {
+            qtyonhand = request.getQtyonhand();
+        } else {
+            qtyonhand = 0; // Default for physical products
+        }
+        
+        Integer qtyreserved = request.getQtyreserved() != null ? request.getQtyreserved() : 0;
+        Inventory inventory = new Inventory(qtyonhand, qtyreserved, product);
         inventoryRepository.save(inventory);
         product.setInventory(inventory);
 
@@ -137,6 +153,25 @@ public class ProductService {
         
         if (request.getStatus() != null) {
             product.setStatus(request.getStatus());
+        }
+        
+        // Update product description
+        if (request.getProductdesc() != null) {
+            product.setProductdesc(request.getProductdesc());
+        }
+        
+        // Update inventory if provided
+        if (request.getQtyonhand() != null || request.getQtyreserved() != null) {
+            Inventory inventory = product.getInventory();
+            if (inventory != null) {
+                if (request.getQtyonhand() != null) {
+                    inventory.setQtyonhand(request.getQtyonhand());
+                }
+                if (request.getQtyreserved() != null) {
+                    inventory.setQtyreserved(request.getQtyreserved());
+                }
+                inventoryRepository.save(inventory);
+            }
         }
 
         // Handle product files update (simulated)

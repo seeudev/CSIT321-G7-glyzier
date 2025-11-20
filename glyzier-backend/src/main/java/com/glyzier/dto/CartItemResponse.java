@@ -81,6 +81,11 @@ public class CartItemResponse {
      */
     private Integer availableStock;
 
+    /**
+     * Screenshot preview URL for product image
+     */
+    private String screenshotPreviewUrl;
+
     // Constructors
 
     /**
@@ -121,6 +126,9 @@ public class CartItemResponse {
             if (product.getInventory() != null) {
                 this.availableStock = product.getInventory().getAvailableQuantity();
             }
+
+            // Extract product image
+            this.screenshotPreviewUrl = product.getScreenshotPreviewUrl();
         }
     }
 
@@ -220,6 +228,14 @@ public class CartItemResponse {
 
     public void setAvailableStock(Integer availableStock) {
         this.availableStock = availableStock;
+    }
+
+    public String getScreenshotPreviewUrl() {
+        return screenshotPreviewUrl;
+    }
+
+    public void setScreenshotPreviewUrl(String screenshotPreviewUrl) {
+        this.screenshotPreviewUrl = screenshotPreviewUrl;
     }
 
     @Override

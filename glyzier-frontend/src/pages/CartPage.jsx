@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { updateCartItem, removeFromCart, clearCart, placeOrderFromCart } from '../services/cartService';
+import { showSuccess, showError, showConfirm } from '../components/NotificationManager';
+import { CartIcon, ImageIcon, AlertIcon, TrashIcon } from '../components/Icons';
+import Navigation from '../components/Navigation';
 import styles from './CartPage.module.css';
 
 /**
@@ -68,8 +71,9 @@ const CartPage = () => {
       await removeFromCart(pid);
       await refreshCart();
       await updateCartCount();
+      showSuccess('Item removed from cart');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to remove item');
+      showError(err.response?.data?.error || 'Failed to remove item');
     }
   };
 
@@ -79,7 +83,8 @@ const CartPage = () => {
    * Removes all items from the cart with confirmation.
    */
   const handleClearCart = async () => {
-    if (!window.confirm('Are you sure you want to clear your cart?')) {
+    const confirmed = await showConfirm('Are you sure you want to clear your cart?');
+    if (!confirmed) {
       return;
     }
 
@@ -88,8 +93,9 @@ const CartPage = () => {
       await clearCart();
       await refreshCart();
       await updateCartCount();
+      showSuccess('Cart cleared successfully');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to clear cart');
+      showError(err.response?.data?.error || 'Failed to clear cart');
     }
   };
 
@@ -118,14 +124,14 @@ const CartPage = () => {
       const result = await placeOrderFromCart();
       
       // Show success message
-      alert(`Order placed successfully! Order ID: ${result.order.orderid}`);
+      showSuccess(`Order placed successfully! Order ID: ${result.order.orderid}`);
       
       // Update cart count and refresh
       await updateCartCount();
       await refreshCart();
       
       // Redirect to dashboard
-      navigate('/dashboard');
+      setTimeout(() => navigate('/dashboard'), 1500);
       
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to place order');
@@ -163,7 +169,8 @@ const CartPage = () => {
   // Loading state
   if (loading) {
     return (
-      <div className={styles.cartPage}>
+      <div className={styles.page}>
+        <Navigation />
         <div className={styles.container}>
           <div className={styles.loading}>
             Loading your cart...
@@ -176,10 +183,11 @@ const CartPage = () => {
   // Empty cart state
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className={styles.cartPage}>
+      <div className={styles.page}>
+        <Navigation />
         <div className={styles.container}>
           <div className={styles.emptyCart}>
-            <div className={styles.emptyIcon}>🛒</div>
+            <div className={styles.emptyIcon}><CartIcon size={80} color="#95a5a6" /></div>
             <h2 className={styles.emptyTitle}>Your cart is empty</h2>
             <p className={styles.emptyText}>
               Looks like you haven't added anything to your cart yet.
@@ -194,144 +202,100 @@ const CartPage = () => {
   }
 
   return (
-    <div className={styles.cartPage}>
+    <div className={styles.page}>
+      <Navigation />
+      
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
           <h1 className={styles.title}>Shopping Cart</h1>
-          <p className={styles.subtitle}>
-            {cart.totalItemCount} {cart.totalItemCount === 1 ? 'item' : 'items'} in your cart
-          </p>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className={styles.errorMessage}>
+          <div className={styles.errorBanner}>
+            <AlertIcon size={20} color="#d32f2f" style={{ marginRight: '8px' }} />
             {error}
           </div>
         )}
 
-        {/* Cart content */}
-        <div className={styles.cartContent}>
-          {/* Cart items list */}
-          <div className={styles.cartItems}>
-            <div className={styles.itemsHeader}>
-              <h2 className={styles.itemsTitle}>Cart Items</h2>
-              <button 
-                onClick={handleClearCart}
-                className={styles.clearButton}
+        {/* Cart Items */}
+        <div className={styles.cartItems}>
+          {cart.items.map((item) => (
+            <div key={item.cartItemid} className={styles.cartItem}>
+              {/* Product image */}
+              <div className={styles.itemImage}>
+                {item.screenshotPreviewUrl ? (
+                  <img src={item.screenshotPreviewUrl} alt={item.productname} />
+                ) : (
+                  <div className={styles.imagePlaceholder}>
+                    <ImageIcon size={48} color="#8b7fc4" />
+                  </div>
+                )}
+              </div>
+
+              {/* Product info */}
+              <div className={styles.itemInfo}>
+                <h3 className={styles.itemName}>{item.productname}</h3>
+                
+                {item.availableStock < item.quantity && (
+                  <div className={styles.stockWarning}>
+                    <AlertIcon size={14} color="#ff9800" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                    Only {item.availableStock} available
+                  </div>
+                )}
+              </div>
+
+              {/* Quantity selector */}
+              <div className={styles.itemQuantity}>
+                <label htmlFor={`qty-${item.pid}`} className={styles.qtyLabel}>Item Qty</label>
+                <select
+                  id={`qty-${item.pid}`}
+                  value={item.quantity}
+                  onChange={(e) => handleQuantityChange(item.pid, e.target.value)}
+                  className={styles.qtySelect}
+                >
+                  {[...Array(Math.min(item.availableStock, 10))].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price */}
+              <div className={styles.itemPrice}>
+                ₱{item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
+
+              {/* Remove button */}
+              <button
+                onClick={() => handleRemoveItem(item.pid)}
+                className={styles.removeButton}
+                aria-label="Remove item"
               >
-                Clear Cart
+                <TrashIcon size={20} color="#d32f2f" />
               </button>
             </div>
+          ))}
+        </div>
 
-            {cart.items.map((item) => (
-              <div key={item.cartItemid} className={styles.cartItem}>
-                {/* Product image placeholder */}
-                <div className={styles.itemImage}>
-                  🎨
-                </div>
-
-                {/* Product details */}
-                <div className={styles.itemDetails}>
-                  <h3 className={styles.itemName}>{item.productname}</h3>
-                  
-                  <div className={styles.itemMeta}>
-                    <span className={styles.itemType}>{item.type}</span>
-                    <span className={styles.itemSeller}>
-                      by <Link to={`/sellers/${item.sellerId}`} className={styles.sellerLink}>
-                        {item.sellerName}
-                      </Link>
-                    </span>
-                  </div>
-
-                  <div className={styles.priceInfo}>
-                    <span className={styles.itemPrice}>
-                      ${item.priceSnapshot.toFixed(2)} each
-                    </span>
-                    {renderPriceChange(item)}
-                  </div>
-
-                  {item.availableStock < item.quantity && (
-                    <div className={styles.stockWarning}>
-                      ⚠️ Only {item.availableStock} available
-                    </div>
-                  )}
-                </div>
-
-                {/* Item actions */}
-                <div className={styles.itemActions}>
-                  {/* Quantity selector */}
-                  <div className={styles.quantitySelector}>
-                    <label htmlFor={`qty-${item.pid}`} className={styles.quantityLabel}>
-                      Qty:
-                    </label>
-                    <select
-                      id={`qty-${item.pid}`}
-                      value={item.quantity}
-                      onChange={(e) => handleQuantityChange(item.pid, e.target.value)}
-                      className={styles.quantitySelect}
-                    >
-                      {[...Array(Math.min(item.availableStock, 10))].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Remove button */}
-                  <button
-                    onClick={() => handleRemoveItem(item.pid)}
-                    className={styles.removeButton}
-                  >
-                    Remove
-                  </button>
-
-                  {/* Line total */}
-                  <div className={styles.lineTotal}>
-                    ${item.lineTotal.toFixed(2)}
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* Bottom bar with total and checkout */}
+        <div className={styles.bottomBar}>
+          <div className={styles.totalSection}>
+            <span className={styles.totalLabel}>Total:</span>
+            <span className={styles.totalPrice}>
+              ₱{cart.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
           </div>
 
-          {/* Order summary */}
-          <div className={styles.orderSummary}>
-            <h2 className={styles.summaryTitle}>Order Summary</h2>
-
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Subtotal:</span>
-              <span className={styles.summaryValue}>
-                ${cart.totalPrice.toFixed(2)}
-              </span>
-            </div>
-
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Shipping:</span>
-              <span className={styles.summaryValue}>
-                Calculated at checkout
-              </span>
-            </div>
-
-            <div className={styles.summaryTotal}>
-              <span>Total:</span>
-              <span>${cart.totalPrice.toFixed(2)}</span>
-            </div>
-
-            <button
-              onClick={handleCheckout}
-              disabled={processingCheckout}
-              className={styles.checkoutButton}
-            >
-              {processingCheckout ? 'Processing...' : 'Proceed to Checkout'}
-            </button>
-
-            <Link to="/" className={styles.continueButton}>
-              Continue Shopping
-            </Link>
-          </div>
+          <button
+            onClick={handleCheckout}
+            disabled={processingCheckout}
+            className={styles.checkoutButton}
+          >
+            {processingCheckout ? 'Processing...' : 'Checkout'}
+          </button>
         </div>
       </div>
     </div>
