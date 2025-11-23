@@ -10,27 +10,75 @@
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f5 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   position: relative;
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 40px 20px;
+  position: relative;
+  z-index: 1;
 }
 
-/* Product Layout */
+/* Product Layout - Floating Glassmorphism */
 .productLayout {
-  background: white;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 32px;
+  padding: 50px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 0 80px rgba(255, 255, 255, 0.03) inset;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
-  border: 1px solid rgba(184, 175, 232, 0.1);
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: floatIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.productLayout::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%
+  );
+  opacity: 0.6;
+  pointer-events: none;
+  animation: shimmer 10s ease-in-out infinite;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-5%, -5%) rotate(3deg);
+  }
 }
 
 /* Left Side - Image */
@@ -41,11 +89,17 @@
 .productImage {
   width: 100%;
   aspect-ratio: 4/3;
-  background: linear-gradient(135deg, #e8e4f3 0%, #d4cfe8 100%);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(139, 127, 196, 0.15);
+  box-shadow: 
+    0 8px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.productImage:not(.imageLoaded) {
   animation: skeletonPulse 1.5s ease-in-out infinite;
 }
 
@@ -53,7 +107,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  animation: fadeIn 0.6s ease;
+  transition: opacity 0.6s ease;
+  display: block;
 }
 
 .imagePlaceholder {
@@ -63,15 +118,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #9b8dd4;
-  font-size: 4em;
+  color: rgba(255, 255, 255, 0.5);
   animation: fadeIn 0.4s ease;
 }
 
 .imagePlaceholder p {
-  font-size: 0.3em;
+  font-size: 1.2rem;
   margin-top: 20px;
-  color: #7f8c8d;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Skeleton loading animation */
@@ -110,14 +164,14 @@
 
 .sellerLabel {
   font-size: 0.85em;
-  color: #7f8c8d;
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .shopName {
   font-size: 1em;
-  color: #2c3e50;
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
 }
 
@@ -125,10 +179,11 @@
 .productName {
   font-size: 2.5em;
   font-weight: 800;
-  color: #2c3e50;
+  color: #ffffff;
   line-height: 1.2;
   margin: 0;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Price Section */
@@ -137,27 +192,27 @@
   align-items: center;
   gap: 16px;
   padding: 20px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideInFromLeft 0.5s ease 0.2s both;
 }
 
 .price {
   font-size: 2em;
   font-weight: 700;
-  background: linear-gradient(135deg, #b8afe8 0%, #8b7fc4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .productType {
   font-size: 0.9em;
   color: white;
-  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
   padding: 6px 16px;
   border-radius: 20px;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(139, 127, 196, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes slideInFromLeft {
@@ -173,24 +228,26 @@
 
 /* Product Description */
 .descriptionSection {
-  background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   padding: 24px;
-  border-radius: 16px;
-  border: 1px solid rgba(184, 175, 232, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideInFromRight 0.5s ease 0.3s both;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .descriptionTitle {
   font-size: 1.1em;
   font-weight: 700;
-  color: #2c3e50;
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 12px;
 }
 
 .descriptionText {
   font-size: 1em;
   line-height: 1.7;
-  color: #555;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 @keyframes slideInFromRight {
@@ -244,9 +301,11 @@
 }
 
 .addToCartButton {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
   color: white;
-  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .addToCartButton::before {
@@ -266,13 +325,17 @@
 
 .addToCartButton:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .buyNowButton {
-  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 50%, #8b7fc4 100%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
   color: white;
-  box-shadow: 0 4px 15px rgba(139, 127, 196, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .buyNowButton::before {
@@ -292,7 +355,9 @@
 
 .buyNowButton:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(139, 127, 196, 0.5);
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .addToCartButton:disabled,
@@ -305,7 +370,7 @@
 .loginNote {
   text-align: center;
   font-size: 0.9em;
-  color: #7f8c8d;
+  color: rgba(255, 255, 255, 0.7);
   margin-top: 12px;
   font-style: italic;
 }
@@ -322,13 +387,17 @@
 }
 
 .inStock {
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  color: #155724;
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .outOfStock {
-  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-  color: #721c24;
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 /* Loading & Error States */
@@ -346,14 +415,12 @@
 
 .loading {
   font-size: 1.3em;
-  background: linear-gradient(135deg, #b8afe8 0%, #8b7fc4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .loading p {
   animation: pulse 1.5s ease-in-out infinite;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes pulse {
@@ -366,24 +433,96 @@
 }
 
 .error {
-  color: #d32f2f;
+  color: rgba(255, 100, 100, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .backButton {
   margin-top: 20px;
   padding: 14px 32px;
-  background: linear-gradient(135deg, #b8afe8 0%, #8b7fc4 100%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
   color: white;
   text-decoration: none;
   border-radius: 25px;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(139, 127, 196, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s;
+  display: inline-block;
 }
 
 .backButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(139, 127, 196, 0.4);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Back Button at Top Left */
+.backButtonTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+.backButtonTop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.backButtonTop:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-4px);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.backButtonTop:hover::before {
+  left: 100%;
+}
+
+.backButtonTop:active {
+  transform: translateX(-2px);
+}
+
+.backArrow {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 0.3s;
+}
+
+.backButtonTop:hover .backArrow {
+  transform: translateX(-3px);
+}
+
+.backText {
+  letter-spacing: 0.3px;
 }
 
 /* Responsive Design */
@@ -404,6 +543,11 @@
 
   .actionSection {
     flex-direction: column;
+  }
+
+  .backButtonTop {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 }
 
@@ -429,5 +573,15 @@
   .buyNowButton {
     padding: 16px 24px;
     font-size: 1em;
+  }
+
+  .backButtonTop {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+
+  .backArrow {
+    font-size: 1.1rem;
   }
 }
