@@ -1,0 +1,160 @@
+/**
+ * Shared Animation Styles
+ * 
+ * Common animations used across the application.
+ * Includes fade, slide, scale, and other transition effects.
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Modularization)
+ */
+
+/* Fade in animation */
+.fadeIn {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade out animation */
+.fadeOut {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Slide down animation */
+.slideDown {
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in animation */
+.slideIn {
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale in animation */
+.scaleIn {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse animation */
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Skeleton pulse animation */
+.skeletonPulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Slide from left */
+.slideInFromLeft {
+  animation: slideInFromLeft 0.5s ease both;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide from right */
+.slideInFromRight {
+  animation: slideInFromRight 0.5s ease both;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide from bottom */
+.slideInFromBottom {
+  animation: slideInFromBottom 0.5s ease both;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

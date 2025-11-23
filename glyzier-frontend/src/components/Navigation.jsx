@@ -18,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { checkIfSeller } from '../services/sellerService';
-import styles from './Navigation.module.css';
+import styles from '../styles/components/Navigation.module.css';
 
 /**
  * Navigation functional component

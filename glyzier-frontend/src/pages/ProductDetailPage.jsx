@@ -23,7 +23,9 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import Navigation from '../components/Navigation';
-import styles from './ProductDetailPage.module.css';
+import Aurora from '../components/Aurora';
+import { extractColorsFromImage, enhanceColorsForAurora } from '../utils/colorExtractor';
+import styles from '../styles/pages/ProductDetailPage.module.css';
 
 function ProductDetailPage() {
   const { pid } = useParams();
@@ -37,7 +39,8 @@ function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const [contentVisible, setContentVisible] = useState(true);
+  const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   /**
    * Fetch product details on component mount
@@ -46,6 +49,7 @@ function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setImageLoaded(false);
         const data = await getProductById(pid);
         console.log('Product data received:', data);
         setProduct(data);
@@ -61,6 +65,21 @@ function ProductDetailPage() {
     
     fetchProduct();
   }, [pid]);
+
+  /**
+   * Update Aurora colors when product image loads
+   */
+  useEffect(() => {
+    const updateAuroraColors = async () => {
+      if (product?.screenshotPreviewUrl && imageLoaded) {
+        const extractedColors = await extractColorsFromImage(product.screenshotPreviewUrl);
+        const enhancedColors = enhanceColorsForAurora(extractedColors);
+        setAuroraColors(enhancedColors);
+      }
+    };
+    
+    updateAuroraColors();
+  }, [product, imageLoaded]);
   
   /**
    * Handle Add to Cart button click
@@ -175,21 +194,38 @@ function ProductDetailPage() {
   
   return (
     <div className={styles.page}>
+      <Aurora 
+        colorStops={auroraColors}
+        amplitude={1.0}
+        blend={0.5}
+        speed={0.3}
+      />
       <Navigation />
       
       <div className={styles.container}>
+        <button 
+          onClick={() => navigate(-1)} 
+          className={styles.backButtonTop}
+          aria-label="Go back to previous page"
+        >
+          <span className={styles.backArrow}>←</span>
+          <span className={styles.backText}>Back</span>
+        </button>
+        
         <div className={styles.productLayout}>
           {/* Left Side - Product Image */}
           <div className={styles.imageSection}>
-            <div className={styles.productImage}>
+            <div className={`${styles.productImage} ${imageLoaded ? styles.imageLoaded : ''}`}>
               {product.screenshotPreviewUrl ? (
                 <img 
                   src={product.screenshotPreviewUrl} 
                   alt={product.productname}
+                  onLoad={() => setImageLoaded(true)}
+                  style={{ opacity: imageLoaded ? 1 : 0 }}
                 />
               ) : (
                 <div className={styles.imagePlaceholder}>
-                  <ImageIcon size={64} color="#8b7fc4" />
+                  <span style={{ fontSize: '4rem' }}>🖼️</span>
                   <p>No Image Available</p>
                 </div>
               )}

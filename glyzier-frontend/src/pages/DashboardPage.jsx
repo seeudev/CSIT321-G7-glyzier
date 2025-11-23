@@ -26,7 +26,7 @@ import { registerAsSeller, checkIfSeller } from '../services/sellerService';
 import Navigation from '../components/Navigation';
 import { UserIcon, PackageIcon, ArtIcon } from '../components/Icons';
 import { showSuccess, showError } from '../components/NotificationManager';
-import styles from './DashboardPage.module.css';
+import styles from '../styles/pages/DashboardPage.module.css';
 
 /**
  * DashboardPage functional component

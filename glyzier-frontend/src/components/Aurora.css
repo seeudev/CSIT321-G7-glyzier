@@ -1,0 +1,25 @@
+/**
+ * Aurora Component Styles
+ * 
+ * WebGL canvas container styling for Aurora effect.
+ * Full-size absolute positioning for background effect.
+ * 
+ * @author Glyzier Team
+ * @version 1.0
+ */
+
+.aurora-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

@@ -5,7 +5,7 @@ import { updateCartItem, removeFromCart, clearCart, placeOrderFromCart } from '.
 import { showSuccess, showError, showConfirm } from '../components/NotificationManager';
 import { CartIcon, ImageIcon, AlertIcon, TrashIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
-import styles from './CartPage.module.css';
+import styles from '../styles/pages/CartPage.module.css';
 
 /**
  * CartPage Component - Shopping cart with checkout

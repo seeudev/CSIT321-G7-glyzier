@@ -29,7 +29,7 @@ import { getProductsBySeller } from '../services/productService';
 import { showError, showInfo } from '../components/NotificationManager';
 import { StoreIcon, PackageIcon, LayersIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
-import styles from './SellerDashboard.module.css';
+import styles from '../styles/pages/SellerDashboard.module.css';
 
 /**
  * SellerDashboard functional component

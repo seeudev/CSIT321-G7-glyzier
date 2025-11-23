@@ -24,7 +24,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import styles from './NotificationManager.module.css';
+import styles from '../styles/components/NotificationManager.module.css';
 
 let notificationRoot = null;
 let notificationContainer = null;

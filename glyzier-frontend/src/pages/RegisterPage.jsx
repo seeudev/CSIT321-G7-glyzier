@@ -16,7 +16,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getAllProducts } from '../services/productService';
-import styles from './RegisterPage.module.css';
+import styles from '../styles/pages/RegisterPage.module.css';
 
 /**
  * RegisterPage functional component

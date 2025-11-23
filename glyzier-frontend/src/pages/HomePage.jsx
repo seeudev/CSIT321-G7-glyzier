@@ -14,8 +14,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import { getAllProducts } from '../services/productService'; // We will use this for the "Hot Arts" section
-import styles from './HomePage.module.css';
+import { extractColorsFromImage, enhanceColorsForAurora } from '../utils/colorExtractor';
+import styles from '../styles/pages/HomePage.module.css';
 
 /**
  * Custom hook for auto-rotating carousel with fade effect
@@ -82,95 +84,13 @@ function HomePage() {
   const [products, setProducts] = useState([]); // This will be used for "Hot Arts"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [heroGradient, setHeroGradient] = useState('linear-gradient(135deg, #c9bfe8 0%, #b8afe8 100%)');
+  const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
   
   // Hero carousel (auto-rotates through first 5 products every 5 seconds)
   const heroSlides = Math.min(products.length, 5);
   const { currentIndex: heroIndex, goToNext: heroNext, goToPrev: heroPrev, goToSlide: goToHeroSlide, isTransitioning } = useCarousel(heroSlides, 5000);
 
-  /**
-   * Extract dominant colors from an image using canvas
-   * @param {string} imageUrl - URL of the image
-   * @returns {Promise<Array>} Array of RGB color values
-   */
-  const extractColorsFromImage = (imageUrl) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      
-      img.onload = () => {
-        try {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          // Resize for performance
-          canvas.width = 100;
-          canvas.height = 100;
-          ctx.drawImage(img, 0, 0, 100, 100);
-          
-          const imageData = ctx.getImageData(0, 0, 100, 100).data;
-          const colorMap = {};
-          
-          // Sample colors and count frequency
-          for (let i = 0; i < imageData.length; i += 4 * 10) { // Sample every 10th pixel
-            const r = imageData[i];
-            const g = imageData[i + 1];
-            const b = imageData[i + 2];
-            const a = imageData[i + 3];
-            
-            // Skip transparent and very light/dark pixels
-            if (a < 128 || (r > 240 && g > 240 && b > 240) || (r < 20 && g < 20 && b < 20)) continue;
-            
-            // Round to reduce color variations
-            const roundedR = Math.round(r / 30) * 30;
-            const roundedG = Math.round(g / 30) * 30;
-            const roundedB = Math.round(b / 30) * 30;
-            const key = `${roundedR},${roundedG},${roundedB}`;
-            
-            colorMap[key] = (colorMap[key] || 0) + 1;
-          }
-          
-          // Get top 3 colors by frequency
-          const sortedColors = Object.entries(colorMap)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(([color]) => color.split(',').map(Number));
-          
-          resolve(sortedColors.length > 0 ? sortedColors : [[201, 191, 232], [184, 175, 232]]);
-        } catch (error) {
-          console.error('Error extracting colors:', error);
-          resolve([[201, 191, 232], [184, 175, 232]]); // Fallback colors
-        }
-      };
-      
-      img.onerror = () => {
-        resolve([[201, 191, 232], [184, 175, 232]]); // Fallback colors
-      };
-      
-      img.src = imageUrl;
-    });
-  };
 
-  /**
-   * Create gradient from extracted colors
-   * @param {Array} colors - Array of RGB color arrays
-   * @returns {string} CSS gradient string
-   */
-  const createGradientFromColors = (colors) => {
-    if (colors.length === 0) {
-      return 'linear-gradient(135deg, #c9bfe8 0%, #b8afe8 100%)';
-    }
-    
-    // Lighten colors for better readability
-    const lightenColor = (rgb, amount = 0.4) => {
-      return rgb.map(c => Math.min(255, Math.round(c + (255 - c) * amount)));
-    };
-    
-    const color1 = lightenColor(colors[0]);
-    const color2 = colors.length > 1 ? lightenColor(colors[1]) : lightenColor(colors[0], 0.5);
-    
-    return `linear-gradient(135deg, rgb(${color1.join(',')}) 0%, rgb(${color2.join(',')}) 100%)`;
-  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -190,17 +110,17 @@ function HomePage() {
     fetchProducts();
   }, []);
 
-  // Update gradient when carousel index changes
+  // Update Aurora colors when carousel index changes
   useEffect(() => {
-    const updateGradient = async () => {
+    const updateAuroraColors = async () => {
       if (products.length > 0 && products[heroIndex]?.screenshotPreviewUrl) {
-        const colors = await extractColorsFromImage(products[heroIndex].screenshotPreviewUrl);
-        const gradient = createGradientFromColors(colors);
-        setHeroGradient(gradient);
+        const extractedColors = await extractColorsFromImage(products[heroIndex].screenshotPreviewUrl);
+        const enhancedColors = enhanceColorsForAurora(extractedColors);
+        setAuroraColors(enhancedColors);
       }
     };
     
-    updateGradient();
+    updateAuroraColors();
   }, [heroIndex, products]);
 
   return (
@@ -208,10 +128,15 @@ function HomePage() {
       <Navigation />
 
       {/* Hero Carousel Section - Auto-rotates through first 5 products */}
-      <header 
-        className={styles.heroSection}
-        style={{ background: heroGradient }}
-      >
+      <header className={styles.heroSection}>
+        {/* Aurora Background Effect */}
+        <Aurora 
+          colorStops={auroraColors}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        
         <button 
           className={styles.carouselArrow} 
           onClick={heroPrev}
@@ -225,7 +150,16 @@ function HomePage() {
           {products.length > 0 ? (
             <>
               <div className={`${styles.heroText} ${isTransitioning ? styles.fadeOut : styles.fadeIn}`}>
-                <h1>
+                <h1 data-length={
+                  (() => {
+                    const title = products[heroIndex]?.productname || "Eye in Abstract";
+                    const length = title.length;
+                    if (length <= 20) return "short";
+                    if (length <= 35) return "medium";
+                    if (length <= 50) return "long";
+                    return "very-long";
+                  })()
+                }>
                   {products[heroIndex]?.productname || "Eye in Abstract"}
                 </h1>
                 <p>

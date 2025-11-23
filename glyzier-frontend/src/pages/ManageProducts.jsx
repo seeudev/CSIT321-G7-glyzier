@@ -21,7 +21,7 @@ import {
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import { PackageIcon, PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, InfinityIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
-import styles from './ManageProducts.module.css';
+import styles from '../styles/pages/ManageProducts.module.css';
 
 function ManageProducts() {
   const { user } = useAuth();
