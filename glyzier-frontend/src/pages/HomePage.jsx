@@ -15,7 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import { getAllProducts } from '../services/productService'; // We will use this for the "Hot Arts" section
-import styles from './HomePage.module.css';
+import styles from '../styles/pages/HomePage.module.css';
 
 /**
  * Custom hook for auto-rotating carousel with fade effect

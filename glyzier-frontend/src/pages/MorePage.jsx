@@ -11,7 +11,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
-import styles from './HomePage.module.css'; // Reuse HomePage styles
+import styles from '../styles/pages/HomePage.module.css'; // Reuse HomePage styles
 
 function MorePage() {
   return (

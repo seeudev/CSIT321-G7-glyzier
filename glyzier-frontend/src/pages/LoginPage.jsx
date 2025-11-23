@@ -23,7 +23,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getAllProducts } from '../services/productService';
-import styles from './LoginPage.module.css';
+import styles from '../styles/pages/LoginPage.module.css';
 
 /**
  * LoginPage functional component

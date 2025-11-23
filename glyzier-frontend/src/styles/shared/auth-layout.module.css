@@ -1,0 +1,307 @@
+/**
+ * Shared Auth Layout Styles
+ * 
+ * Common layout patterns for authentication pages (Login/Register).
+ * Includes split-screen layout, carousel, and decorative elements.
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Modularization)
+ */
+
+/* Split-screen container */
+.container {
+  min-height: 100vh;
+  display: flex;
+  background-color: #ffffff;
+}
+
+/* Left side - Form section */
+.formSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #ffffff;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 450px;
+}
+
+.logo {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #95a5a6;
+  font-size: 1em;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* Right side - Decorative background */
+.artSection {
+  flex: 1;
+  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.artContent {
+  text-align: center;
+  color: white;
+  z-index: 1;
+  padding: 20px;
+}
+
+.artTitle {
+  font-size: 3em;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Full-Screen Cycling Carousel with Zoom Effect */
+.fullscreenCarousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreenImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: zoomFade 4s ease-in-out;
+}
+
+@keyframes zoomFade {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+.carouselOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+  padding: 2.5rem;
+  z-index: 10;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carouselOverlay h3 {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.loadingText {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Divider for "or" text */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: #95a5a6;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.divider span {
+  padding: 0 15px;
+  font-size: 0.9em;
+}
+
+/* Google Sign In button */
+.googleButton {
+  padding: 14px;
+  background: white;
+  color: #2c3e50;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.05em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.googleButton:hover {
+  background-color: #f9f9f9;
+  border-color: #d0d0d0;
+}
+
+.googleIcon {
+  font-weight: bold;
+  color: #4285f4;
+  font-size: 1.2em;
+}
+
+/* Alert messages */
+.error {
+  background-color: #fee;
+  color: #c33;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #fcc;
+  font-size: 0.95em;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+  font-size: 0.95em;
+}
+
+/* Footer */
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 0.95em;
+}
+
+.footer a {
+  color: #8b7fc4;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer a:hover {
+  color: #7c6fb8;
+}
+
+/* Responsive design */
+@media (max-width: 968px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .artSection {
+    min-height: 200px;
+    order: -1;
+  }
+
+  .artTitle {
+    font-size: 2em;
+  }
+
+  .formSection {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+
+  .carouselOverlay {
+    padding: 2rem;
+  }
+  
+  .carouselOverlay h3 {
+    font-size: 1.6rem;
+  }
+  
+  .loadingText {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .logo {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+  }
+
+  .carouselOverlay {
+    padding: 1.5rem;
+  }
+  
+  .carouselOverlay h3 {
+    font-size: 1.3rem;
+  }
+  
+  .loadingText {
+    font-size: 1rem;
+  }
+}

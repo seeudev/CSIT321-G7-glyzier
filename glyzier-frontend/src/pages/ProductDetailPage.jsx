@@ -23,7 +23,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import Navigation from '../components/Navigation';
-import styles from './ProductDetailPage.module.css';
+import styles from '../styles/pages/ProductDetailPage.module.css';
 
 function ProductDetailPage() {
   const { pid } = useParams();

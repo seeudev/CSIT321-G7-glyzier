@@ -1,0 +1,126 @@
+/**
+ * Shared Header Styles
+ * 
+ * Common header patterns used across dashboard, seller dashboard, and other pages.
+ * Provides gradient backgrounds and decorative elements.
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Modularization)
+ */
+
+/* Gradient header with decorative elements */
+.header {
+  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 50%, #8b7fc4 100%);
+  color: white;
+  padding: 60px 0;
+  box-shadow: 0 4px 20px rgba(139, 127, 196, 0.2);
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Header content container */
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Welcome section */
+.welcomeSection {
+  flex: 1;
+}
+
+.title {
+  font-size: 3em;
+  margin-bottom: 12px;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1.3em;
+  opacity: 0.95;
+  font-weight: 300;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header actions */
+.headerActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Responsive design */
+@media (max-width: 968px) {
+  .headerContent {
+    padding: 0 30px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 30px 0;
+  }
+
+  .headerContent {
+    padding: 0 20px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    width: 100%;
+  }
+}
