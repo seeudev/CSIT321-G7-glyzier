@@ -149,11 +149,8 @@ public class FavoritesService {
     private FavoriteProductResponse mapToDTO(Favorites favorite) {
         Products product = favorite.getProduct();
         
-        // Get screenshot preview URL (first screenshot or null)
-        String previewUrl = null;
-        if (product.getProductFiles() != null && !product.getProductFiles().isEmpty()) {
-            previewUrl = product.getProductFiles().get(0).getFileKey();
-        }
+        // Get screenshot preview URL directly from product entity
+        String previewUrl = product.getScreenshotPreviewUrl();
         
         return new FavoriteProductResponse(
                 favorite.getFavid(),

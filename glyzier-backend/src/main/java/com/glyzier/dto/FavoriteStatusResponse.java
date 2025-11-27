@@ -21,12 +21,17 @@ public class FavoriteStatusResponse {
         this.productId = productId;
     }
     
-    public boolean isFavorited() {
+    public boolean getFavorited() {
         return isFavorited;
     }
     
     public void setFavorited(boolean favorited) {
         isFavorited = favorited;
+    }
+    
+    // Keep this for backwards compatibility
+    public boolean isFavorited() {
+        return isFavorited;
     }
     
     public Long getProductId() {
