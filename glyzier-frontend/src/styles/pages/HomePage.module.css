@@ -484,6 +484,15 @@
   font-weight: bold;
   color: #555;
   overflow: hidden;
+  position: relative; /* For favorite button positioning */
+}
+
+/* Favorite Button Overlay - Module 10 */
+.favoriteButtonOverlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
 }
 
 .productImage {

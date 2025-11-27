@@ -24,6 +24,7 @@ import { useCart } from '../context/CartContext';
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
+import FavoriteButton from '../components/FavoriteButton';
 import { extractColorsFromImage, enhanceColorsForAurora } from '../utils/colorExtractor';
 import styles from '../styles/pages/ProductDetailPage.module.css';
 
@@ -229,6 +230,12 @@ function ProductDetailPage() {
                   <p>No Image Available</p>
                 </div>
               )}
+              
+              {/* Favorite Button - Module 10 */}
+              <FavoriteButton 
+                productId={product.pid} 
+                className={styles.favoriteButtonOverlay}
+              />
             </div>
           </div>
           

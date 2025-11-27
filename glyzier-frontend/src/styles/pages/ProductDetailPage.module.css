@@ -99,6 +99,14 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Favorite Button Overlay - Module 10 */
+.favoriteButtonOverlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
+}
+
 .productImage:not(.imageLoaded) {
   animation: skeletonPulse 1.5s ease-in-out infinite;
 }
