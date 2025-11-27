@@ -51,6 +51,18 @@ const FavoritesPage = () => {
       setLoading(true);
       setError(null);
       const data = await getAllFavorites();
+      console.log('Favorites data received:', data);
+      console.log('Total favorites:', data?.length || 0);
+      if (data && data.length > 0) {
+        data.forEach((fav, index) => {
+          console.log(`Favorite ${index + 1}:`, {
+            pid: fav.pid,
+            name: fav.productname,
+            imageUrl: fav.screenshotPreviewUrl,
+            hasImage: !!fav.screenshotPreviewUrl
+          });
+        });
+      }
       setFavorites(data);
     } catch (err) {
       console.error('Error fetching favorites:', err);
@@ -83,13 +95,11 @@ const FavoritesPage = () => {
   };
   
   /**
-   * Format price for display
+   * Format price for display (USD only)
    */
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
+    if (price === null || price === undefined) return '$0.00';
+    return `$${Number(price).toFixed(2)}`;
   };
   
   /**
@@ -179,13 +189,29 @@ const FavoritesPage = () => {
         // Products Grid
         <div className={styles.productsGrid}>
           {favorites.map((favorite) => (
-            <Link
+            <div
               key={favorite.favid}
-              to={`/products/${favorite.pid}`}
               className={styles.productCard}
             >
-              {/* Product Image */}
-              <div className={styles.imageContainer}>
+              {/* Remove Button - Top Right */}
+              <button
+                className={styles.removeButton}
+                onClick={(e) => handleRemoveFavorite(favorite.pid, e)}
+                disabled={removingId === favorite.pid}
+                aria-label="Remove from favorites"
+                title="Remove from favorites"
+              >
+                {removingId === favorite.pid ? (
+                  <span className={styles.removingSpinner}>⏳</span>
+                ) : (
+                  <svg className={styles.trashIcon} viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                  </svg>
+                )}
+              </button>
+              
+              {/* Product Image - Clickable */}
+              <Link to={`/products/${favorite.pid}`} className={styles.imageContainer}>
                 {favorite.screenshotPreviewUrl ? (
                   <img
                     src={favorite.screenshotPreviewUrl}
@@ -194,49 +220,24 @@ const FavoritesPage = () => {
                   />
                 ) : (
                   <div className={styles.placeholderImage}>
-                    <span>No Image</span>
+                    <span>Product Photo</span>
                   </div>
                 )}
-                
-                {/* Remove Button */}
-                <button
-                  className={styles.removeButton}
-                  onClick={(e) => handleRemoveFavorite(favorite.pid, e)}
-                  disabled={removingId === favorite.pid}
-                  aria-label="Remove from favorites"
-                  title="Remove from favorites"
-                >
-                  {removingId === favorite.pid ? (
-                    <span className={styles.removingSpinner}>⏳</span>
-                  ) : (
-                    <span className={styles.heartIcon}>♥</span>
-                  )}
-                </button>
-              </div>
+              </Link>
               
-              {/* Product Info */}
-              <div className={styles.productInfo}>
+              {/* Product Info - Clickable */}
+              <Link to={`/products/${favorite.pid}`} className={styles.productInfo}>
                 <h3 className={styles.productName}>{favorite.productname}</h3>
                 
                 <p className={styles.productDesc}>
-                  {truncateText(favorite.productdesc)}
+                  {truncateText(favorite.productdesc, 80)}
                 </p>
                 
-                <div className={styles.productMeta}>
-                  <span className={styles.category}>{favorite.category}</span>
-                  <span className={styles.type}>{favorite.type}</span>
-                </div>
-                
-                <div className={styles.productFooter}>
+                <div className={styles.priceSection}>
                   <span className={styles.price}>{formatPrice(favorite.price)}</span>
-                  <span className={styles.seller}>by {favorite.sellerName}</span>
                 </div>
-                
-                <div className={styles.statusBadge} data-status={favorite.status}>
-                  {favorite.status}
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       )}

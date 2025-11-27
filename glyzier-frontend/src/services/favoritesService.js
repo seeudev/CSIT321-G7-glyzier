@@ -82,7 +82,20 @@ export const removeFromFavorites = async (productId) => {
 export const checkFavoriteStatus = async (productId) => {
   try {
     const response = await api.get(`/api/favorites/check/${productId}`);
-    return response.data.isFavorited;
+    console.log(`Favorite status response for product ${productId}:`, response.data);
+    // Handle both boolean and object response formats
+    if (typeof response.data === 'boolean') {
+      return response.data;
+    }
+    // Check for 'favorited' field (what backend actually sends)
+    if (response.data && typeof response.data.favorited === 'boolean') {
+      return response.data.favorited;
+    }
+    // Fallback to 'isFavorited' for backwards compatibility
+    if (response.data && typeof response.data.isFavorited === 'boolean') {
+      return response.data.isFavorited;
+    }
+    return false;
   } catch (error) {
     console.error('Error checking favorite status:', error);
     return false; // Default to not favorited on error

@@ -84,6 +84,7 @@
 /* Left Side - Image */
 .imageSection {
   position: relative;
+  isolation: isolate;
 }
 
 .productImage {
@@ -104,7 +105,7 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 20;
+  z-index: 10000;
 }
 
 .productImage:not(.imageLoaded) {

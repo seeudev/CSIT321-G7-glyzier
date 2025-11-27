@@ -127,7 +127,7 @@ function ProductDetailPage() {
     
     if (orderLoading) return;
     
-    const confirmed = await showConfirm(`Purchase ${product.productname} for ₱${product.price?.toFixed(2)}?`);
+    const confirmed = await showConfirm(`Purchase ${product.productname} for $${product.price?.toFixed(2)}?`);
     if (!confirmed) return;
     
     try {
@@ -252,7 +252,7 @@ function ProductDetailPage() {
             
             {/* Price */}
             <div className={styles.priceSection}>
-              <span className={styles.price}>₱ {product.price ? product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
+              <span className={styles.price}>$ {product.price ? product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
               <span className={styles.productType}>{product.type}</span>
             </div>
             
