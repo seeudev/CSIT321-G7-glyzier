@@ -1,0 +1,312 @@
+/* OrderConfirmationPage Styles - Module 12 */
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding-bottom: 60px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 100px 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+}
+
+/* Error card */
+.errorCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  padding: 60px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.errorTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f44336;
+  margin: 0;
+}
+
+.errorMessage {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Success header */
+.successHeader {
+  text-align: center;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.successTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #4caf50;
+  margin: 0;
+}
+
+.successSubtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Order card */
+.orderCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+/* Order header */
+.orderHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.orderInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orderLabel {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.orderNumber {
+  color: #8b7fc4;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.orderStatus {
+  color: #4caf50;
+  font-size: 16px;
+  font-weight: 600;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 6px;
+  padding: 4px 12px;
+}
+
+.orderDate {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Items list */
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orderItem {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.itemDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemName {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.itemQuantity {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.itemPricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.itemUnitPrice {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.itemLineTotal {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Delivery address */
+.addressBox {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.addressText {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  font-family: inherit;
+  white-space: pre-wrap;
+}
+
+/* Order total */
+.totalSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 2px solid rgba(139, 127, 196, 0.3);
+}
+
+.totalLabel {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.totalAmount {
+  color: #8b7fc4;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.homeButton,
+.dashboardButton {
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.homeButton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.homeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.dashboardButton {
+  background: linear-gradient(135deg, #8b7fc4 0%, #a991d4 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(139, 127, 196, 0.3);
+}
+
+.dashboardButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 127, 196, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .successTitle {
+    font-size: 28px;
+  }
+
+  .successSubtitle {
+    font-size: 16px;
+  }
+
+  .orderCard {
+    padding: 20px;
+  }
+
+  .orderItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .itemPricing {
+    align-self: flex-end;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .homeButton,
+  .dashboardButton {
+    width: 100%;
+  }
+}
