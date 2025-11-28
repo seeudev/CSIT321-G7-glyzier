@@ -324,3 +324,43 @@ export const LayersIcon = ({ size = 24, color = 'currentColor', ...props }) => (
     <polyline points="2 12 12 17 22 12" />
   </svg>
 );
+
+/**
+ * CheckCircle Icon - Success confirmation with checkmark in circle
+ */
+export const CheckCircleIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke={color} 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="9 12 11 14 15 10" />
+  </svg>
+);
+
+/**
+ * Lock Icon - Security/Payment security representation
+ */
+export const LockIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke={color} 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    {...props}
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+);
