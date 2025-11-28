@@ -59,6 +59,7 @@ import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import SellerOrdersPage from './pages/SellerOrdersPage';
 
 /**
  * App functional component
@@ -140,6 +141,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <ManageProducts />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Seller Orders - view and manage orders containing seller's products (PROTECTED - Module 13) */}
+          <Route 
+            path="/seller/orders" 
+            element={
+              <ProtectedRoute>
+                <SellerOrdersPage />
               </ProtectedRoute>
             } 
           />
