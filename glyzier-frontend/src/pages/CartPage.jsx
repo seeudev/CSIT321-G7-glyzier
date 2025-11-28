@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { updateCartItem, removeFromCart, clearCart, placeOrderFromCart } from '../services/cartService';
+import { updateCartItem, removeFromCart, clearCart } from '../services/cartService';
 import { showSuccess, showError, showConfirm } from '../components/NotificationManager';
 import { CartIcon, ImageIcon, AlertIcon, TrashIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
@@ -31,7 +31,6 @@ const CartPage = () => {
   const { cart, refreshCart, updateCartCount } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [processingCheckout, setProcessingCheckout] = useState(false);
   const [error, setError] = useState('');
 
   // Load cart on mount
@@ -102,9 +101,9 @@ const CartPage = () => {
   /**
    * Handle checkout
    * 
-   * Places an order from the cart and redirects to dashboard.
+   * Redirects to the checkout page where address and payment are collected.
    */
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (!cart || !cart.items || cart.items.length === 0) {
       setError('Cart is empty');
       return;
@@ -117,27 +116,8 @@ const CartPage = () => {
       return;
     }
 
-    try {
-      setProcessingCheckout(true);
-      setError('');
-      
-      const result = await placeOrderFromCart();
-      
-      // Show success message
-      showSuccess(`Order placed successfully! Order ID: ${result.order.orderid}`);
-      
-      // Update cart count and refresh
-      await updateCartCount();
-      await refreshCart();
-      
-      // Redirect to dashboard
-      setTimeout(() => navigate('/dashboard'), 1500);
-      
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to place order');
-    } finally {
-      setProcessingCheckout(false);
-    }
+    // Redirect to checkout page
+    navigate('/checkout');
   };
 
   /**
@@ -291,10 +271,9 @@ const CartPage = () => {
 
           <button
             onClick={handleCheckout}
-            disabled={processingCheckout}
             className={styles.checkoutButton}
           >
-            {processingCheckout ? 'Processing...' : 'Checkout'}
+            Checkout
           </button>
         </div>
       </div>
