@@ -336,4 +336,57 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
+
+    /**
+     * Search products by name and optionally filter by category
+     * 
+     * Endpoint: GET /api/products/search
+     * Access: Public (no authentication required)
+     * 
+     * Module 11 - Basic Search & Filter
+     * 
+     * This endpoint allows users to search for products by name.
+     * Results can be filtered by category (product type).
+     * Search is case-insensitive and uses LIKE pattern matching.
+     * 
+     * Query parameters:
+     * - query: Search string (required) - searches in product name
+     * - category: Product type/category (optional) - filters results
+     * 
+     * Examples:
+     * - /api/products/search?query=abstract
+     * - /api/products/search?query=painting&category=Print
+     * - /api/products/search?query=landscape&category=Original
+     * 
+     * @param query The search query string (required)
+     * @param category Optional category filter
+     * @return ResponseEntity with List<ProductResponse> and count, HTTP 200 (OK)
+     */
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProducts(
+            @RequestParam String query,
+            @RequestParam(required = false) String category) {
+        
+        try {
+            // Perform search
+            List<ProductResponse> products = productService.searchProducts(query, category);
+            
+            // Build response with results and count
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", products);
+            response.put("count", products.size());
+            response.put("query", query);
+            if (category != null && !category.trim().isEmpty()) {
+                response.put("category", category);
+            }
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
 }
