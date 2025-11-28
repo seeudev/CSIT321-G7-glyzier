@@ -56,6 +56,9 @@ public class OrderService {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private SellerRepository sellerRepository;
+
     /**
      * Place an order for the authenticated user (SIMULATED)
      * 
@@ -230,6 +233,60 @@ public class OrderService {
     }
 
     /**
+     * Get orders containing seller's products (Module 13 - Seller Order Management)
+     * 
+     * This method returns all orders that contain at least one product belonging to the seller.
+     * Each order response includes only the order items that belong to the seller.
+     * 
+     * This allows sellers to:
+     * - See which orders include their products
+     * - Track order status for fulfillment
+     * - Manage their product deliveries
+     * 
+     * @param userId The authenticated user's ID (must be a seller)
+     * @return List of OrderResponse DTOs containing orders with seller's products
+     * @throws IllegalArgumentException if user is not a seller
+     */
+    public List<OrderResponse> getSellerOrders(Long userId) {
+        // Step 1: Verify user is a seller
+        Seller seller = sellerRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User is not a seller"));
+        
+        // Step 2: Get all orders
+        List<Orders> allOrders = ordersRepository.findAll();
+        
+        // Step 3: Filter orders to include only those containing seller's products
+        List<OrderResponse> sellerOrders = allOrders.stream()
+                .filter(order -> {
+                    // Check if this order contains any of the seller's products
+                    return order.getOrderProducts().stream()
+                            .anyMatch(op -> op.getProduct().getSeller().getSid().equals(seller.getSid()));
+                })
+                .map(order -> {
+                    // Create order response with full details
+                    OrderResponse response = new OrderResponse(order, true);
+                    
+                    // Filter items to show only seller's products
+                    // This gives the seller a clear view of which items they need to fulfill
+                    List<com.glyzier.dto.OrderProductResponse> sellerItems = response.getItems().stream()
+                            .filter(item -> {
+                                // Find the actual product to check seller
+                                Products product = productsRepository.findById(item.getPid())
+                                        .orElse(null);
+                                return product != null && product.getSeller().getSid().equals(seller.getSid());
+                            })
+                            .collect(Collectors.toList());
+                    
+                    response.setItems(sellerItems);
+                    return response;
+                })
+                .sorted((o1, o2) -> o2.getPlacedAt().compareTo(o1.getPlacedAt())) // Sort by most recent first
+                .collect(Collectors.toList());
+        
+        return sellerOrders;
+    }
+
+    /**
      * Get all orders (admin functionality - optional for future use)
      * 
      * This could be used by administrators to view all orders in the system.
@@ -246,21 +303,49 @@ public class OrderService {
     }
 
     /**
-     * Update order status (admin/seller functionality - optional for future use)
+     * Update order status (Module 13 - Seller Order Management)
      * 
-     * This could be used to update order status (e.g., "Pending" -> "Shipped" -> "Delivered").
-     * Not part of the current module requirements but included for completeness.
+     * This method allows sellers to update the status of orders containing their products.
+     * The system verifies that the user is a seller and that they own at least one product in the order.
      * 
+     * Valid status values:
+     * - "Pending" - Order placed, awaiting processing
+     * - "Processing" - Order is being prepared
+     * - "Shipped" - Order has been shipped to customer
+     * - "Delivered" - Order has been delivered
+     * - "Cancelled" - Order was cancelled
+     * 
+     * @param userId The authenticated user's ID (must be a seller)
      * @param orderId The order ID to update
      * @param newStatus The new status value
      * @return Updated OrderResponse DTO
-     * @throws IllegalArgumentException if order not found
+     * @throws IllegalArgumentException if order not found, user not a seller, or seller doesn't own products in order
      */
     @Transactional
-    public OrderResponse updateOrderStatus(Long orderId, String newStatus) {
+    public OrderResponse updateOrderStatus(Long userId, Long orderId, String newStatus) {
+        // Step 1: Verify user is a seller
+        Seller seller = sellerRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User is not a seller"));
+        
+        // Step 2: Find the order
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
-
+        
+        // Step 3: Verify seller owns at least one product in this order
+        boolean hasSellerProducts = order.getOrderProducts().stream()
+                .anyMatch(op -> op.getProduct().getSeller().getSid().equals(seller.getSid()));
+        
+        if (!hasSellerProducts) {
+            throw new IllegalArgumentException("You do not have permission to update this order - none of your products are in this order");
+        }
+        
+        // Step 4: Validate status value
+        List<String> validStatuses = List.of("Pending", "Processing", "Shipped", "Delivered", "Cancelled");
+        if (!validStatuses.contains(newStatus)) {
+            throw new IllegalArgumentException("Invalid status. Valid values are: " + String.join(", ", validStatuses));
+        }
+        
+        // Step 5: Update the status
         order.setStatus(newStatus);
         order = ordersRepository.save(order);
 
