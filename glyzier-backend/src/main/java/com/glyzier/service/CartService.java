@@ -172,10 +172,11 @@ public class CartService {
             cart.addCartItem(cartItem);
         }
 
-        // Refresh cart to get updated items
-        cart = cartRepository.findById(cart.getCartid())
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
-
+        // Re-query the cart with eager loading to ensure all items are loaded
+        // This prevents lazy loading issues when constructing the response
+        cart = cartRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalStateException("Cart not found after update"));
+        
         return new CartResponse(cart);
     }
 
@@ -223,10 +224,10 @@ public class CartService {
         cartItem.setQuantity(newQuantity);
         cartItemRepository.save(cartItem);
 
-        // Refresh cart to get updated items
-        cart = cartRepository.findById(cart.getCartid())
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
-
+        // Re-query the cart with eager loading to ensure all items are loaded
+        cart = cartRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalStateException("Cart not found after update"));
+        
         return new CartResponse(cart);
     }
 
@@ -251,10 +252,10 @@ public class CartService {
         cartItemRepository.delete(cartItem);
         cart.removeCartItem(cartItem);
 
-        // Refresh cart to get updated items
-        cart = cartRepository.findById(cart.getCartid())
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
-
+        // Re-query the cart with eager loading to ensure all items are loaded
+        cart = cartRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalStateException("Cart not found after update"));
+        
         return new CartResponse(cart);
     }
 
@@ -277,9 +278,10 @@ public class CartService {
         cartItemRepository.deleteByCartCartid(cart.getCartid());
         cart.clearCart();
 
-        // Save cart
-        cart = cartRepository.save(cart);
-
+        // Re-query the cart with eager loading to ensure it's empty
+        cart = cartRepository.findByUserUserid(userId)
+                .orElseThrow(() -> new IllegalStateException("Cart not found after clear"));
+        
         return new CartResponse(cart);
     }
 

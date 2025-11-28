@@ -268,13 +268,25 @@ public class ProductService {
      * Get all products (paginated)
      * 
      * This is a public endpoint - anyone can view all products.
+     * Uses eager loading to prevent N+1 query problem.
      * 
      * @param pageable Pagination parameters
      * @return Page of ProductResponse DTOs
      */
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        Page<Products> productsPage = productsRepository.findAll(pageable);
-        return productsPage.map(ProductResponse::new);
+        // Use eager fetch to load all relations in single query
+        List<Products> products = productsRepository.findAllWithRelations();
+        
+        // Apply pagination manually
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), products.size());
+        List<Products> pageContent = products.subList(start, end);
+        
+        return new org.springframework.data.domain.PageImpl<>(
+            pageContent.stream().map(ProductResponse::new).collect(java.util.stream.Collectors.toList()),
+            pageable,
+            products.size()
+        );
     }
 
     /**
@@ -282,13 +294,14 @@ public class ProductService {
      * 
      * This is a public endpoint - anyone can view product details.
      * Includes ProductFiles and Inventory information.
+     * Uses eager loading to prevent lazy loading issues.
      * 
      * @param productId The product ID
      * @return ProductResponse DTO
      * @throws IllegalArgumentException if product not found
      */
     public ProductResponse getProductById(Long productId) {
-        Products product = productsRepository.findById(productId)
+        Products product = productsRepository.findByIdWithRelations(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
         return new ProductResponse(product);
