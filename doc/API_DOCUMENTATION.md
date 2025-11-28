@@ -10,7 +10,8 @@ Content-Type: `application/json`
 - Module 7: Products & Inventory
 - Module 8: Orders
 - Module 9: Shopping Cart
-- **Module 10: Favorites/Wishlist** ⭐ NEW
+- Module 10: Favorites/Wishlist
+- **Module 11: Basic Search & Filter** ⭐ NEW
 
 ---
 
@@ -441,6 +442,85 @@ Get seller's products.
     "createdAt": "2025-10-20T12:00:00.000+00:00"
   }
 ]
+```
+
+---
+
+### GET /products/search ⭐ NEW (Module 11)
+
+Search products by name and optionally filter by category.
+
+**Authentication**: Not required
+
+**Query Parameters**:
+- query: Search string (required) - searches product name using LIKE pattern (case-insensitive)
+- category: Product type/category (optional) - filters results by type
+
+**Examples**:
+- `/products/search?query=abstract`
+- `/products/search?query=painting&category=Print`
+- `/products/search?query=landscape&category=Original`
+
+**Response 200**:
+```json
+{
+  "products": [
+    {
+      "pid": 1,
+      "productname": "Abstract Sunset Print",
+      "type": "Print",
+      "price": 29.99,
+      "status": "Available",
+      "createdAt": "2025-10-20T12:00:00.000+00:00",
+      "seller": {
+        "sid": 1,
+        "sellername": "Artisan Gallery"
+      }
+    },
+    {
+      "pid": 3,
+      "productname": "Abstract Expressionism Original",
+      "type": "Original",
+      "price": 299.99,
+      "status": "Available",
+      "createdAt": "2025-10-22T14:30:00.000+00:00",
+      "seller": {
+        "sid": 2,
+        "sellername": "Modern Art Collective"
+      }
+    }
+  ],
+  "count": 2,
+  "query": "abstract"
+}
+```
+
+**Response with Category Filter**:
+```json
+{
+  "products": [
+    {
+      "pid": 1,
+      "productname": "Abstract Sunset Print",
+      "type": "Print",
+      "price": 29.99,
+      "status": "Available",
+      "createdAt": "2025-10-20T12:00:00.000+00:00",
+      "seller": {
+        "sid": 1,
+        "sellername": "Artisan Gallery"
+      }
+    }
+  ],
+  "count": 1,
+  "query": "abstract",
+  "category": "Print"
+}
+```
+
+**Error 400**:
+```json
+{"error": "Search query cannot be empty"}
 ```
 
 ---

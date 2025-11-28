@@ -67,4 +67,14 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
      * @return List of products whose names contain the search string
      */
     List<Products> findByProductnameContainingIgnoreCase(String productname);
+
+    /**
+     * Find products by name and type (category)
+     * Used for filtered search - search by name within a specific category
+     * 
+     * @param productname The search string (case-insensitive)
+     * @param type The product type/category
+     * @return List of products matching both name and type
+     */
+    List<Products> findByProductnameContainingIgnoreCaseAndType(String productname, String type);
 }

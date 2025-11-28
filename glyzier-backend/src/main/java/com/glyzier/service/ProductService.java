@@ -315,6 +315,42 @@ public class ProductService {
     }
 
     /**
+     * Search products by name and optionally filter by category
+     * 
+     * Module 11 - Basic Search & Filter
+     * This method provides simple product search functionality.
+     * Users can search by product name and optionally filter by category (type).
+     * 
+     * Search is case-insensitive and uses LIKE %query% pattern.
+     * 
+     * @param query The search query string (required, searches in product name)
+     * @param category Optional category filter (product type)
+     * @return List of ProductResponse DTOs matching the search criteria
+     */
+    public List<ProductResponse> searchProducts(String query, String category) {
+        List<Products> products;
+        
+        // Validate query is not empty
+        if (query == null || query.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search query cannot be empty");
+        }
+        
+        // Search with or without category filter
+        if (category != null && !category.trim().isEmpty()) {
+            // Search by name within specific category
+            products = productsRepository.findByProductnameContainingIgnoreCaseAndType(query.trim(), category.trim());
+        } else {
+            // Search by name only
+            products = productsRepository.findByProductnameContainingIgnoreCase(query.trim());
+        }
+        
+        // Convert to DTOs and return
+        return products.stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Helper method to extract file format from file key
      * 
      * This is a simple simulation - in a real system, you would use proper

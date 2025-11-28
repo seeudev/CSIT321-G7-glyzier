@@ -53,6 +53,7 @@ import SellerDashboard from './pages/SellerDashboard';
 import ManageProducts from './pages/ManageProducts';
 import CartPage from './pages/CartPage';
 import FavoritesPage from './pages/FavoritesPage';
+import SearchPage from './pages/SearchPage';
 import ShopsPage from './pages/ShopsPage';
 import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
@@ -90,6 +91,9 @@ function App() {
             
             {/* Product detail page - view individual product (PUBLIC) */}
             <Route path="/products/:pid" element={<ProductDetailPage />} />
+            
+            {/* Search page - search and filter products (PUBLIC - Module 11) */}
+            <Route path="/search" element={<SearchPage />} />
             
             {/* Placeholder pages for navigation links (PUBLIC) */}
             <Route path="/shops" element={<ShopsPage />} />
