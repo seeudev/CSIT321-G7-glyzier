@@ -52,6 +52,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
 import ManageProducts from './pages/ManageProducts';
 import CartPage from './pages/CartPage';
+import FavoritesPage from './pages/FavoritesPage';
 import ShopsPage from './pages/ShopsPage';
 import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
@@ -96,6 +97,16 @@ function App() {
             <Route path="/more" element={<MorePage />} />
           
           {/* Protected routes - require authentication */}
+          
+          {/* Favorites page - user's wishlist (PROTECTED) - Module 10 */}
+          <Route 
+            path="/favorites" 
+            element={
+              <ProtectedRoute>
+                <FavoritesPage />
+              </ProtectedRoute>
+            } 
+          />
           
           {/* Dashboard - user's personal dashboard (PROTECTED) */}
           <Route 

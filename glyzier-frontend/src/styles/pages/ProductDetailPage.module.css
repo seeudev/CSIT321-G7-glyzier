@@ -84,6 +84,7 @@
 /* Left Side - Image */
 .imageSection {
   position: relative;
+  isolation: isolate;
 }
 
 .productImage {
@@ -97,6 +98,14 @@
     0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Favorite Button Overlay - Module 10 */
+.favoriteButtonOverlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
 }
 
 .productImage:not(.imageLoaded) {

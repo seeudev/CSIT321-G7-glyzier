@@ -9,7 +9,8 @@ Content-Type: `application/json`
 - Module 3-5: Seller Management
 - Module 7: Products & Inventory
 - Module 8: Orders
-- **Module 9: Shopping Cart** ⭐ NEW
+- Module 9: Shopping Cart
+- **Module 10: Favorites/Wishlist** ⭐ NEW
 
 ---
 
@@ -881,6 +882,114 @@ Place order from all items in cart. Cart is cleared after successful order.
 
 ---
 
+## Favorites
+
+### GET /favorites
+
+Get all favorited products for authenticated user.
+
+**Authentication**: Required
+
+**Response 200**:
+```json
+[
+  {
+    "favid": 1,
+    "pid": 5,
+    "productname": "Abstract Eye",
+    "productdesc": "A vibrant abstract painting...",
+    "price": 45.00,
+    "category": "Graphical",
+    "type": "Digital",
+    "status": "Available",
+    "screenshotPreviewUrl": "https://...",
+    "sellerName": "ArtShop",
+    "sellerId": 3,
+    "favoritedAt": "2024-11-13T10:30:00Z"
+  }
+]
+```
+
+---
+
+### POST /favorites/{pid}
+
+Add product to favorites (idempotent operation).
+
+**Authentication**: Required
+
+**Path Parameters**:
+- `pid` (number): Product ID to favorite
+
+**Response 201**:
+```json
+{
+  "message": "Product added to favorites",
+  "favorite": {
+    "favid": 1,
+    "pid": 5,
+    "productname": "Abstract Eye",
+    "price": 45.00,
+    "favoritedAt": "2024-11-13T10:30:00Z"
+  }
+}
+```
+
+**Error 400**:
+```json
+{"error": "Product not found with ID: 5"}
+```
+
+---
+
+### DELETE /favorites/{pid}
+
+Remove product from favorites.
+
+**Authentication**: Required
+
+**Path Parameters**:
+- `pid` (number): Product ID to unfavorite
+
+**Response 200**:
+```json
+{"message": "Product removed from favorites"}
+```
+
+---
+
+### GET /favorites/check/{pid}
+
+Check if product is favorited by user.
+
+**Authentication**: Required
+
+**Path Parameters**:
+- `pid` (number): Product ID to check
+
+**Response 200**:
+```json
+{
+  "isFavorited": true,
+  "productId": 5
+}
+```
+
+---
+
+### GET /favorites/count
+
+Get total count of user's favorites.
+
+**Authentication**: Required
+
+**Response 200**:
+```json
+{"count": 12}
+```
+
+---
+
 ## Notes
 
 **JWT Token**:
@@ -907,5 +1016,5 @@ Place order from all items in cart. Cart is cleared after successful order.
 
 ---
 
-Last Updated: October 21, 2025  
+Last Updated: November 27, 2025 (Module 10: Favorites/Wishlist)  
 Project: Glyzier CSIT321-G7

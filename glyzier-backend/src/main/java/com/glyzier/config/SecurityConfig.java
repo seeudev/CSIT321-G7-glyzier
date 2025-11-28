@@ -144,6 +144,9 @@ public class SecurityConfig {
                 // Cart endpoints require authentication (Module 9)
                 .requestMatchers("/api/cart/**").authenticated()
                 
+                // Favorites endpoints require authentication (Module 10)
+                .requestMatchers("/api/favorites/**").authenticated()
+                
                 // All other /api endpoints require authentication
                 .requestMatchers("/api/**").authenticated()
                 

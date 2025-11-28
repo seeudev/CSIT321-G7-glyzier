@@ -15,6 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
+import FavoriteButton from '../components/FavoriteButton';
 import { getAllProducts } from '../services/productService'; // We will use this for the "Hot Arts" section
 import { extractColorsFromImage, enhanceColorsForAurora } from '../utils/colorExtractor';
 import styles from '../styles/pages/HomePage.module.css';
@@ -241,6 +242,11 @@ function HomePage() {
                       ) : (
                         <span>[No Image]</span>
                       )}
+                      {/* Favorite Button - Module 10 */}
+                      <FavoriteButton 
+                        productId={product.pid} 
+                        className={styles.favoriteButtonOverlay}
+                      />
                     </div>
                     <p>{product.productname}</p>
                   </Link>
