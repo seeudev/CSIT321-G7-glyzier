@@ -1,5 +1,7 @@
 package com.glyzier.service;
 
+import com.glyzier.dto.UpdateProfileRequest;
+import com.glyzier.dto.ChangePasswordRequest;
 import com.glyzier.model.Users;
 import com.glyzier.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * User Service
@@ -32,6 +36,13 @@ public class UserService {
      */
     @Autowired
     private UserRepository userRepository;
+
+    /**
+     * Password encoder for hashing passwords
+     * Used for password change operations
+     */
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Get the currently authenticated user
@@ -104,5 +115,81 @@ public class UserService {
     public boolean isCurrentUserSeller() {
         Users currentUser = getCurrentUser();
         return currentUser.getSeller() != null;
+    }
+
+    /**
+     * Update user profile information
+     * 
+     * This method allows users to update their display name and phone number.
+     * Email cannot be changed through this method for security reasons.
+     * 
+     * Module 14 Implementation:
+     * - Updates display name (required)
+     * - Updates phone number (optional, can be null or empty)
+     * - Saves changes to database
+     * - Returns updated user entity
+     * 
+     * @param request UpdateProfileRequest containing new display name and phone number
+     * @return Updated Users entity
+     * @throws RuntimeException if user is not found
+     */
+    @Transactional
+    public Users updateProfile(UpdateProfileRequest request) {
+        // Get the current authenticated user
+        Users currentUser = getCurrentUser();
+
+        // Update the fields from the request
+        currentUser.setDisplayname(request.getDisplayname());
+        
+        // Phone number is optional - set even if null or empty
+        currentUser.setPhonenumber(request.getPhonenumber());
+
+        // Save and return the updated user
+        return userRepository.save(currentUser);
+    }
+
+    /**
+     * Change user password
+     * 
+     * This method allows users to change their password securely.
+     * It requires verification of the current password before allowing the change.
+     * 
+     * Security measures:
+     * 1. Verifies current password matches stored hash
+     * 2. Validates new password matches confirmation
+     * 3. Encrypts new password before storage
+     * 
+     * Module 14 Implementation:
+     * - Validates current password is correct
+     * - Checks new password and confirmation match
+     * - Hashes new password using BCrypt
+     * - Updates password in database
+     * 
+     * @param request ChangePasswordRequest containing current and new passwords
+     * @throws RuntimeException if current password is incorrect
+     * @throws RuntimeException if new password and confirmation don't match
+     * @throws RuntimeException if user is not found
+     */
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+        // Get the current authenticated user
+        Users currentUser = getCurrentUser();
+
+        // Verify current password is correct
+        // passwordEncoder.matches() compares plain text with BCrypt hash
+        if (!passwordEncoder.matches(request.getCurrentPassword(), currentUser.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        // Verify new password and confirmation match
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirmation do not match");
+        }
+
+        // Encrypt the new password and update
+        currentUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        // Save the updated user
+        userRepository.save(currentUser);
     }
 }
