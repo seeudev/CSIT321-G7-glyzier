@@ -51,6 +51,13 @@ public class Orders {
     private String status;
 
     /**
+     * Delivery address captured at order time. Stored as text to allow
+     * multi-line addresses and preserve the address used for this order.
+     */
+    @Column(name = "delivery_address", columnDefinition = "TEXT")
+    private String deliveryAddress;
+
+    /**
      * Timestamp of when the order was placed
      * Automatically set when the entity is first persisted
      */
@@ -138,6 +145,14 @@ public class Orders {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     public List<OrderProducts> getOrderProducts() {
