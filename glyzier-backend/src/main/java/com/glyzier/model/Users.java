@@ -51,6 +51,14 @@ public class Users {
     private String password;
 
     /**
+     * Phone number for user contact (optional)
+     * Used for order notifications and account recovery
+     * Format is flexible (can include country code)
+     */
+    @Column(name = "phonenumber", length = 20)
+    private String phonenumber;
+
+    /**
      * Timestamp of when the user account was created
      * Automatically set when the entity is first persisted
      */
@@ -123,6 +131,14 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 
     public Timestamp getCreatedAt() {

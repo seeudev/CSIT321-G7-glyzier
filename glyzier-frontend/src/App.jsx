@@ -60,6 +60,7 @@ import MorePage from './pages/MorePage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
+import ProfilePage from './pages/ProfilePage';
 
 /**
  * App functional component
@@ -121,6 +122,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Profile - user profile management (PROTECTED - Module 14) */}
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             } 
           />

@@ -1,0 +1,252 @@
+/**
+ * ProfilePage CSS Module
+ * 
+ * Styles for the profile management page (Module 14 - Basic User Profile).
+ * Clean, modern design with card-based sections for profile info and password change.
+ * Reuses shared form and button styles for consistency.
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Module 14)
+ */
+
+/* Main Container */
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f5 100%);
+}
+
+/* Header Section */
+.header {
+  background: linear-gradient(135deg, #b8afe8 0%, #9b8dd4 50%, #8b7fc4 100%);
+  color: white;
+  padding: 50px 0;
+  box-shadow: 0 4px 20px rgba(139, 127, 196, 0.2);
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.headerIcon {
+  font-size: 3em;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+.title {
+  font-size: 2.5em;
+  margin: 0 0 8px 0;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  margin: 0;
+  opacity: 0.95;
+  font-weight: 300;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Content Area */
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.loadingContainer {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  font-size: 1.1em;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section Cards */
+.section {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(184, 175, 232, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #b8afe8 0%, #9b8dd4 50%, #8b7fc4 100%);
+}
+
+.sectionTitle {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+  letter-spacing: -0.3px;
+}
+
+/* Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Read-Only Field */
+.readOnlyField {
+  background-color: #f5f5f5 !important;
+  cursor: not-allowed;
+  color: #7f8c8d;
+}
+
+/* Field Notes & Labels */
+.fieldNote {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85em;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.optional {
+  font-weight: 400;
+  color: #95a5a6;
+  font-size: 0.9em;
+}
+
+/* Button Group */
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.buttonGroup button {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 40px 0;
+  }
+
+  .headerContent {
+    padding: 0 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerIcon {
+    font-size: 2.5em;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+
+  .content {
+    padding: 30px 20px;
+  }
+
+  .section {
+    padding: 24px 20px;
+  }
+
+  .sectionTitle {
+    font-size: 1.3em;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .buttonGroup button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 30px 0;
+  }
+
+  .headerContent {
+    padding: 0 15px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .subtitle {
+    font-size: 0.95em;
+  }
+
+  .content {
+    padding: 20px 15px;
+  }
+
+  .section {
+    padding: 20px 15px;
+  }
+
+  .sectionTitle {
+    font-size: 1.2em;
+  }
+}
