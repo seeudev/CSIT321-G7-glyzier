@@ -57,6 +57,11 @@ public class OrderResponse {
      */
     private List<OrderProductResponse> items;
 
+    /**
+     * Delivery address used for this order
+     */
+    private String deliveryAddress;
+
     // Constructors
 
     /**
@@ -89,6 +94,8 @@ public class OrderResponse {
                     .map(OrderProductResponse::new)
                     .collect(Collectors.toList());
         }
+        // Capture delivery address if present
+        this.deliveryAddress = order.getDeliveryAddress();
     }
 
     /**
@@ -115,6 +122,7 @@ public class OrderResponse {
                     .map(OrderProductResponse::new)
                     .collect(Collectors.toList());
         }
+        this.deliveryAddress = order.getDeliveryAddress();
     }
 
     // Getters and Setters
@@ -173,5 +181,13 @@ public class OrderResponse {
 
     public void setItems(List<OrderProductResponse> items) {
         this.items = items;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 }

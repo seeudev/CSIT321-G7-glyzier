@@ -266,7 +266,9 @@ public class OrderController {
      * @return ResponseEntity with OrderResponse and HTTP 201 (Created)
      */
     @PostMapping("/place-from-cart")
-    public ResponseEntity<?> placeOrderFromCart(Authentication authentication) {
+    public ResponseEntity<?> placeOrderFromCart(
+            @Valid @RequestBody PlaceOrderRequest request,
+            Authentication authentication) {
         try {
             // Get the authenticated user's email
             String email = authentication.getName();
@@ -275,8 +277,8 @@ public class OrderController {
             Users user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
             
-            // Place order from cart through the service
-            OrderResponse order = orderService.placeOrderFromCart(user.getUserid());
+            // Place order from cart through the service (include address/payment)
+            OrderResponse order = orderService.placeOrderFromCart(user.getUserid(), request);
             
             // Return success response
             Map<String, Object> response = new HashMap<>();

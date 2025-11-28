@@ -62,6 +62,30 @@ export const placeOrder = async (orderData) => {
 };
 
 /**
+ * Place Order From Cart (Checkout)
+ *
+ * Sends address and simulated payment details to create an order from the
+ * authenticated user's cart. Backend will convert cart items to an order,
+ * calculate totals and clear the cart.
+ *
+ * @param {{address: string, cardNumber: string}} checkoutData
+ * @returns {Promise<Object>} Response with message and created order
+ */
+export const placeOrderFromCart = async (checkoutData) => {
+  try {
+    const response = await api.post('/api/orders/place-from-cart', checkoutData);
+    return response.data;
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    if (error.response && error.response.data) {
+      const errorMessage = error.response.data.error || error.response.data.message || 'Checkout failed';
+      throw new Error(errorMessage);
+    }
+    throw error;
+  }
+};
+
+/**
  * Get My Order History
  * 
  * Retrieves the complete order history for the authenticated user.

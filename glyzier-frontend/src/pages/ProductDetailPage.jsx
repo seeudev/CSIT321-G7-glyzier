@@ -17,7 +17,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
-import { placeOrder } from '../services/orderService';
 import { addToCart } from '../services/cartService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -116,7 +115,8 @@ function ProductDetailPage() {
   };
 
   /**
-   * Handle Buy Now button click
+   * Handle Buy Now button click (Module 12: Updated for checkout flow)
+   * Adds product to cart and redirects to checkout page
    */
   const handleBuyNow = async () => {
     if (!isAuthenticated) {
@@ -127,27 +127,20 @@ function ProductDetailPage() {
     
     if (orderLoading) return;
     
-    const confirmed = await showConfirm(`Purchase ${product.productname} for $${product.price?.toFixed(2)}?`);
-    if (!confirmed) return;
-    
     try {
       setOrderLoading(true);
       
-      const orderData = {
-        items: [{
-          pid: product.pid,
-          quantity: 1
-        }]
-      };
+      // Add product to cart
+      await addToCart(product.pid, 1);
+      await updateCartCount();
       
-      const result = await placeOrder(orderData);
+      showSuccess('Added to cart! Redirecting to checkout...');
       
-      showSuccess(`Order #${result.order.orderid} placed successfully! Total: ₱${result.order.total.toFixed(2)}`);
-      
-      setTimeout(() => navigate('/dashboard'), 2000);
+      // Redirect to checkout page
+      setTimeout(() => navigate('/checkout'), 1000);
     } catch (err) {
-      console.error('Error placing order:', err);
-      const errorMessage = err.response?.data?.error || 'Failed to place order. Please try again.';
+      console.error('Error adding to cart:', err);
+      const errorMessage = err.response?.data?.error || 'Failed to add to cart. Please try again.';
       showError(errorMessage);
     } finally {
       setOrderLoading(false);

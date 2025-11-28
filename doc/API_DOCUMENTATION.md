@@ -11,7 +11,8 @@ Content-Type: `application/json`
 - Module 8: Orders
 - Module 9: Shopping Cart
 - Module 10: Favorites/Wishlist
-- **Module 11: Basic Search & Filter** ⭐ NEW
+- Module 11: Basic Search & Filter
+- **Module 12: Simple Checkout** ⭐ NEW
 
 ---
 
@@ -925,11 +926,21 @@ Returns 0 if cart is empty or on error.
 
 ### POST /orders/place-from-cart
 
-Place order from all items in cart. Cart is cleared after successful order.
+Place order from all items in cart with delivery address and payment simulation. Cart is cleared after successful order. **(Module 12: Checkout)**
 
 **Authentication**: Required
 
-**Request**: No body required
+**Request**:
+```json
+{
+  "address": "John Doe\n123 Main St, Building A, Unit 4B\nManila, 1000\nPhone: 09123456789",
+  "cardNumber": "1234567812345678"
+}
+```
+
+**Validation**:
+- `address`: Required, delivery address string (multiline format)
+- `cardNumber`: Required, exactly 16 digits (simulated payment)
 
 **Response 201**:
 ```json
@@ -940,6 +951,7 @@ Place order from all items in cart. Cart is cleared after successful order.
     "total": 75.00,
     "status": "Pending",
     "placedAt": "2024-11-13T14:30:00Z",
+    "deliveryAddress": "John Doe\n123 Main St, Building A, Unit 4B\nManila, 1000\nPhone: 09123456789",
     "items": [
       {
         "pid": 1,
@@ -957,6 +969,13 @@ Place order from all items in cart. Cart is cleared after successful order.
 ```json
 {
   "error": "Cart is empty"
+}
+```
+
+**Error 400** (Validation):
+```json
+{
+  "error": "Delivery address is required"
 }
 ```
 

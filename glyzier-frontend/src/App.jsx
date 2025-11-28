@@ -57,6 +57,8 @@ import SearchPage from './pages/SearchPage';
 import ShopsPage from './pages/ShopsPage';
 import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 /**
  * App functional component
@@ -148,6 +150,26 @@ function App() {
             element={
               <ProtectedRoute>
                 <CartPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Checkout page - address and payment (PROTECTED - Module 12) */}
+          <Route 
+            path="/checkout" 
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Order Confirmation page - show order details after checkout (PROTECTED - Module 12) */}
+          <Route 
+            path="/order-confirmation/:orderid" 
+            element={
+              <ProtectedRoute>
+                <OrderConfirmationPage />
               </ProtectedRoute>
             } 
           />

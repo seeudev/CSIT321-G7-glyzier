@@ -99,6 +99,10 @@ public class OrderService {
         order.setUser(user);
         order.setStatus("Pending"); // Initial status
         order.setTotal(BigDecimal.ZERO); // Will be calculated below
+        // Capture delivery address from request if provided
+        if (request.getAddress() != null) {
+            order.setDeliveryAddress(request.getAddress());
+        }
 
         // Save order first to get its ID
         order = ordersRepository.save(order);
@@ -280,7 +284,7 @@ public class OrderService {
      * @throws IllegalArgumentException if cart is empty, invalid, or order fails
      */
     @Transactional
-    public OrderResponse placeOrderFromCart(Long userId) {
+    public OrderResponse placeOrderFromCart(Long userId, PlaceOrderRequest request) {
         // Step 1: Validate cart before checkout
         cartService.validateCartForCheckout(userId);
 
@@ -299,6 +303,11 @@ public class OrderService {
         }
 
         orderRequest.setItems(orderItems);
+        // Propagate delivery address and card number from incoming request
+        if (request != null) {
+            orderRequest.setAddress(request.getAddress());
+            orderRequest.setCardNumber(request.getCardNumber());
+        }
 
         // Step 4: Place the order using the existing method
         OrderResponse orderResponse = placeOrder(userId, orderRequest);
