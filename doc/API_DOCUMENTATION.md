@@ -13,7 +13,8 @@ Content-Type: `application/json`
 - Module 10: Favorites/Wishlist
 - Module 11: Basic Search & Filter
 - Module 12: Simple Checkout
-- **Module 13: Seller Order Management** ⭐ NEW
+- Module 13: Seller Order Management
+- **Module 14: Basic User Profile** ⭐ NEW
 
 ---
 
@@ -103,8 +104,94 @@ Get current authenticated user.
   "userid": 1,
   "email": "john@example.com",
   "displayname": "John Doe",
+  "phonenumber": "+1 234 567 8900",
   "createdAt": "2025-10-20T12:00:00.000+00:00",
   "isSeller": false
+}
+```
+
+---
+
+### PUT /users/profile
+
+Update user profile information (Module 14).
+
+**Authentication**: Required
+
+**Request**:
+```json
+{
+  "displayname": "Jane Doe",
+  "phonenumber": "+1 234 567 8900"
+}
+```
+
+**Validation**:
+- displayname: 2-100 chars, required
+- phonenumber: 10-20 chars, optional, numbers/spaces/+/- only
+
+**Response 200**:
+```json
+{
+  "message": "Profile updated successfully",
+  "user": {
+    "userid": 1,
+    "email": "john@example.com",
+    "displayname": "Jane Doe",
+    "phonenumber": "+1 234 567 8900",
+    "createdAt": "2025-10-20T12:00:00.000+00:00",
+    "isSeller": false
+  }
+}
+```
+
+**Error 400**:
+```json
+{
+  "error": "Display name is required"
+}
+```
+
+---
+
+### PUT /users/change-password
+
+Change user password (Module 14).
+
+**Authentication**: Required
+
+**Request**:
+```json
+{
+  "currentPassword": "oldpass123",
+  "newPassword": "newpass456",
+  "confirmPassword": "newpass456"
+}
+```
+
+**Validation**:
+- currentPassword: required
+- newPassword: min 8 chars, required
+- confirmPassword: must match newPassword, required
+
+**Response 200**:
+```json
+{
+  "message": "Password changed successfully"
+}
+```
+
+**Error 400 (wrong current password)**:
+```json
+{
+  "error": "Current password is incorrect"
+}
+```
+
+**Error 400 (passwords don't match)**:
+```json
+{
+  "error": "New password and confirmation do not match"
 }
 ```
 
