@@ -2,6 +2,8 @@ package com.glyzier.repository;
 
 import com.glyzier.model.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,18 +23,20 @@ import java.util.Optional;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
     /**
-     * Find a cart by user ID
+     * Find a cart by user ID with eager loading of cart items and products
      * 
-     * Since each user has exactly one cart (1:1 relationship),
-     * this method returns an Optional<Cart>.
-     * 
-     * Query equivalent:
-     * SELECT * FROM cart WHERE userid = ?
+     * Uses JOIN FETCH to eagerly load cart items and their associated products
+     * in a single query, avoiding N+1 lazy loading issues.
      * 
      * @param userid The user's ID
-     * @return Optional containing the cart if found, empty otherwise
+     * @return Optional containing the cart with items and products loaded
      */
-    Optional<Cart> findByUserUserid(Long userid);
+    @Query("SELECT DISTINCT c FROM Cart c " +
+           "LEFT JOIN FETCH c.cartItems ci " +
+           "LEFT JOIN FETCH ci.product p " +
+           "LEFT JOIN FETCH p.inventory " +
+           "WHERE c.user.userid = :userid")
+    Optional<Cart> findByUserUserid(@Param("userid") Long userid);
 
     /**
      * Check if a cart exists for a user
