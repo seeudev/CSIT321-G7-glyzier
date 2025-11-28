@@ -301,43 +301,84 @@ public class OrderController {
         }
     }
 
-    // ==================== OPTIONAL: ADMIN/FUTURE ENDPOINTS ====================
-    // These endpoints are not required for Module 4 but are included for potential future use
+    // ==================== MODULE 13: SELLER ORDER MANAGEMENT ====================
 
     /**
-     * Get all orders (ADMIN functionality - optional)
+     * Get orders containing seller's products (Module 13)
      * 
-     * Endpoint: GET /api/orders/all
-     * Access: Should be restricted to admin users (not implemented in current version)
+     * Endpoint: GET /api/orders/seller/my-orders
+     * Access: Authenticated sellers only
      * 
-     * This endpoint could be used by administrators to view all orders in the system.
-     * In a production system, this would require additional role-based access control.
+     * This endpoint allows sellers to view all orders that contain their products.
+     * Sellers can only see orders that include at least one of their products.
      * 
-     * Note: This is commented out as it's not part of the current requirements.
-     * Uncomment and add admin role checking if needed in the future.
+     * The response includes:
+     * - Order ID
+     * - Buyer name
+     * - Total amount
+     * - Status
+     * - Timestamp when placed
+     * - Items (filtered to show only seller's products)
+     * - Delivery address
+     * 
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity with List<OrderResponse> and HTTP 200 (OK)
      */
-    /*
-    @GetMapping("/all")
-    public ResponseEntity<List<OrderResponse>> getAllOrders(Authentication authentication) {
-        // TODO: Add admin role check here
-        List<OrderResponse> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+    @GetMapping("/seller/my-orders")
+    public ResponseEntity<?> getSellerOrders(Authentication authentication) {
+        try {
+            // Get the authenticated user's email
+            String email = authentication.getName();
+            
+            // Find the user by email
+            Users user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+            
+            // Get seller orders from the service
+            List<OrderResponse> orders = orderService.getSellerOrders(user.getUserid());
+            
+            return ResponseEntity.ok(orders);
+            
+        } catch (IllegalArgumentException e) {
+            // Handle user/seller not found errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            
+        } catch (Exception e) {
+            // Handle unexpected errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "An error occurred while fetching seller orders: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
-    */
 
     /**
-     * Update order status (ADMIN/SELLER functionality - optional)
+     * Update order status (Module 13)
      * 
      * Endpoint: PUT /api/orders/{orderid}/status
-     * Access: Should be restricted to admin/seller users
+     * Access: Authenticated sellers only (must own at least one product in the order)
      * 
-     * This endpoint could be used to update order status (e.g., Pending -> Shipped -> Delivered).
-     * In a production system, this would require proper role-based access control.
+     * This endpoint allows sellers to update the status of orders containing their products.
+     * Sellers can only update orders that include at least one of their products.
      * 
-     * Note: This is commented out as it's not part of the current requirements.
-     * Uncomment and add proper authorization if needed in the future.
+     * Valid status values:
+     * - "Pending" - Order placed, awaiting processing
+     * - "Processing" - Order is being prepared
+     * - "Shipped" - Order has been shipped to customer
+     * - "Delivered" - Order has been delivered
+     * - "Cancelled" - Order was cancelled
+     * 
+     * Request body should contain:
+     * {
+     *   "status": "Shipped"
+     * }
+     * 
+     * @param orderid The order ID to update
+     * @param request Map containing the new status
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity with updated OrderResponse and HTTP 200 (OK)
      */
-    /*
     @PutMapping("/{orderid}/status")
     public ResponseEntity<?> updateOrderStatus(
             @PathVariable Long orderid,
@@ -345,9 +386,21 @@ public class OrderController {
             Authentication authentication) {
         
         try {
-            // TODO: Add admin/seller role check here
+            // Get the authenticated user's email
+            String email = authentication.getName();
+            
+            // Find the user by email
+            Users user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+            
+            // Get the new status from request
             String newStatus = request.get("status");
-            OrderResponse order = orderService.updateOrderStatus(orderid, newStatus);
+            if (newStatus == null || newStatus.trim().isEmpty()) {
+                throw new IllegalArgumentException("Status is required");
+            }
+            
+            // Update order status through the service (includes permission check)
+            OrderResponse order = orderService.updateOrderStatus(user.getUserid(), orderid, newStatus);
             
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Order status updated successfully");
@@ -356,10 +409,22 @@ public class OrderController {
             return ResponseEntity.ok(response);
             
         } catch (IllegalArgumentException e) {
+            // Handle validation errors and permission errors
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            
+            // Determine appropriate status code
+            HttpStatus status = e.getMessage().contains("permission") || e.getMessage().contains("not a seller")
+                    ? HttpStatus.FORBIDDEN 
+                    : HttpStatus.BAD_REQUEST;
+            
+            return ResponseEntity.status(status).body(error);
+            
+        } catch (Exception e) {
+            // Handle unexpected errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "An error occurred while updating order status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
-    */
 }

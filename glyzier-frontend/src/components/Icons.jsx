@@ -364,3 +364,41 @@ export const LockIcon = ({ size = 24, color = 'currentColor', ...props }) => (
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
+
+/**
+ * ChevronDown Icon - Expand/Show more indicator
+ */
+export const ChevronDownIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke={color} 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    {...props}
+  >
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+/**
+ * ChevronUp Icon - Collapse/Show less indicator
+ */
+export const ChevronUpIcon = ({ size = 24, color = 'currentColor', ...props }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke={color} 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    {...props}
+  >
+    <polyline points="18 15 12 9 6 15" />
+  </svg>
+);

@@ -206,6 +206,16 @@ function SellerDashboard() {
                   </div>
                 </div>
               </Link>
+              
+              <Link to="/seller/orders" className={styles.manageProductsButton}>
+                <PackageIcon size={24} color="white" />
+                <div>
+                  <div className={styles.buttonTitle}>Manage Orders</div>
+                  <div className={styles.buttonSubtitle}>
+                    View and update order status
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

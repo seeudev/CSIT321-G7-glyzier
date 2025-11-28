@@ -12,7 +12,8 @@ Content-Type: `application/json`
 - Module 9: Shopping Cart
 - Module 10: Favorites/Wishlist
 - Module 11: Basic Search & Filter
-- **Module 12: Simple Checkout** ⭐ NEW
+- Module 12: Simple Checkout
+- **Module 13: Seller Order Management** ⭐ NEW
 
 ---
 
@@ -645,6 +646,118 @@ Get order details (owner only).
 
 ---
 
+### GET /orders/seller/my-orders
+
+Get orders containing seller's products. **(Module 13: Seller Order Management)**
+
+**Authentication**: Required (Seller only)
+
+**Description**: Returns all orders that contain at least one product belonging to the authenticated seller. Each order's items list is filtered to show only the seller's products.
+
+**Response 200**:
+```json
+[
+  {
+    "orderid": 5,
+    "total": 150.00,
+    "status": "Pending",
+    "placedAt": "2024-11-28T14:30:00Z",
+    "userid": 3,
+    "userDisplayName": "John Buyer",
+    "deliveryAddress": "John Buyer\n123 Main St\nManila, 1000\nPhone: 09123456789",
+    "items": [
+      {
+        "opid": 10,
+        "pid": 7,
+        "productNameSnapshot": "Sunset Painting",
+        "unitPrice": 75.00,
+        "quantity": 2,
+        "lineTotal": 150.00
+      }
+    ]
+  }
+]
+```
+
+**Error 404**:
+```json
+{"error": "User is not a seller"}
+```
+
+---
+
+### PUT /orders/{orderid}/status
+
+Update order status. **(Module 13: Seller Order Management)**
+
+**Authentication**: Required (Seller only - must own at least one product in order)
+
+**Path Parameters**:
+- `orderid` (number): Order ID to update
+
+**Request**:
+```json
+{
+  "status": "Shipped"
+}
+```
+
+**Valid Status Values**:
+- `Pending` → `Processing` or `Cancelled`
+- `Processing` → `Shipped` or `Cancelled`
+- `Shipped` → `Delivered`
+- `Delivered` → (terminal state, no transitions)
+- `Cancelled` → (terminal state, no transitions)
+
+**Response 200**:
+```json
+{
+  "message": "Order status updated successfully",
+  "order": {
+    "orderid": 5,
+    "total": 150.00,
+    "status": "Shipped",
+    "placedAt": "2024-11-28T14:30:00Z",
+    "userid": 3,
+    "userDisplayName": "John Buyer",
+    "deliveryAddress": "John Buyer\n123 Main St\nManila, 1000\nPhone: 09123456789",
+    "items": [
+      {
+        "opid": 10,
+        "pid": 7,
+        "productNameSnapshot": "Sunset Painting",
+        "unitPrice": 75.00,
+        "quantity": 2,
+        "lineTotal": 150.00
+      }
+    ]
+  }
+}
+```
+
+**Error 400**:
+```json
+{"error": "Status is required"}
+```
+```json
+{"error": "Invalid status. Valid values are: Pending, Processing, Shipped, Delivered, Cancelled"}
+```
+
+**Error 403**:
+```json
+{"error": "You do not have permission to update this order - none of your products are in this order"}
+```
+```json
+{"error": "User is not a seller"}
+```
+
+**Error 404**:
+```json
+{"error": "Order not found with ID: 99"}
+```
+
+---
+
 ## Error Responses
 
 **Format**:
@@ -748,6 +861,18 @@ curl -X POST http://localhost:8080/api/orders/place-from-cart \
 # Clear cart
 curl -X DELETE http://localhost:8080/api/cart/clear \
   -H "Authorization: Bearer $BUYER_TOKEN"
+
+# MODULE 13: SELLER ORDER MANAGEMENT
+
+# Get seller's orders (containing seller's products)
+curl -X GET http://localhost:8080/api/orders/seller/my-orders \
+  -H "Authorization: Bearer $SELLER_TOKEN"
+
+# Update order status (seller only)
+curl -X PUT http://localhost:8080/api/orders/5/status \
+  -H "Authorization: Bearer $SELLER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"status":"Shipped"}'
 ```
 
 ---
@@ -1115,5 +1240,5 @@ Get total count of user's favorites.
 
 ---
 
-Last Updated: November 27, 2025 (Module 10: Favorites/Wishlist)  
+Last Updated: November 28, 2025 (Module 13: Seller Order Management)  
 Project: Glyzier CSIT321-G7
