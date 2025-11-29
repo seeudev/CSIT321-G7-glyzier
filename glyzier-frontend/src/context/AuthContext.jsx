@@ -112,10 +112,12 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.login(email, password);
       
       // Update the context state with the logged-in user
+      // Module 17: Include isAdmin for admin access control
       const userInfo = {
-        uid: data.uid,
+        uid: data.userid,
         displayname: data.displayname,
         email: data.email,
+        isAdmin: data.isAdmin, // Module 17: Store admin flag
       };
       
       setUser(userInfo);
