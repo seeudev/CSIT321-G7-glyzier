@@ -122,4 +122,16 @@ public class SellerService {
         }
         return sellerRepository.existsByUserUserid(user.getUserid());
     }
+
+    /**
+     * Get all sellers (Module 15 - Public Shop Pages)
+     * 
+     * This method retrieves all registered sellers for the public shops page.
+     * Returns a list of all seller accounts with their basic information.
+     * 
+     * @return List of all Seller entities
+     */
+    public java.util.List<Seller> getAllSellers() {
+        return sellerRepository.findAll();
+    }
 }

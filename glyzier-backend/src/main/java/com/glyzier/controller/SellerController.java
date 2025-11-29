@@ -165,4 +165,31 @@ public class SellerController {
         
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Get all sellers (Module 15 - Public Shop Pages)
+     * 
+     * Endpoint: GET /api/sellers
+     * Access: Public (anyone can view all shops)
+     * 
+     * This endpoint returns a list of all sellers for the public shops page.
+     * Users can browse all shops and click on them to view shop details.
+     * 
+     * @return ResponseEntity with list of all sellers
+     */
+    @GetMapping
+    public ResponseEntity<?> getAllSellers() {
+        try {
+            java.util.List<Seller> sellers = sellerService.getAllSellers();
+            // Convert to DTOs to prevent circular references
+            java.util.List<SellerResponse> sellerResponses = sellers.stream()
+                    .map(SellerResponse::new)
+                    .collect(java.util.stream.Collectors.toList());
+            return ResponseEntity.ok(sellerResponses);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to retrieve sellers: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 }
