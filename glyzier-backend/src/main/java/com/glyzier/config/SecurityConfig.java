@@ -141,6 +141,10 @@ public class SecurityConfig {
                 // Public seller viewing (GET only - Module 15: All Shops & Shop Detail Pages)
                 .requestMatchers(HttpMethod.GET, "/api/sellers", "/api/sellers/**").permitAll()
                 
+                // Admin endpoints require authentication (Module 17: Admin System)
+                // Role check is performed in the controller layer
+                .requestMatchers("/api/admin/**").authenticated()
+                
                 // Cart endpoints require authentication (Module 9)
                 .requestMatchers("/api/cart/**").authenticated()
                 
