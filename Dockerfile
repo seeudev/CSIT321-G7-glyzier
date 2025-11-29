@@ -11,8 +11,9 @@ WORKDIR /app/frontend
 # Copy frontend package files
 COPY glyzier-frontend/package*.json ./
 
-# Install frontend dependencies
-RUN npm ci --only=production
+# Install frontend dependencies (including devDependencies like Vite)
+# Note: Vite is a devDependency required for building
+RUN npm ci
 
 # Copy frontend source
 COPY glyzier-frontend/ ./
@@ -37,10 +38,12 @@ RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 COPY glyzier-backend/src ./src
 
 # Copy built frontend to Spring Boot static resources
+# This replaces the maven-resources-plugin copy step
 COPY --from=frontend-build /app/frontend/dist ./src/main/resources/static
 
-# Build Spring Boot application (skip tests for faster build)
-RUN ./mvnw clean package -DskipTests -B
+# Build Spring Boot application with docker profile (skips frontend plugins)
+# Tests are also skipped for faster build
+RUN ./mvnw clean package -DskipTests -P docker -B
 
 # ============================================
 # Stage 3: Runtime (Production)

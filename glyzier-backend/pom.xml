@@ -177,4 +177,51 @@
 		</plugins>
 	</build>
 
+	<!-- ======================================== -->
+	<!-- Profiles                                 -->
+	<!-- ======================================== -->
+	<profiles>
+		<!-- Docker Profile: Skip frontend plugins (frontend built separately) -->
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<!-- Disable frontend-maven-plugin in Docker -->
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.15.0</version>
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<phase>none</phase>
+							</execution>
+							<execution>
+								<id>npm install</id>
+								<phase>none</phase>
+							</execution>
+							<execution>
+								<id>npm run build</id>
+								<phase>none</phase>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<!-- Disable maven-resources-plugin copy in Docker -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.3.1</version>
+						<executions>
+							<execution>
+								<id>copy-frontend-build</id>
+								<phase>none</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
