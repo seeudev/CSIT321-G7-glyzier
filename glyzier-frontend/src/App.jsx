@@ -55,6 +55,7 @@ import CartPage from './pages/CartPage';
 import FavoritesPage from './pages/FavoritesPage';
 import SearchPage from './pages/SearchPage';
 import ShopsPage from './pages/ShopsPage';
+import ShopDetailPage from './pages/ShopDetailPage';
 import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -103,6 +104,9 @@ function App() {
             <Route path="/shops" element={<ShopsPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/more" element={<MorePage />} />
+            
+            {/* Shop Detail page - view individual shop (PUBLIC - Module 15) */}
+            <Route path="/shops/:sid" element={<ShopDetailPage />} />
           
           {/* Protected routes - require authentication */}
           
