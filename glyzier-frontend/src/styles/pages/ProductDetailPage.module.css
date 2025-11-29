@@ -369,6 +369,75 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
+/* Module 16: Floating Contact Seller Button */
+.floatingContactButton {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+  
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  padding: 16px 24px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.95) 0%, rgba(124, 58, 237, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  color: white;
+  
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  
+  font-size: 1rem;
+  font-weight: 600;
+  
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4),
+              0 0 0 0 rgba(139, 92, 246, 0.7);
+  
+  animation: floatIn 0.5s ease 0.8s both;
+}
+
+.floatingContactButton:hover:not(:disabled) {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 48px rgba(139, 92, 246, 0.6),
+              0 0 0 8px rgba(139, 92, 246, 0.1);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 1) 0%, rgba(124, 58, 237, 1) 100%);
+}
+
+.floatingContactButton:active:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.floatingContactButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.floatingContactButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.floatingButtonText {
+  white-space: nowrap;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .addToCartButton:disabled,
 .buyNowButton:disabled {
   opacity: 0.5;
