@@ -4,10 +4,13 @@
 [![React](https://img.shields.io/badge/React-19.1.1-blue.svg)](https://reactjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue.svg)](https://supabase.com/)
 [![Java](https://img.shields.io/badge/Java-17-red.svg)](https://www.oracle.com/java/)
+[![Deploy](https://img.shields.io/badge/Deploy-Render-blueviolet.svg)](https://render.com)
 
 Full-stack web application for artists to showcase and sell their work. Built for CSIT321 App-Dev and CSIT340 Elective final project.
 
 > **🆕 Database Migration**: Now using **Supabase PostgreSQL** (migrated from MySQL). See [Database Migration Guide](doc/DATABASE_MIGRATION.md) for details.
+
+> **🚀 Deployment**: Ready to deploy on Render! See [Render Deployment Guide](RENDER_DEPLOYMENT.md) or [Quick Start](RENDER_QUICKSTART.md) for 10-minute deployment.
 
 ---
 
@@ -17,6 +20,7 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
+- [Deployment](#-deployment)
 - [API Documentation](#-api-documentation)
 - [Database Schema](#-database-schema)
 - [Security](#-security)
@@ -293,6 +297,54 @@ Authorization: Bearer <your_jwt_token>
 | **Order** | `/orders/{orderid}` | GET | ✅ | Get order details |
 
 📖 **Complete API Documentation**: See [`doc/API_DOCUMENTATION.md`](./doc/API_DOCUMENTATION.md) for detailed request/response examples, validation rules, and error codes.
+
+---
+
+## 🚀 Deployment
+
+### Deploy to Render (Recommended)
+
+**Quick Start** (10 minutes):
+1. See [RENDER_QUICKSTART.md](./RENDER_QUICKSTART.md) for step-by-step guide
+2. Create Web Service on [Render](https://render.com)
+3. Configure environment variables (database, JWT secret)
+4. Deploy and go live!
+
+**Full Documentation**:
+- 📘 [Complete Deployment Guide](./RENDER_DEPLOYMENT.md) - Detailed instructions, troubleshooting, and best practices
+- 📄 [Environment Variables Template](./.env.example) - Copy and configure for your deployment
+- 📋 [Infrastructure as Code](./render.yaml) - Render Blueprint for automated setup
+
+### Deployment Checklist
+
+- [ ] Supabase PostgreSQL database ready
+- [ ] Environment variables configured in Render
+- [ ] JWT secret generated (strong random value)
+- [ ] Build and start commands set correctly
+- [ ] Health check endpoint configured
+- [ ] Database connection tested
+- [ ] Frontend loads correctly
+- [ ] API endpoints responding
+
+**Live URL**: Your app will be available at `https://your-app-name.onrender.com`
+
+### Key Configuration
+
+```bash
+# Build Command
+./mvnw clean package -DskipTests
+
+# Start Command
+java -jar target/glyzier-backend-0.0.1-SNAPSHOT.jar
+
+# Required Environment Variables
+SPRING_DATASOURCE_URL=jdbc:postgresql://HOST:6543/postgres?sslmode=require
+SPRING_DATASOURCE_USERNAME=postgres.PROJECT_ID
+SPRING_DATASOURCE_PASSWORD=your_password
+JWT_SECRET=your_secure_random_secret
+```
+
+See full configuration details in the deployment guides.
 
 ---
 

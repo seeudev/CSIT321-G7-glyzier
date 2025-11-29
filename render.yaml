@@ -1,0 +1,75 @@
+# Render Blueprint for Glyzier
+# Infrastructure-as-Code deployment configuration
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Main Web Service - Spring Boot + React
+  - type: web
+    name: glyzier
+    runtime: java
+    plan: free  # Change to 'starter' for paid tier ($7/mo)
+    
+    # Build Configuration
+    rootDir: glyzier-backend
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/glyzier-backend-0.0.1-SNAPSHOT.jar
+    
+    # Auto Deploy
+    autoDeploy: true
+    branch: main
+    
+    # Health Check
+    healthCheckPath: /api/products
+    
+    # Environment Variables
+    envVars:
+      # Database Configuration
+      - key: SPRING_DATASOURCE_URL
+        sync: false  # Set manually in dashboard (contains credentials)
+      
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false  # Set manually in dashboard
+      
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false  # Set manually in dashboard
+      
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
+      
+      # JPA Configuration
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      
+      - key: SPRING_JPA_SHOW_SQL
+        value: false
+      
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+        value: org.hibernate.dialect.PostgreSQLDialect
+      
+      # JWT Configuration
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates secure random value
+      
+      - key: JWT_EXPIRATION
+        value: 86400000
+      
+      # Application Configuration
+      - key: SPRING_PROFILES_ACTIVE
+        value: supabase
+      
+      - key: SPRING_APPLICATION_NAME
+        value: glyzier
+      
+      # Performance Tuning (Free Tier - 512MB RAM)
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx400m -Xms200m
+      
+      - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+        value: 10
+      
+      - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+        value: 2
+
+# Note: Database is external (Supabase)
+# No database service defined in this blueprint
+# Configure database credentials manually in Render dashboard
