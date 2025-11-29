@@ -147,3 +147,36 @@ export const getSellerById = async (sid) => {
     throw error;
   }
 };
+
+/**
+ * Get All Sellers (Module 15 - Public Shop Pages)
+ * 
+ * Retrieves a list of all sellers for the public shops page.
+ * This is a public endpoint - no authentication required.
+ * 
+ * @returns {Promise<Array>} Array of seller objects with basic information
+ * @throws {Error} If the API request fails
+ * 
+ * @example
+ * const sellers = await getAllSellers();
+ * // Returns: [
+ * //   {
+ * //     sid: 1,
+ * //     sellername: "Artisan Gallery",
+ * //     storebio: "Professional digital artist.",
+ * //     createdAt: "2025-10-20T12:00:00.000+00:00",
+ * //     productCount: 5,
+ * //     products: [...]
+ * //   },
+ * //   ...
+ * // ]
+ */
+export const getAllSellers = async () => {
+  try {
+    const response = await api.get('/api/sellers');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching all sellers:', error);
+    throw error;
+  }
+};
