@@ -1,5 +1,14 @@
 package com.glyzier.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.glyzier.dto.InventoryRequest;
 import com.glyzier.dto.ProductRequest;
 import com.glyzier.dto.ProductResponse;
@@ -8,17 +17,8 @@ import com.glyzier.model.ProductFiles;
 import com.glyzier.model.Products;
 import com.glyzier.model.Seller;
 import com.glyzier.repository.InventoryRepository;
-import com.glyzier.repository.ProductFilesRepository;
 import com.glyzier.repository.ProductsRepository;
 import com.glyzier.repository.SellerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * ProductService - Business logic for product-related operations
@@ -114,7 +114,8 @@ public class ProductService {
             qtyonhand = 0; // Default for physical products
         }
         
-        Integer qtyreserved = request.getQtyreserved() != null ? request.getQtyreserved() : 0;
+        Integer reservedQty = request.getQtyreserved();
+        Integer qtyreserved = reservedQty != null ? reservedQty : 0;
         Inventory inventory = new Inventory(qtyonhand, qtyreserved, product);
         inventoryRepository.save(inventory);
         product.setInventory(inventory);

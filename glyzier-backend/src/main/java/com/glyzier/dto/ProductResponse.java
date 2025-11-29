@@ -1,14 +1,13 @@
 package com.glyzier.dto;
 
-import com.glyzier.model.Products;
-import com.glyzier.model.ProductFiles;
-import com.glyzier.model.Inventory;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.glyzier.model.Inventory;
+import com.glyzier.model.Products;
 
 /**
  * ProductResponse DTO
@@ -135,7 +134,8 @@ public class ProductResponse {
             Inventory inv = product.getInventory();
             this.qtyonhand = inv.getQtyonhand();
             this.isUnlimited = inv.isUnlimited();
-            this.availableQuantity = this.isUnlimited ? Integer.MAX_VALUE : inv.getAvailableQuantity();
+            Integer availQty = inv.getAvailableQuantity();
+            this.availableQuantity = this.isUnlimited ? Integer.MAX_VALUE : (availQty != null ? availQty : 0);
             this.inStock = inv.isInStock();
         } else {
             this.qtyonhand = 0;
