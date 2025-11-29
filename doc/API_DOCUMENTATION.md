@@ -14,7 +14,8 @@ Content-Type: `application/json`
 - Module 11: Basic Search & Filter
 - Module 12: Simple Checkout
 - Module 13: Seller Order Management
-- **Module 14: Basic User Profile** ⭐ NEW
+- Module 14: Basic User Profile
+- **Module 15: Public Shop Pages** ⭐ NEW
 
 ---
 
@@ -285,6 +286,42 @@ Get own seller profile.
 **Error 404**:
 ```json
 {"error": "User is not a seller"}
+```
+
+---
+
+### GET /sellers
+
+Get all sellers (Module 15 - Public Shop Pages).
+
+**Authentication**: Not required
+
+**Response 200**:
+```json
+[
+  {
+    "sid": 1,
+    "sellername": "Artisan Gallery",
+    "storebio": "Professional digital artist.",
+    "createdAt": "2025-10-20T12:00:00.000+00:00",
+    "userId": 1,
+    "userDisplayName": "John Doe",
+    "userEmail": "john@example.com",
+    "productCount": 5,
+    "products": [...]
+  },
+  {
+    "sid": 2,
+    "sellername": "Creative Studio",
+    "storebio": "Innovative designs and artwork.",
+    "createdAt": "2025-11-15T09:30:00.000+00:00",
+    "userId": 2,
+    "userDisplayName": "Jane Smith",
+    "userEmail": "jane@example.com",
+    "productCount": 3,
+    "products": [...]
+  }
+]
 ```
 
 ---
