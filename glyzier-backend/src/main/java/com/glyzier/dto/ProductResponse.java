@@ -34,6 +34,7 @@ public class ProductResponse {
     // Seller information
     private Long sellerId;
     private String sellerName;
+    private Long sellerUserId; // User ID of the seller for messaging
     
     // Inventory information
     private Integer qtyonhand;
@@ -123,6 +124,10 @@ public class ProductResponse {
         if (product.getSeller() != null) {
             this.sellerId = product.getSeller().getSid();
             this.sellerName = product.getSeller().getSellername();
+            // Set seller's user ID for messaging
+            if (product.getSeller().getUser() != null) {
+                this.sellerUserId = product.getSeller().getUser().getUserid();
+            }
         }
         
         // Set inventory information
@@ -234,6 +239,14 @@ public class ProductResponse {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public Long getSellerUserId() {
+        return sellerUserId;
+    }
+
+    public void setSellerUserId(Long sellerUserId) {
+        this.sellerUserId = sellerUserId;
     }
 
     public Integer getQtyonhand() {
