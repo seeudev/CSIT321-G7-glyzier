@@ -55,11 +55,13 @@ public class Products {
     private BigDecimal price;
 
     /**
-     * Current status of the product (e.g., "Available", "Sold Out", "Discontinued")
-     * Used to control product availability
+     * Current status of the product (ACTIVE, DELETED)
+     * ACTIVE: Product is visible and available for purchase
+     * DELETED: Product has been soft-deleted by admin (hidden from public view)
+     * Defaults to ACTIVE when product is created
      */
-    @Column(name = "status")
-    private String status;
+    @Column(name = "status", length = 20, nullable = false)
+    private String status = "ACTIVE";
 
     /**
      * Product description

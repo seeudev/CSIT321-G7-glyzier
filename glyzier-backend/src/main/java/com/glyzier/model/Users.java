@@ -59,6 +59,24 @@ public class Users {
     private String phonenumber;
 
     /**
+     * Admin flag indicating if user has admin privileges
+     * Defaults to false for regular users
+     * Set to true for platform administrators
+     * Module 17: Admin System
+     */
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin = false;
+
+    /**
+     * Account status (ACTIVE, BANNED)
+     * Defaults to ACTIVE
+     * BANNED users cannot log in or access the platform
+     * Used by admins for moderation purposes
+     */
+    @Column(name = "status", length = 20, nullable = false)
+    private String status = "ACTIVE";
+
+    /**
      * Timestamp of when the user account was created
      * Automatically set when the entity is first persisted
      */
@@ -139,6 +157,22 @@ public class Users {
 
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Timestamp getCreatedAt() {
