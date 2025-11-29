@@ -3,16 +3,15 @@
 # https://render.com/docs/blueprint-spec
 
 services:
-  # Main Web Service - Spring Boot + React
+  # Main Web Service - Spring Boot + React (Docker)
   - type: web
     name: glyzier
-    runtime: java
+    runtime: docker
     plan: free  # Change to 'starter' for paid tier ($7/mo)
     
-    # Build Configuration
-    rootDir: glyzier-backend
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/glyzier-backend-0.0.1-SNAPSHOT.jar
+    # Docker Configuration
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
     
     # Auto Deploy
     autoDeploy: true

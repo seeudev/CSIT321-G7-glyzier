@@ -18,15 +18,16 @@ Fast deployment guide for Glyzier on Render.com
 
 **Service Configuration:**
 ```
-Name:           glyzier
-Region:         Oregon (US West)
-Branch:         main
-Root Directory: glyzier-backend
-Runtime:        Java
-Build Command:  ./mvnw clean package -DskipTests
-Start Command:  java -jar target/glyzier-backend-0.0.1-SNAPSHOT.jar
-Instance:       Free
+Name:              glyzier
+Region:            Singapore (or closest to you)
+Branch:            main
+Runtime:           Docker
+Dockerfile Path:   ./Dockerfile
+Docker Context:    ./
+Instance:          Free
 ```
+
+> **Note**: We use Docker because Render's free tier doesn't include Java runtime. Docker bundles everything together.
 
 ---
 
@@ -34,11 +35,11 @@ Instance:       Free
 
 Go to **Environment** tab and add these variables:
 
-### Database (Replace with your Supabase credentials)
+### Database (Your actual Supabase credentials)
 ```bash
-SPRING_DATASOURCE_URL=jdbc:postgresql://db.YOUR_PROJECT.supabase.co:6543/postgres?sslmode=require
-SPRING_DATASOURCE_USERNAME=postgres.YOUR_PROJECT
-SPRING_DATASOURCE_PASSWORD=your_supabase_password
+SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres
+SPRING_DATASOURCE_USERNAME=postgres.yyavmyittkbueafovaoe
+SPRING_DATASOURCE_PASSWORD=glyzierDB@8080
 SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
 ```
 
