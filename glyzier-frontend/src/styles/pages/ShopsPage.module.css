@@ -1,0 +1,283 @@
+/**
+ * ShopsPage Component Styles (Module 15)
+ * 2-column card layout with product carousel following wireframe
+ */
+
+.page {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 100px 2rem 3rem;
+}
+
+/* --- Header Section --- */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.75rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- Loading & Error States --- */
+.loading,
+.error,
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+
+.empty {
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  padding: 3rem;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+
+/* --- Shops Grid (2 Column Layout) --- */
+.shopsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* --- Shop Card --- */
+.shopCard {
+  background: linear-gradient(135deg, #e8e3f5 0%, #f0ecfa 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  border: 2px solid rgba(139, 127, 196, 0.2);
+  display: flex;
+  flex-direction: column;
+  min-height: 350px;
+  position: relative;
+}
+
+.shopCard:hover {
+  box-shadow: 0 8px 24px rgba(139, 127, 196, 0.25);
+  border-color: #8b7fc4;
+}
+
+/* --- Shop Header --- */
+.shopHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(139, 127, 196, 0.2);
+}
+
+.shopName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c2c54;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.sellerName {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* --- Product Carousel --- */
+.productCarousel {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: white;
+  padding: 1rem 3rem; /* More padding for arrows */
+  min-height: 200px;
+}
+
+.carouselTrack {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.carouselItem {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  border: 1px solid #e5e7eb;
+}
+
+.carouselImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carouselImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Carousel Navigation Arrows --- */
+.carouselArrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -18px; /* Half of height for perfect centering */
+  background: rgba(139, 127, 196, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+  z-index: 10;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.carouselArrow:hover {
+  background: rgba(124, 111, 184, 1);
+  opacity: 1;
+}
+
+.carouselArrow:active {
+  background: rgba(109, 96, 168, 1);
+}
+
+.carouselArrowLeft {
+  left: 0.5rem;
+}
+
+.carouselArrowRight {
+  right: 0.5rem;
+}
+
+/* --- No Products State --- */
+.noProducts {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.noProducts p {
+  margin: 0;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 1200px) {
+  .shopsGrid {
+    gap: 1.5rem;
+  }
+  
+  .carouselTrack {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .shopsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .carouselTrack {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 90px 1.5rem 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .shopCard {
+    padding: 1.5rem;
+    min-height: 300px;
+  }
+  
+  .shopName {
+    font-size: 1.5rem;
+  }
+  
+  .carouselTrack {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .carouselTrack {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .shopCard {
+    min-height: 280px;
+  }
+}
