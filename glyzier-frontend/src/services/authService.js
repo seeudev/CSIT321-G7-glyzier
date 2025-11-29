@@ -48,16 +48,18 @@ const login = async (email, password) => {
       password,
     });
     
-    // The response should contain: { token, uid, displayname, email }
+    // The response should contain: { token, uid, displayname, email, isAdmin }
     // Store the token in localStorage for persistent authentication
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       
       // Store user info as well (optional, but useful for UI)
+      // Module 17: Include isAdmin for admin access control
       const userInfo = {
-        uid: response.data.uid,
+        uid: response.data.userid,
         displayname: response.data.displayname,
         email: response.data.email,
+        isAdmin: response.data.isAdmin, // Module 17: Store admin flag
       };
       localStorage.setItem('user', JSON.stringify(userInfo));
     }
