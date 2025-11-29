@@ -62,6 +62,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import ProfilePage from './pages/ProfilePage';
+import MessagesPage from './pages/MessagesPage';
 
 /**
  * App functional component
@@ -200,10 +201,29 @@ function App() {
             } 
           />
           
+          {/* Messages - 2-column layout with conversations and messages (PROTECTED - Module 16) */}
+          <Route 
+            path="/messages" 
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Message Thread - specific conversation selected (PROTECTED - Module 16) */}
+          <Route 
+            path="/messages/:id" 
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
+              </ProtectedRoute>
+            } 
+          />
+          
           {/* 
             Additional routes to be added in future modules:
             - /orders/:orderid - Order details (Future module, PROTECTED)
-            - /sellers/:sid - Public seller profile page (Future module, PUBLIC)
           */}
           </Routes>
         </CartProvider>

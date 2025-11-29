@@ -18,6 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { checkIfSeller } from '../services/sellerService';
+import { hasNewMessages, markMessagesAsSeen } from '../services/notificationService';
 import styles from '../styles/components/Navigation.module.css';
 
 /**
@@ -42,6 +43,7 @@ function Navigation() {
   const [isSeller, setIsSeller] = useState(false);
   const [checkingSeller, setCheckingSeller] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
 
   /**
    * Check if user is a seller on component mount
@@ -68,6 +70,43 @@ function Navigation() {
 
     checkSellerStatus();
   }, [isAuthenticated]);
+
+  /**
+   * Check for new messages periodically
+   * Polls every 10 seconds when user is authenticated
+   */
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setHasUnreadMessages(false);
+      return;
+    }
+
+    // Check immediately on mount
+    const checkMessages = async () => {
+      try {
+        const hasNew = await hasNewMessages();
+        setHasUnreadMessages(hasNew);
+      } catch (error) {
+        console.error('Error checking messages:', error);
+      }
+    };
+
+    checkMessages();
+
+    // Poll every 10 seconds
+    const interval = setInterval(checkMessages, 10000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
+
+  /**
+   * Handle clicking messages icon
+   * Marks messages as seen and clears the badge
+   */
+  const handleMessagesClick = () => {
+    markMessagesAsSeen();
+    setHasUnreadMessages(false);
+  };
 
   /**
    * Handle logout
@@ -141,10 +180,19 @@ function Navigation() {
         <div className={styles.actions}>
           {isAuthenticated ? (
             <>
-              {/* Messages Icon */}
-              <button className={styles.iconButton} title="Messages" aria-label="Messages">
+              {/* Messages Icon - Module 16 with notification badge */}
+              <Link 
+                to="/messages" 
+                className={styles.iconButton} 
+                title="Messages" 
+                aria-label="Messages"
+                onClick={handleMessagesClick}
+              >
                 <svg className={styles.iconSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
-              </button>
+                {hasUnreadMessages && (
+                  <span className={styles.notificationBadge}></span>
+                )}
+              </Link>
 
               {/* Favorites Icon - Module 10 */}
               <Link to="/favorites" className={styles.iconButton} title="Favorites" aria-label="Favorites">

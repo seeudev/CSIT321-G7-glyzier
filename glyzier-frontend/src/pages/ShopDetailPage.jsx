@@ -17,7 +17,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import FavoriteButton from '../components/FavoriteButton';
+import { useAuth } from '../context/AuthContext';
 import { getSellerById } from '../services/sellerService';
+import { createOrGetConversation } from '../services/messageService';
+import { showSuccess, showError, showInfo } from '../components/NotificationManager';
 import styles from '../styles/pages/ShopDetailPage.module.css';
 import buttons from '../styles/shared/buttons.module.css';
 
@@ -32,11 +35,13 @@ import buttons from '../styles/shared/buttons.module.css';
 function ShopDetailPage() {
   const { sid } = useParams(); // Get seller ID from URL
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
   // Component state
   const [seller, setSeller] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [contactingLoading, setContactingLoading] = useState(false);
 
   /**
    * Fetch seller data on component mount
@@ -59,6 +64,47 @@ function ShopDetailPage() {
 
     fetchSeller();
   }, [sid]);
+
+  /**
+   * Handle Contact Seller button click
+   * 
+   * Creates or gets an existing conversation with the seller,
+   * then redirects to the message thread page.
+   */
+  const handleContactSeller = async () => {
+    if (!isAuthenticated) {
+      showInfo('Please login to contact the seller');
+      setTimeout(() => navigate('/login'), 1500);
+      return;
+    }
+
+    if (contactingLoading || !seller) return;
+
+    // Get seller's user ID
+    const sellerUserId = seller.userid;
+    if (!sellerUserId) {
+      showError('Unable to contact seller. Seller information not available.');
+      return;
+    }
+
+    try {
+      setContactingLoading(true);
+      
+      // Create or get conversation with the seller
+      const conversation = await createOrGetConversation(sellerUserId);
+      
+      showSuccess('Opening conversation...');
+      
+      // Redirect to the message thread
+      setTimeout(() => navigate(`/messages/${conversation.id}`), 500);
+    } catch (err) {
+      console.error('Error contacting seller:', err);
+      const errorMessage = err.response?.data?.error || 'Failed to start conversation. Please try again.';
+      showError(errorMessage);
+    } finally {
+      setContactingLoading(false);
+    }
+  };
 
   /**
    * Loading state
@@ -191,6 +237,27 @@ function ShopDetailPage() {
           </button>
         </div>
       </div>
+      
+      {/* Floating Contact Seller Button - Module 16 */}
+      {seller && seller.userid && (
+        <button
+          className={styles.floatingContactButton}
+          onClick={handleContactSeller}
+          disabled={contactingLoading}
+          title="Contact Seller"
+        >
+          {contactingLoading ? (
+            <span>⏳</span>
+          ) : (
+            <>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+              </svg>
+              <span className={styles.floatingButtonText}>Contact Seller</span>
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 }

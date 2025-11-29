@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 import { addToCart } from '../services/cartService';
+import { createOrGetConversation } from '../services/messageService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
@@ -39,6 +40,7 @@ function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
+  const [contactingLoading, setContactingLoading] = useState(false);
   const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
   const [imageLoaded, setImageLoaded] = useState(false);
   
@@ -144,6 +146,53 @@ function ProductDetailPage() {
       showError(errorMessage);
     } finally {
       setOrderLoading(false);
+    }
+  };
+
+  /**
+   * Handle Contact Seller button click (Module 16: Messaging)
+   * 
+   * Creates or gets an existing conversation with the seller,
+   * then redirects to the message thread page.
+   * 
+   * Logic:
+   * - Check if user is authenticated
+   * - Get seller's user ID from product data
+   * - Call API to create/get conversation
+   * - Redirect to message thread
+   */
+  const handleContactSeller = async () => {
+    if (!isAuthenticated) {
+      showInfo('Please login to contact the seller');
+      setTimeout(() => navigate('/login'), 1500);
+      return;
+    }
+
+    if (contactingLoading) return;
+
+    // Get seller's user ID from the product data
+    const sellerUserId = product.sellerUserId;
+    if (!sellerUserId) {
+      showError('Unable to contact seller. Seller information not available.');
+      return;
+    }
+
+    try {
+      setContactingLoading(true);
+      
+      // Create or get conversation with the seller
+      const conversation = await createOrGetConversation(sellerUserId);
+      
+      showSuccess('Opening conversation...');
+      
+      // Redirect to the message thread
+      setTimeout(() => navigate(`/messages/${conversation.id}`), 500);
+    } catch (err) {
+      console.error('Error contacting seller:', err);
+      const errorMessage = err.response?.data?.error || 'Failed to start conversation. Please try again.';
+      showError(errorMessage);
+    } finally {
+      setContactingLoading(false);
     }
   };
   
@@ -291,6 +340,27 @@ function ProductDetailPage() {
           </div>
         </div>
       </div>
+      
+      {/* Floating Contact Seller Button - Module 16 */}
+      {product && product.sellerUserId && (
+        <button
+          className={styles.floatingContactButton}
+          onClick={handleContactSeller}
+          disabled={contactingLoading}
+          title="Contact Seller"
+        >
+          {contactingLoading ? (
+            <span>⏳</span>
+          ) : (
+            <>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+              </svg>
+              <span className={styles.floatingButtonText}>Contact Seller</span>
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 }
