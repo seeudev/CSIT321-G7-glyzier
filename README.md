@@ -10,7 +10,7 @@ Full-stack web application for artists to showcase and sell their work. Built fo
 
 > **🆕 Database Migration**: Now using **Supabase PostgreSQL** (migrated from MySQL). See [Database Migration Guide](doc/DATABASE_MIGRATION.md) for details.
 
-> **🚀 Deployment**: Ready to deploy on Render! See [Render Deployment Guide](RENDER_DEPLOYMENT.md) or [Quick Start](RENDER_QUICKSTART.md) for 10-minute deployment.
+> **🚀 Deployment**: Ready to deploy on Render! See [Render Deployment Guide](doc/RENDER_DEPLOYMENT.md) or [Quick Start](doc/RENDER_QUICKSTART.md) for 10-minute deployment.
 
 ---
 
@@ -305,14 +305,14 @@ Authorization: Bearer <your_jwt_token>
 ### Deploy to Render (Recommended)
 
 **Quick Start** (10 minutes):
-1. See [RENDER_QUICKSTART.md](./RENDER_QUICKSTART.md) for step-by-step guide
+1. See [RENDER_QUICKSTART.md](./doc/RENDER_QUICKSTART.md) for step-by-step guide
 2. Create Web Service on [Render](https://render.com)
 3. Configure environment variables (database, JWT secret)
 4. Deploy and go live!
 
 **Full Documentation**:
-- 📘 [Complete Deployment Guide](./RENDER_DEPLOYMENT.md) - Detailed instructions, troubleshooting, and best practices
-- 📄 [Environment Variables Template](./.env.example) - Copy and configure for your deployment
+- 📘 [Complete Deployment Guide](./doc/RENDER_DEPLOYMENT.md) - Detailed instructions, troubleshooting, and best practices
+- 📄 [Environment Variables Template](./doc/.env.example) - Copy and configure for your deployment
 - 📋 [Infrastructure as Code](./render.yaml) - Render Blueprint for automated setup
 
 ### Deployment Checklist
