@@ -1,0 +1,51 @@
+# Dockerignore - Exclude unnecessary files from Docker build context
+# This speeds up builds and reduces image size
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+README.md
+doc/
+guides/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (will be installed in container)
+glyzier-frontend/node_modules/
+glyzier-frontend/dist/
+glyzier-frontend/.vite/
+
+# Maven build artifacts (will be built in container)
+glyzier-backend/target/
+glyzier-backend/.mvn/wrapper/maven-wrapper.jar
+
+# Environment files (use env vars instead)
+.env.local
+.env.development
+.env.test
+.env.production.local
+
+# Logs
+*.log
+logs/
+
+# Test files
+glyzier-backend/src/test/
+
+# Deployment files
+render.yaml
+docker-compose.yml
+.dockerignore
