@@ -12,10 +12,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import AdminSidebar from '../components/admin/AdminSidebar';
-import { getDashboardStats } from '../services/adminService';
-import styles from '../styles/pages/Admin.module.css';
+import { useAuth } from '../../context/AuthContext';
+import AdminSidebar from '../../components/admin/AdminSidebar';
+import { getDashboardStats } from '../../services/adminService';
+import styles from '../../styles/pages/Admin.module.css';
 
 const AdminDashboardPage = () => {
   const { user } = useAuth();

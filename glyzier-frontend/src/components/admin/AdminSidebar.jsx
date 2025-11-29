@@ -12,7 +12,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import styles from '../styles/pages/Admin.module.css';
+import styles from '../../styles/pages/Admin.module.css';
 
 const AdminSidebar = () => {
   return (
