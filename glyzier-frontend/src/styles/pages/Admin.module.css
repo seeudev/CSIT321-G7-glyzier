@@ -1,0 +1,357 @@
+/**
+ * Admin Pages CSS Module
+ * 
+ * Shared styles for all admin pages (dashboard, users, products, categories).
+ * Module 17: Admin System
+ */
+
+/* Admin Layout */
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebarHeader {
+  padding: 0 1.5rem 2rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.sidebarTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #667eea;
+  margin: 0;
+}
+
+.sidebarNav {
+  list-style: none;
+  padding: 1rem 0;
+  margin: 0;
+}
+
+.navItem {
+  margin: 0;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  color: #4a5568;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.navLink:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-left-color: #667eea;
+  color: #667eea;
+}
+
+.navLink.active {
+  background: rgba(102, 126, 234, 0.15);
+  border-left-color: #667eea;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.navIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+}
+
+/* Main Content Area */
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Page Header */
+.pageHeader {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+}
+
+.pageSubtitle {
+  font-size: 1rem;
+  color: #718096;
+  margin: 0;
+}
+
+/* Stats Cards Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem 0;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 0;
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  color: #667eea;
+}
+
+/* Table Container */
+.tableContainer {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.tableTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #f7fafc;
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badgeActive {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.badgeBanned {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.badgeDeleted {
+  background: #feebc8;
+  color: #7c2d12;
+}
+
+.badgeUser {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.badgeSeller {
+  background: #d9f99d;
+  color: #365314;
+}
+
+.badgeAdmin {
+  background: #fcd34d;
+  color: #78350f;
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btnAction {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btnBan {
+  background: #fc8181;
+  color: white;
+}
+
+.btnBan:hover {
+  background: #f56565;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(252, 129, 129, 0.3);
+}
+
+.btnUnban {
+  background: #68d391;
+  color: white;
+}
+
+.btnUnban:hover {
+  background: #48bb78;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(104, 211, 145, 0.3);
+}
+
+.btnRemove {
+  background: #fc8181;
+  color: white;
+}
+
+.btnRemove:hover {
+  background: #f56565;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(252, 129, 129, 0.3);
+}
+
+.btnRestore {
+  background: #4299e1;
+  color: white;
+}
+
+.btnRestore:hover {
+  background: #3182ce;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+}
+
+/* Loading & Error States */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.error {
+  background: #fed7d7;
+  color: #742a2a;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #fc8181;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+  font-size: 1.125rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .adminLayout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem 0;
+  }
+
+  .mainContent {
+    padding: 1rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tableContainer {
+    overflow-x: auto;
+  }
+
+  .table {
+    font-size: 0.875rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
