@@ -19,7 +19,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
+import { useAuth } from '../context/AuthContext';
 import { getAllSellers } from '../services/sellerService';
+import { createOrGetConversation } from '../services/messageService';
+import { showSuccess, showError, showInfo } from '../components/NotificationManager';
 import styles from '../styles/pages/ShopsPage.module.css';
 
 /**
@@ -32,12 +35,14 @@ import styles from '../styles/pages/ShopsPage.module.css';
  */
 function ShopsPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
   // Component state
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [carouselIndexes, setCarouselIndexes] = useState({});
+  const [contactingLoading, setContactingLoading] = useState({});
 
   /**
    * Fetch all sellers on component mount
@@ -89,6 +94,38 @@ function ShopsPage() {
       }
       return { ...prev, [sellerId]: newIndex };
     });
+  };
+
+  /**
+   * Handle contacting seller
+   * Creates or gets existing conversation and navigates to message thread
+   */
+  const handleContactSeller = async (sellerUserId, sellerName, e) => {
+    e.stopPropagation(); // Prevent card click
+
+    // Check authentication
+    if (!isAuthenticated) {
+      showInfo('Please login to contact sellers');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      setContactingLoading(prev => ({ ...prev, [sellerUserId]: true }));
+      
+      // Create or get conversation
+      const conversation = await createOrGetConversation(sellerUserId);
+      
+      // Navigate to message thread
+      navigate(`/messages/${conversation.id}`);
+      showSuccess(`Opening conversation with ${sellerName}`);
+      
+    } catch (error) {
+      console.error('Error contacting seller:', error);
+      showError(error.response?.data?.error || 'Failed to contact seller');
+    } finally {
+      setContactingLoading(prev => ({ ...prev, [sellerUserId]: false }));
+    }
   };
 
   return (
@@ -149,6 +186,20 @@ function ShopsPage() {
                   <div className={styles.shopHeader}>
                     <h2 className={styles.shopName}>{seller.sellername}</h2>
                     <p className={styles.sellerName}>{seller.userDisplayName}</p>
+                    
+                    {/* Contact Seller Button */}
+                    <button
+                      className={styles.contactButton}
+                      onClick={(e) => handleContactSeller(seller.userid, seller.sellername, e)}
+                      disabled={contactingLoading[seller.userid]}
+                      aria-label="Contact seller"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                      {contactingLoading[seller.userid] ? 'Contacting...' : 'Contact Seller'}
+                    </button>
                   </div>
                   
                   {/* Product Carousel */}
