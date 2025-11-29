@@ -42,6 +42,12 @@ public class AuthResponse {
      */
     private boolean isSeller;
 
+    /**
+     * Indicates if the user is an admin
+     * Module 17: Admin System
+     */
+    private boolean isAdmin;
+
     // Constructors
 
     /**
@@ -65,6 +71,25 @@ public class AuthResponse {
         this.email = email;
         this.displayname = displayname;
         this.isSeller = isSeller;
+    }
+
+    /**
+     * Constructor with all fields including isAdmin (Module 17)
+     * 
+     * @param token JWT token string
+     * @param userid User's unique identifier
+     * @param email User's email address
+     * @param displayname User's display name
+     * @param isSeller Whether the user is a seller
+     * @param isAdmin Whether the user is an admin
+     */
+    public AuthResponse(String token, Long userid, String email, String displayname, boolean isSeller, boolean isAdmin) {
+        this.token = token;
+        this.userid = userid;
+        this.email = email;
+        this.displayname = displayname;
+        this.isSeller = isSeller;
+        this.isAdmin = isAdmin;
     }
 
     // Getters and Setters
@@ -109,6 +134,14 @@ public class AuthResponse {
         isSeller = seller;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
     @Override
     public String toString() {
         return "AuthResponse{" +
@@ -116,6 +149,7 @@ public class AuthResponse {
                 ", email='" + email + '\'' +
                 ", displayname='" + displayname + '\'' +
                 ", isSeller=" + isSeller +
+                ", isAdmin=" + isAdmin +
                 '}'; // Token excluded from toString for security
     }
 }
