@@ -13,6 +13,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Navigation from '../../components/Navigation';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import { getAllProducts, removeProduct, restoreProduct } from '../../services/adminService';
 import styles from '../../styles/pages/Admin.module.css';
@@ -99,8 +100,10 @@ const AdminProductsPage = () => {
   };
 
   return (
-    <div className={styles.adminLayout}>
-      <AdminSidebar />
+    <>
+      <Navigation />
+      <div className={styles.adminLayout}>
+        <AdminSidebar />
       
       <main className={styles.mainContent}>
         <div className={styles.pageHeader}>
@@ -185,7 +188,8 @@ const AdminProductsPage = () => {
           </div>
         )}
       </main>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Navigation from '../../components/Navigation';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import styles from '../../styles/pages/Admin.module.css';
 
@@ -39,8 +40,10 @@ const AdminCategoriesPage = () => {
   }, [user, navigate]);
 
   return (
-    <div className={styles.adminLayout}>
-      <AdminSidebar />
+    <>
+      <Navigation />
+      <div className={styles.adminLayout}>
+        <AdminSidebar />
       
       <main className={styles.mainContent}>
         <div className={styles.pageHeader}>
@@ -87,7 +90,8 @@ const AdminCategoriesPage = () => {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </>
   );
 };
 

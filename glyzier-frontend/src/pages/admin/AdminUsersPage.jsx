@@ -13,8 +13,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Navigation from '../../components/Navigation';
 import AdminSidebar from '../../components/admin/AdminSidebar';
-import { getAllUsers, banUser, unbanUser } from '../../services/adminService';
+import { getAllUsers, banUser, unbanUser, grantAdmin, revokeAdmin } from '../../services/adminService';
 import styles from '../../styles/pages/Admin.module.css';
 
 const AdminUsersPage = () => {
@@ -83,6 +84,44 @@ const AdminUsersPage = () => {
     }
   };
 
+  const handleGrantAdmin = async (userid) => {
+    if (!window.confirm('Are you sure you want to grant admin privileges to this user?')) {
+      return;
+    }
+
+    try {
+      setActionLoading(userid);
+      await grantAdmin(userid);
+      // Refresh users list
+      await fetchUsers();
+      alert('Admin privileges granted successfully!');
+    } catch (err) {
+      console.error('Error granting admin:', err);
+      alert(err.response?.data?.error || 'Failed to grant admin privileges. Please try again.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleRevokeAdmin = async (userid) => {
+    if (!window.confirm('Are you sure you want to revoke admin privileges from this user?')) {
+      return;
+    }
+
+    try {
+      setActionLoading(userid);
+      await revokeAdmin(userid);
+      // Refresh users list
+      await fetchUsers();
+      alert('Admin privileges revoked successfully!');
+    } catch (err) {
+      console.error('Error revoking admin:', err);
+      alert(err.response?.data?.error || 'Failed to revoke admin privileges. Please try again.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const formatDate = (timestamp) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -92,8 +131,10 @@ const AdminUsersPage = () => {
   };
 
   return (
-    <div className={styles.adminLayout}>
-      <AdminSidebar />
+    <>
+      <Navigation />
+      <div className={styles.adminLayout}>
+        <AdminSidebar />
       
       <main className={styles.mainContent}>
         <div className={styles.pageHeader}>
@@ -155,11 +196,13 @@ const AdminUsersPage = () => {
                       <td>{formatDate(usr.createdAt)}</td>
                       <td>
                         <div className={styles.actionButtons}>
+                          {/* Ban/Unban button */}
                           {usr.status === 'ACTIVE' ? (
                             <button
                               onClick={() => handleBanUser(usr.userid)}
                               disabled={actionLoading === usr.userid || usr.isAdmin}
                               className={`${styles.btnAction} ${styles.btnBan}`}
+                              title={usr.isAdmin ? 'Cannot ban admin users' : 'Ban this user'}
                             >
                               {actionLoading === usr.userid ? 'Banning...' : 'Ban'}
                             </button>
@@ -172,6 +215,26 @@ const AdminUsersPage = () => {
                               {actionLoading === usr.userid ? 'Unbanning...' : 'Unban'}
                             </button>
                           )}
+                          
+                          {/* Grant/Revoke Admin button */}
+                          {usr.isAdmin ? (
+                            <button
+                              onClick={() => handleRevokeAdmin(usr.userid)}
+                              disabled={actionLoading === usr.userid || usr.userid === user?.uid}
+                              className={`${styles.btnAction} ${styles.btnRevoke}`}
+                              title={usr.userid === user?.uid ? 'Cannot revoke your own admin' : 'Revoke admin privileges'}
+                            >
+                              Revoke Admin
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleGrantAdmin(usr.userid)}
+                              disabled={actionLoading === usr.userid}
+                              className={`${styles.btnAction} ${styles.btnGrant}`}
+                            >
+                              Grant Admin
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -182,7 +245,8 @@ const AdminUsersPage = () => {
           </div>
         )}
       </main>
-    </div>
+      </div>
+    </>
   );
 };
 

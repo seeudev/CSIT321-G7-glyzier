@@ -13,6 +13,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Navigation from '../../components/Navigation';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import { getDashboardStats } from '../../services/adminService';
 import styles from '../../styles/pages/Admin.module.css';
@@ -58,8 +59,10 @@ const AdminDashboardPage = () => {
   };
 
   return (
-    <div className={styles.adminLayout}>
-      <AdminSidebar />
+    <>
+      <Navigation />
+      <div className={styles.adminLayout}>
+        <AdminSidebar />
       
       <main className={styles.mainContent}>
         <div className={styles.pageHeader}>
@@ -119,7 +122,8 @@ const AdminDashboardPage = () => {
           <div className={styles.empty}>No data available</div>
         )}
       </main>
-    </div>
+      </div>
+    </>
   );
 };
 
