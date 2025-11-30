@@ -37,7 +37,7 @@ import forms from '../styles/shared/forms.module.css';
  * @returns {JSX.Element} The profile management page
  */
 function ProfilePage() {
-  const { user: authUser, logout } = useAuth();
+  const { user: authUser, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   // State for profile data
@@ -122,6 +122,10 @@ function ProfilePage() {
         displayname: profileData.displayname,
         phonenumber: profileData.phonenumber || null
       });
+      
+      // Refresh user data in AuthContext to reflect changes immediately
+      await refreshUser();
+      
       showSuccess('Profile updated successfully!');
     } catch (err) {
       console.error('Failed to update profile:', err);

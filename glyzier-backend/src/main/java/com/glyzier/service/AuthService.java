@@ -72,14 +72,17 @@ public class AuthService {
      * @throws RuntimeException if email is already registered
      */
     public AuthResponse register(RegisterRequest request) {
-        // Check if email already exists
-        if (userRepository.existsByEmail(request.getEmail())) {
+        // Normalize email to lowercase to ensure case-insensitive uniqueness
+        String normalizedEmail = request.getEmail().toLowerCase().trim();
+        
+        // Check if email already exists (case-insensitive)
+        if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
             throw new RuntimeException("Email already registered");
         }
 
         // Create new user entity
         Users user = new Users();
-        user.setEmail(request.getEmail());
+        user.setEmail(normalizedEmail);
         user.setDisplayname(request.getDisplayname());
         
         // Encrypt the password before saving
@@ -127,17 +130,20 @@ public class AuthService {
      */
     public AuthResponse login(LoginRequest request) {
         try {
+            // Normalize email to lowercase for case-insensitive login
+            String normalizedEmail = request.getEmail().toLowerCase().trim();
+            
             // Authenticate the user using Spring Security
             // This will check if the password matches the encrypted password in the database
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
+                    normalizedEmail,
                     request.getPassword()
                 )
             );
 
-            // If authentication succeeds, retrieve the user from database
-            Users user = userRepository.findByEmail(request.getEmail())
+            // If authentication succeeds, retrieve the user from database (case-insensitive)
+            Users user = userRepository.findByEmailIgnoreCase(normalizedEmail)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             // Generate JWT token

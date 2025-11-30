@@ -43,4 +43,27 @@ public interface UserRepository extends JpaRepository<Users, Long> {
      * @return true if a user with this email exists, false otherwise
      */
     boolean existsByEmail(String email);
+
+    /**
+     * Find a user by email address (case-insensitive)
+     * This is useful for login functionality and checking if an email exists
+     * regardless of case
+     * 
+     * Spring Data JPA automatically implements this method based on the name
+     * IgnoreCase suffix makes the query case-insensitive
+     * 
+     * @param email The email address to search for
+     * @return Optional containing the user if found, empty otherwise
+     */
+    Optional<Users> findByEmailIgnoreCase(String email);
+
+    /**
+     * Check if a user exists by email address (case-insensitive)
+     * Useful for registration validation to prevent duplicate emails
+     * regardless of case
+     * 
+     * @param email The email address to check
+     * @return true if a user with this email exists, false otherwise
+     */
+    boolean existsByEmailIgnoreCase(String email);
 }
