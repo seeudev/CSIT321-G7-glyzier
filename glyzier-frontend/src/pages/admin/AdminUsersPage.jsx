@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navigation from '../../components/Navigation';
+import Aurora from '../../components/Aurora';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import { getAllUsers, banUser, unbanUser, grantAdmin, revokeAdmin } from '../../services/adminService';
 import styles from '../../styles/pages/Admin.module.css';
@@ -137,23 +138,34 @@ const AdminUsersPage = () => {
         <AdminSidebar />
       
       <main className={styles.mainContent}>
-        <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>User Management</h1>
-          <p className={styles.pageSubtitle}>
-            Manage user accounts and permissions
-          </p>
+        <div className={styles.headerWrapper}>
+          <Aurora 
+            colorStops={['#667eea', '#764ba2', '#f093fb']}
+            amplitude={1.2}
+            blend={0.6}
+            speed={0.4}
+          />
+          <div className={styles.headerCard}>
+            <div className={styles.pageHeader}>
+              <h1 className={styles.pageTitle}>User Management</h1>
+              <p className={styles.pageSubtitle}>
+                Manage user accounts and permissions
+              </p>
+            </div>
+          </div>
         </div>
 
-        {error && (
-          <div className={styles.error}>
-            {error}
-          </div>
-        )}
+        <div className={styles.contentSection}>
+          {error && (
+            <div className={styles.error}>
+              {error}
+            </div>
+          )}
 
-        {loading ? (
-          <div className={styles.loading}>Loading users...</div>
-        ) : (
-          <div className={styles.tableContainer}>
+          {loading ? (
+            <div className={styles.loading}>Loading users...</div>
+          ) : (
+            <div className={styles.tableContainer}>
             <h2 className={styles.tableTitle}>All Users ({users.length})</h2>
             
             {users.length === 0 ? (
@@ -244,6 +256,7 @@ const AdminUsersPage = () => {
             )}
           </div>
         )}
+        </div>
       </main>
       </div>
     </>
