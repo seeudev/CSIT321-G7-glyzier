@@ -20,12 +20,12 @@
 .content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 80px 20px 40px;
+  padding: 0 20px 40px;
 }
 
 /* Header Section */
 .header {
-  padding: 50px 0;
+  padding: 60px 20px;
   position: relative;
   overflow: hidden;
   width: 100vw;
@@ -35,7 +35,9 @@
 }
 
 .headerCard {
-  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

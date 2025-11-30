@@ -135,29 +135,29 @@ function SellerDashboard() {
     <div className={styles.page}>
       <Navigation />
       
-      <div className={styles.container}>
-        {/* Header Section */}
-        <div className={styles.header}>
-          <Aurora 
-            colorStops={['#667eea', '#764ba2', '#f093fb']}
-            amplitude={1.2}
-            blend={0.6}
-            speed={0.4}
-          />
-          <div className={styles.headerCard}>
-            <div className={styles.headerContent}>
-              <div className={styles.welcomeSection}>
-                <h1 className={styles.title}>Seller Dashboard</h1>
-                <p className={styles.subtitle}>
-                  {sellerProfile?.sellername || 'Loading...'}
-                </p>
-              </div>
+      {/* Header Section */}
+      <div className={styles.header}>
+        <Aurora 
+          colorStops={['#667eea', '#764ba2', '#f093fb']}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        <div className={styles.headerCard}>
+          <div className={styles.headerContent}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.title}>Seller Dashboard</h1>
+              <p className={styles.subtitle}>
+                {sellerProfile?.sellername || 'Loading...'}
+              </p>
             </div>
           </div>
         </div>
+      </div>
       
-      {/* Main Content */}
-      <div className={styles.content}>
+      <div className={styles.container}>
+        {/* Main Content */}
+        <div className={styles.content}>
         {/* Stats Grid - Quick Overview */}
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
@@ -258,7 +258,7 @@ function SellerDashboard() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
     </div>
   );
 }

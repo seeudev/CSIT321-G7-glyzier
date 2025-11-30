@@ -153,30 +153,32 @@ function SellerOrdersPage() {
         <div className={styles.pageContainer}>
             <Navigation />
             
-            <div className={styles.content}>
-                {/* Header */}
-                <div className={styles.header}>
-                    <Aurora 
-                      colorStops={['#667eea', '#764ba2', '#f093fb']}
-                      amplitude={1.2}
-                      blend={0.6}
-                      speed={0.4}
-                    />
-                    <div className={styles.headerCard}>
-                        <div className={styles.headerContent}>
-                            <div className={styles.headerIcon}>
-                                <PackageIcon />
-                            </div>
-                            <div>
-                                <h1 className={styles.title}>My Orders</h1>
-                                <p className={styles.subtitle}>
-                                    Manage orders containing your products
-                                </p>
-                            </div>
+            {/* Header */}
+            <div className={styles.header}>
+                <Aurora 
+                  colorStops={['#667eea', '#764ba2', '#f093fb']}
+                  amplitude={1.2}
+                  blend={0.6}
+                  speed={0.4}
+                />
+                <div className={styles.headerCard}>
+                    <div className={styles.headerContent}>
+                        <div className={styles.welcomeSection}>
+                            <h1 className={styles.title}>My Orders</h1>
+                            <p className={styles.subtitle}>
+                                Manage orders containing your products
+                            </p>
+                        </div>
+                        <div className={styles.headerActions}>
+                            <Link to="/seller/dashboard" className={styles.backButton}>
+                                ← Back to Dashboard
+                            </Link>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div className={styles.content}>
                 {/* Loading State */}
                 {loading && (
                     <div className={styles.loadingContainer}>

@@ -312,7 +312,8 @@ function ManageProducts() {
         </div>
       </div>
       
-      <div className={styles.content}>
+      <div className={styles.container}>
+        <div className={styles.content}>
         {/* Create Product Section */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -353,7 +354,7 @@ function ManageProducts() {
                 
                 <div className={styles.formGroup}>
                   <label htmlFor="price" className={styles.formLabel}>
-                    Price (₱) <span className={styles.required}>*</span>
+                    Price ($) <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="number"
@@ -650,6 +651,22 @@ function ManageProducts() {
                         />
                       </div>
                       
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Screenshot Preview URL</label>
+                        <input
+                          type="url"
+                          name="screenshotPreviewUrl"
+                          className={styles.formInput}
+                          placeholder="https://example.com/image.jpg"
+                          value={editFormData.screenshotPreviewUrl || ''}
+                          onChange={handleEditFormChange}
+                          disabled={editFormLoading}
+                        />
+                        <small className={styles.formHint}>
+                          Image URL for product thumbnail (used in cards and galleries)
+                        </small>
+                      </div>
+                      
                       <div className={styles.productActions}>
                         <button
                           className={styles.saveButton}
@@ -725,6 +742,7 @@ function ManageProducts() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
