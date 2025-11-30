@@ -55,8 +55,8 @@ public class AdminService {
         // Count total users
         Long totalUsers = userRepository.count();
 
-        // Count active products (exclude soft-deleted)
-        Long totalProducts = productsRepository.countByStatus("ACTIVE");
+        // Count all products (including all statuses)
+        Long totalProducts = productsRepository.count();
 
         // Count all orders
         Long totalOrders = ordersRepository.count();

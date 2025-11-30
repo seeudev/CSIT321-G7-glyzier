@@ -82,6 +82,7 @@ public class UserController {
             response.put("userid", currentUser.getUserid());
             response.put("email", currentUser.getEmail());
             response.put("displayname", currentUser.getDisplayname());
+            response.put("phonenumber", currentUser.getPhonenumber());
             response.put("createdAt", currentUser.getCreatedAt());
             
             // Check if user is also a seller

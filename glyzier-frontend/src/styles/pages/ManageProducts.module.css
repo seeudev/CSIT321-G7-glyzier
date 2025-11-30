@@ -6,7 +6,7 @@
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f5 100%);
+  background: #ffffff;
 }
 
 .loading {
@@ -18,16 +18,27 @@
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
+  padding: 60px 20px;
   color: white;
-  padding: 48px 0;
-  box-shadow: 0 4px 20px rgba(123, 111, 184, 0.3);
   position: relative;
   overflow: hidden;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
-  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.headerCard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  position: relative;
 }
 
 .header::before {
@@ -66,14 +77,16 @@
   font-size: 2.5em;
   margin: 0 0 12px 0;
   font-weight: 700;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .subtitle {
   font-size: 1.1em;
   margin: 0;
-  opacity: 0.95;
+  color: #ffffff;
   font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .headerActions {

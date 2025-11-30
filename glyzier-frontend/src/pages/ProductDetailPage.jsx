@@ -285,7 +285,9 @@ function ProductDetailPage() {
           <div className={styles.infoSection}>
             {/* Seller & Shop Name */}
             <div className={styles.sellerInfo}>
-              <div className={styles.sellerLabel}>seller's name</div>
+              <div className={styles.sellerLabel}>
+                {product.sellerDisplayName || 'Unknown Seller'}
+              </div>
               <div className={styles.shopName}>{product.sellerName || 'Unknown Shop'}</div>
             </div>
             

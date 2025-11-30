@@ -53,10 +53,13 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Find the user by email in the database
+        // Normalize email to lowercase for case-insensitive lookup
+        String normalizedEmail = username.toLowerCase().trim();
+        
+        // Find the user by email in the database (case-insensitive)
         // orElseThrow will throw UsernameNotFoundException if user doesn't exist
-        Users user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+        Users user = userRepository.findByEmailIgnoreCase(normalizedEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + normalizedEmail));
 
         // Check if user is banned (Module 17: Admin System)
         // Banned users cannot log in

@@ -29,6 +29,7 @@ import { getProductsBySeller } from '../services/productService';
 import { showError, showInfo } from '../components/NotificationManager';
 import { StoreIcon, PackageIcon, LayersIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import styles from '../styles/pages/SellerDashboard.module.css';
 
 /**
@@ -134,9 +135,15 @@ function SellerDashboard() {
     <div className={styles.page}>
       <Navigation />
       
-      <div className={styles.container}>
-        {/* Header Section */}
-        <div className={styles.header}>
+      {/* Header Section */}
+      <div className={styles.header}>
+        <Aurora 
+          colorStops={['#667eea', '#764ba2', '#f093fb']}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        <div className={styles.headerCard}>
           <div className={styles.headerContent}>
             <div className={styles.welcomeSection}>
               <h1 className={styles.title}>Seller Dashboard</h1>
@@ -146,81 +153,112 @@ function SellerDashboard() {
             </div>
           </div>
         </div>
+      </div>
       
-      {/* Main Content */}
-      <div className={styles.content}>
-        {/* Seller Info Card */}
-          <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <span className={styles.cardIcon}><StoreIcon size={32} color="#8b7fc4" /></span>
-            <h2 className={styles.cardTitle}>Seller Information</h2>
-          </div>
-          <div className={styles.cardContent}>
-            {sellerProfile ? (
-              <>
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Seller ID</span>
-                  <span className={styles.infoValue}>{sellerProfile.sid || sellerId || 'N/A'}</span>
-                </div>
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Shop Name</span>
-                  <span className={styles.infoValue}>{sellerProfile.sellername || 'N/A'}</span>
-                </div>
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Bio</span>
-                  <span className={styles.infoValue}>
-                    {sellerProfile.storebio || 'No bio provided'}
-                  </span>
-                </div>
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Total Products</span>
-                  <span className={styles.infoValue}>{products.length}</span>
-                </div>
-              </>
-            ) : (
-              <div className={styles.infoRow}>
-                <span className={styles.infoValue}>Loading seller information...</span>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Product Management Section */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <span className={styles.cardIcon}><PackageIcon size={32} color="#8b7fc4" /></span>
-            <h2 className={styles.cardTitle}>Product Management</h2>
+      <div className={styles.container}>
+        {/* Main Content */}
+        <div className={styles.content}>
+        {/* Stats Grid - Quick Overview */}
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <StoreIcon size={28} color="#667eea" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>Shop Name</div>
+              <div className={styles.statValue}>{sellerProfile?.sellername || 'Loading...'}</div>
+            </div>
           </div>
           
-          <div className={styles.cardContent}>
-            <p className={styles.sectionDescription}>
-              Create, edit, and manage your product catalog in one place.
-            </p>
-            <div className={styles.manageProductsSection}>
-              <Link to="/seller/manage-products" className={styles.manageProductsButton}>
-                <LayersIcon size={24} color="white" />
-                <div>
-                  <div className={styles.buttonTitle}>Manage Products</div>
-                  <div className={styles.buttonSubtitle}>
-                    View and edit your catalog ({products.length} product{products.length !== 1 ? 's' : ''})
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <PackageIcon size={28} color="#764ba2" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>Total Products</div>
+              <div className={styles.statValue}>{products.length}</div>
+            </div>
+          </div>
+          
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <LayersIcon size={28} color="#f093fb" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>Seller ID</div>
+              <div className={styles.statValue}>#{sellerProfile?.sid || sellerId || 'N/A'}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Grid Layout */}
+        <div className={styles.dashboardGrid}>
+          {/* Seller Info Card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <span className={styles.cardIcon}><StoreIcon size={32} color="#8b7fc4" /></span>
+              <h2 className={styles.cardTitle}>Shop Information</h2>
+            </div>
+            <div className={styles.cardContent}>
+              {sellerProfile ? (
+                <>
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Shop Name</span>
+                    <span className={styles.infoValue}>{sellerProfile.sellername || 'N/A'}</span>
                   </div>
-                </div>
-              </Link>
-              
-              <Link to="/seller/orders" className={styles.manageProductsButton}>
-                <PackageIcon size={24} color="white" />
-                <div>
-                  <div className={styles.buttonTitle}>Manage Orders</div>
-                  <div className={styles.buttonSubtitle}>
-                    View and update order status
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>About Your Shop</span>
+                    <span className={styles.infoValue}>
+                      {sellerProfile.storebio || 'No bio provided'}
+                    </span>
                   </div>
+                </>
+              ) : (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoValue}>Loading seller information...</span>
                 </div>
-              </Link>
+              )}
+            </div>
+          </div>
+          
+          {/* Quick Actions Card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <span className={styles.cardIcon}><PackageIcon size={32} color="#8b7fc4" /></span>
+              <h2 className={styles.cardTitle}>Quick Actions</h2>
+            </div>
+            
+            <div className={styles.cardContent}>
+              <div className={styles.quickActionsGrid}>
+                <Link to="/seller/manage-products" className={styles.actionCard}>
+                  <div className={styles.actionIconWrapper}>
+                    <LayersIcon size={32} color="#667eea" />
+                  </div>
+                  <div className={styles.actionInfo}>
+                    <div className={styles.actionTitle}>Manage Products</div>
+                    <div className={styles.actionSubtitle}>
+                      {products.length} product{products.length !== 1 ? 's' : ''} in catalog
+                    </div>
+                  </div>
+                </Link>
+                
+                <Link to="/seller/orders" className={styles.actionCard}>
+                  <div className={styles.actionIconWrapper}>
+                    <PackageIcon size={32} color="#764ba2" />
+                  </div>
+                  <div className={styles.actionInfo}>
+                    <div className={styles.actionTitle}>View Orders</div>
+                    <div className={styles.actionSubtitle}>
+                      Manage customer orders
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
     </div>
   );
 }

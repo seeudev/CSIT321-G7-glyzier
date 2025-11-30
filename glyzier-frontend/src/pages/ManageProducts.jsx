@@ -21,6 +21,7 @@ import {
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
 import { PackageIcon, PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, InfinityIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import styles from '../styles/pages/ManageProducts.module.css';
 
 function ManageProducts() {
@@ -290,20 +291,29 @@ function ManageProducts() {
       
       {/* Header */}
       <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.welcomeSection}>
-            <h1 className={styles.title}>Manage Products</h1>
-            <p className={styles.subtitle}>Create, edit, and manage your product catalog</p>
-          </div>
-          <div className={styles.headerActions}>
-            <Link to="/seller/dashboard" className={styles.backButton}>
-              ← Back to Dashboard
-            </Link>
+        <Aurora 
+          colorStops={['#667eea', '#764ba2', '#f093fb']}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        <div className={styles.headerCard}>
+          <div className={styles.headerContent}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.title}>Manage Products</h1>
+              <p className={styles.subtitle}>Create, edit, and manage your product catalog</p>
+            </div>
+            <div className={styles.headerActions}>
+              <Link to="/seller/dashboard" className={styles.backButton}>
+                ← Back to Dashboard
+              </Link>
+            </div>
           </div>
         </div>
       </div>
       
-      <div className={styles.content}>
+      <div className={styles.container}>
+        <div className={styles.content}>
         {/* Create Product Section */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -344,7 +354,7 @@ function ManageProducts() {
                 
                 <div className={styles.formGroup}>
                   <label htmlFor="price" className={styles.formLabel}>
-                    Price (₱) <span className={styles.required}>*</span>
+                    Price ($) <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="number"
@@ -641,6 +651,22 @@ function ManageProducts() {
                         />
                       </div>
                       
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Screenshot Preview URL</label>
+                        <input
+                          type="url"
+                          name="screenshotPreviewUrl"
+                          className={styles.formInput}
+                          placeholder="https://example.com/image.jpg"
+                          value={editFormData.screenshotPreviewUrl || ''}
+                          onChange={handleEditFormChange}
+                          disabled={editFormLoading}
+                        />
+                        <small className={styles.formHint}>
+                          Image URL for product thumbnail (used in cards and galleries)
+                        </small>
+                      </div>
+                      
                       <div className={styles.productActions}>
                         <button
                           className={styles.saveButton}
@@ -716,6 +742,7 @@ function ManageProducts() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

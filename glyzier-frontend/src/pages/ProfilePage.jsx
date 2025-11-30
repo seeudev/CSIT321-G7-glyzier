@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getCurrentUser, updateProfile, changePassword } from '../services/userService';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import { UserIcon } from '../components/Icons';
 import { showSuccess, showError } from '../components/NotificationManager';
 import styles from '../styles/pages/ProfilePage.module.css';
@@ -37,7 +38,7 @@ import forms from '../styles/shared/forms.module.css';
  * @returns {JSX.Element} The profile management page
  */
 function ProfilePage() {
-  const { user: authUser, logout } = useAuth();
+  const { user: authUser, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   // State for profile data
@@ -122,6 +123,10 @@ function ProfilePage() {
         displayname: profileData.displayname,
         phonenumber: profileData.phonenumber || null
       });
+      
+      // Refresh user data in AuthContext to reflect changes immediately
+      await refreshUser();
+      
       showSuccess('Profile updated successfully!');
     } catch (err) {
       console.error('Failed to update profile:', err);
@@ -197,11 +202,19 @@ function ProfilePage() {
       <div className={styles.content}>
         {/* Page Header */}
         <div className={styles.header}>
-          <div className={styles.headerContent}>
-            <UserIcon className={styles.headerIcon} />
-            <div>
-              <h1 className={styles.title}>Profile Settings</h1>
-              <p className={styles.subtitle}>Manage your account information</p>
+          <Aurora 
+            colorStops={['#667eea', '#764ba2', '#f093fb']}
+            amplitude={1.2}
+            blend={0.6}
+            speed={0.4}
+          />
+          <div className={styles.headerCard}>
+            <div className={styles.headerContent}>
+              <UserIcon className={styles.headerIcon} />
+              <div>
+                <h1 className={styles.title}>Profile Settings</h1>
+                <p className={styles.subtitle}>Manage your account information</p>
+              </div>
             </div>
           </div>
         </div>

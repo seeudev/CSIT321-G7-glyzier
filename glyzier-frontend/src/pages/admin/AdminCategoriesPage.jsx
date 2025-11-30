@@ -11,10 +11,11 @@
  * @version 1.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navigation from '../../components/Navigation';
+import Aurora from '../../components/Aurora';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import styles from '../../styles/pages/Admin.module.css';
 
@@ -46,14 +47,25 @@ const AdminCategoriesPage = () => {
         <AdminSidebar />
       
       <main className={styles.mainContent}>
-        <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>Category Management</h1>
-          <p className={styles.pageSubtitle}>
-            Manage product categories (Minimal Implementation)
-          </p>
+        <div className={styles.headerWrapper}>
+          <Aurora 
+            colorStops={['#667eea', '#764ba2', '#f093fb']}
+            amplitude={1.2}
+            blend={0.6}
+            speed={0.4}
+          />
+          <div className={styles.headerCard}>
+            <div className={styles.pageHeader}>
+              <h1 className={styles.pageTitle}>Category Management</h1>
+              <p className={styles.pageSubtitle}>
+                Manage product categories (Minimal Implementation)
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.tableContainer}>
+        <div className={styles.contentSection}>
+          <div className={styles.tableContainer}>
           <h2 className={styles.tableTitle}>Product Categories ({categories.length})</h2>
           
           <table className={styles.table}>
@@ -88,6 +100,7 @@ const AdminCategoriesPage = () => {
               Currently, categories are hardcoded and used for product filtering.
             </p>
           </div>
+        </div>
         </div>
       </main>
       </div>
