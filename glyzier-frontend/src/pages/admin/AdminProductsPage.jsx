@@ -163,7 +163,7 @@ const AdminProductsPage = () => {
                       <td>{formatPrice(product.price)}</td>
                       <td>
                         <span className={`${styles.badge} ${
-                          product.status === 'ACTIVE' ? styles.badgeActive : styles.badgeDeleted
+                          product.status !== 'DELETED' ? styles.badgeActive : styles.badgeDeleted
                         }`}>
                           {product.status}
                         </span>
@@ -173,7 +173,7 @@ const AdminProductsPage = () => {
                       <td>{formatDate(product.createdAt)}</td>
                       <td>
                         <div className={styles.actionButtons}>
-                          {product.status === 'ACTIVE' ? (
+                          {product.status !== 'DELETED' ? (
                             <button
                               onClick={() => handleRemoveProduct(product.pid)}
                               disabled={actionLoading === product.pid}
