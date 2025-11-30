@@ -663,3 +663,49 @@
     font-size: 1.1rem;
   }
 }
+
+/* Module 19: Seller Self-Interaction Guard Styles */
+
+/* Product header container for name + owner badge */
+.productHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Owner badge styling */
+.ownerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.badgeIcon {
+  opacity: 0.9;
+}
+
+/* Disabled button states */
+.addToCartButton:disabled,
+.buyNowButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #6c757d;
+  border-color: #6c757d;
+}
+
+.addToCartButton:disabled:hover,
+.buyNowButton:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: #6c757d;
+}
