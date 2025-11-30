@@ -24,6 +24,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { getMyHistory } from '../services/orderService';
 import { registerAsSeller, checkIfSeller } from '../services/sellerService';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import { UserIcon, PackageIcon, ArtIcon } from '../components/Icons';
 import { showSuccess, showError } from '../components/NotificationManager';
 import styles from '../styles/pages/DashboardPage.module.css';
@@ -184,17 +185,59 @@ function DashboardPage() {
       
       {/* Header Section */}
       <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.welcomeSection}>
-            <h1 className={styles.title}>User Dashboard</h1>
-            <p className={styles.subtitle}>Welcome back, {user.displayname}!</p>
+        <Aurora 
+          colorStops={['#667eea', '#764ba2', '#f093fb']}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        <div className={styles.headerCard}>
+          <div className={styles.headerContent}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.title}>User Dashboard</h1>
+              <p className={styles.subtitle}>Welcome back, {user.displayname}!</p>
+            </div>
           </div>
         </div>
       </div>
       
       {/* Main Content */}
       <div className={styles.content}>
-        <div className={styles.grid}>
+        {/* Stats Overview */}
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <PackageIcon size={28} color="#667eea" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>Total Orders</div>
+              <div className={styles.statValue}>{Array.isArray(orders) ? orders.length : 0}</div>
+            </div>
+          </div>
+          
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <UserIcon size={28} color="#764ba2" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>Account Status</div>
+              <div className={styles.statValue}>{isSeller ? 'Seller' : 'Buyer'}</div>
+            </div>
+          </div>
+          
+          <div className={styles.statCard}>
+            <div className={styles.statIconWrapper}>
+              <ArtIcon size={28} color="#f093fb" />
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statLabel}>User ID</div>
+              <div className={styles.statValue}>#{user.uid}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Dashboard Grid */}
+        <div className={styles.dashboardGrid}>
           {/* User info card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
@@ -203,10 +246,6 @@ function DashboardPage() {
             </div>
             <div className={styles.cardContent}>
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>User ID</span>
-                <span className={styles.infoValue}>{user.uid}</span>
-              </div>
-              <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>Display Name</span>
                 <span className={styles.infoValue}>{user.displayname}</span>
               </div>
@@ -214,19 +253,25 @@ function DashboardPage() {
                 <span className={styles.infoLabel}>Email</span>
                 <span className={styles.infoValue}>{user.email}</span>
               </div>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Account Type</span>
+                <span className={styles.infoValue}>
+                  {sellerCheckLoading ? 'Checking...' : isSeller ? 'Seller Account' : 'Buyer Account'}
+                </span>
+              </div>
               <div className={styles.cardActions}>
-                <Link to="/profile" className={styles.buttonSecondary}>
+                <Link to="/profile" className={styles.buttonPrimary}>
                   Edit Profile
                 </Link>
               </div>
             </div>
           </div>
           
-          {/* Order history card */}
+          {/* Recent Orders Card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <span className={styles.cardIcon}><PackageIcon size={32} color="#8b7fc4" /></span>
-              <h2 className={styles.cardTitle}>Order History</h2>
+              <h2 className={styles.cardTitle}>Recent Orders</h2>
             </div>
             <div className={styles.cardContent}>
               {ordersLoading ? (
@@ -234,25 +279,44 @@ function DashboardPage() {
               ) : ordersError ? (
                 <p style={{ color: '#d32f2f' }}>{ordersError}</p>
               ) : !Array.isArray(orders) || orders.length === 0 ? (
-                <p className={styles.muted}>No orders yet. Start shopping to see your order history!</p>
+                <div className={styles.emptyState}>
+                  <PackageIcon size={48} color="#cbd5e0" />
+                  <p className={styles.muted}>No orders yet</p>
+                  <Link to="/shops" className={styles.buttonSecondary}>
+                    Start Shopping
+                  </Link>
+                </div>
               ) : (
-                <ul className={styles.list}>
-                  {orders.map((order) => (
-                    <li key={order.orderid} className={styles.listItem}>
-                      <div>
-                        <div className={styles.orderNumber}>Order #{order.orderid}</div>
-                        <div className={styles.orderDate}>{formatDate(order.placedAt)}</div>
-                        <div className={styles.orderAmount}>₱{order.total.toFixed(2)}</div>
-                        <div className={styles.orderItems}>{order.itemCount} item(s)</div>
-                      </div>
-                      <span className={`${styles.orderStatus} ${
-                        order.status === 'Completed' ? styles.statusCompleted : styles.statusPending
-                      }`}>
-                        {order.status}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className={styles.orderList}>
+                    {orders.slice(0, 3).map((order) => (
+                      <li key={order.orderid} className={styles.orderItem}>
+                        <div className={styles.orderDetails}>
+                          <div className={styles.orderHeader}>
+                            <span className={styles.orderNumber}>Order #{order.orderid}</span>
+                            <span className={`${styles.orderStatus} ${
+                              order.status === 'Completed' ? styles.statusCompleted : styles.statusPending
+                            }`}>
+                              {order.status}
+                            </span>
+                          </div>
+                          <div className={styles.orderMeta}>
+                            <span className={styles.orderDate}>{formatDate(order.placedAt)}</span>
+                            <span className={styles.orderAmount}>₱{order.total.toFixed(2)}</span>
+                          </div>
+                          <div className={styles.orderItems}>{order.itemCount} item(s)</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  {orders.length > 3 && (
+                    <div className={styles.cardActions}>
+                      <button className={styles.buttonSecondary}>
+                        View All Orders ({orders.length})
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
