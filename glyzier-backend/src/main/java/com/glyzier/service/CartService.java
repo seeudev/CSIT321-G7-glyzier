@@ -121,6 +121,12 @@ public class CartService {
             throw new IllegalArgumentException("Product is not available: " + product.getProductname());
         }
 
+        // Prevent sellers from purchasing their own products
+        Seller productSeller = product.getSeller();
+        if (productSeller != null && productSeller.getUser().getUserid().equals(userId)) {
+            throw new IllegalArgumentException("Operation denied: You cannot purchase your own products.");
+        }
+
         // Check stock availability
         Inventory inventory = inventoryRepository.findByProductPid(productId)
                 .orElseThrow(() -> new IllegalArgumentException("No inventory record found for product: " + product.getProductname()));

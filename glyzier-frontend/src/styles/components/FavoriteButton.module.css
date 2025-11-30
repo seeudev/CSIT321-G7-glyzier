@@ -135,6 +135,22 @@
   }
 }
 
+/* Module 19: Disabled state for owners */
+.favoriteButton.disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.favoriteButton.disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.favoriteButton.disabled .heartIcon {
+  stroke: #ccc;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .favoriteButton {

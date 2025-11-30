@@ -3,6 +3,7 @@ package com.glyzier.service;
 import com.glyzier.dto.FavoriteProductResponse;
 import com.glyzier.model.Favorites;
 import com.glyzier.model.Products;
+import com.glyzier.model.Seller;
 import com.glyzier.model.Users;
 import com.glyzier.repository.FavoritesRepository;
 import com.glyzier.repository.ProductsRepository;
@@ -71,6 +72,12 @@ public class FavoritesService {
         
         Products product = productsRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+        
+        // Prevent sellers from favoriting their own products
+        Seller productSeller = product.getSeller();
+        if (productSeller != null && productSeller.getUser().getUserid().equals(user.getUserid())) {
+            throw new IllegalArgumentException("Operation denied: You cannot favorite your own products.");
+        }
         
         // Check if already favorited
         if (favoritesRepository.existsByUserAndProduct(user, product)) {

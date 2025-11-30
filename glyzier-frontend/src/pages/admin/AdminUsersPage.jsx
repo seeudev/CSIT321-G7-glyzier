@@ -192,9 +192,9 @@ const AdminUsersPage = () => {
                       <td>{usr.email}</td>
                       <td>
                         <span className={`${styles.badge} ${
-                          usr.isAdmin ? styles.badgeAdmin : styles.badgeUser
+                          (usr.isAdmin || usr.admin) ? styles.badgeAdmin : styles.badgeUser
                         }`}>
-                          {usr.isAdmin ? 'ADMIN' : (usr.shopName ? 'SELLER' : 'USER')}
+                          {(usr.isAdmin || usr.admin) ? 'ADMIN' : (usr.shopName ? 'SELLER' : 'USER')}
                         </span>
                       </td>
                       <td>
@@ -208,44 +208,49 @@ const AdminUsersPage = () => {
                       <td>{formatDate(usr.createdAt)}</td>
                       <td>
                         <div className={styles.actionButtons}>
-                          {/* Ban/Unban button */}
-                          {usr.status === 'ACTIVE' ? (
-                            <button
-                              onClick={() => handleBanUser(usr.userid)}
-                              disabled={actionLoading === usr.userid || usr.isAdmin}
-                              className={`${styles.btnAction} ${styles.btnBan}`}
-                              title={usr.isAdmin ? 'Cannot ban admin users' : 'Ban this user'}
-                            >
-                              {actionLoading === usr.userid ? 'Banning...' : 'Ban'}
-                            </button>
+                          {/* Check if this is current user (self) */}
+                          {usr.userid === user?.uid ? (
+                            <span className={`${styles.badge} ${styles.badgeSelf}`}>
+                              YOU
+                            </span>
+                          ) : (usr.isAdmin || usr.admin) ? (
+                            /* Admin users show ADMIN badge instead of action buttons */
+                            <span className={`${styles.badge} ${styles.badgeAdminAction}`}>
+                              ADMIN
+                            </span>
                           ) : (
-                            <button
-                              onClick={() => handleUnbanUser(usr.userid)}
-                              disabled={actionLoading === usr.userid}
-                              className={`${styles.btnAction} ${styles.btnUnban}`}
-                            >
-                              {actionLoading === usr.userid ? 'Unbanning...' : 'Unban'}
-                            </button>
-                          )}
-                          
-                          {/* Grant/Revoke Admin button */}
-                          {usr.isAdmin ? (
-                            <button
-                              onClick={() => handleRevokeAdmin(usr.userid)}
-                              disabled={actionLoading === usr.userid || usr.userid === user?.uid}
-                              className={`${styles.btnAction} ${styles.btnRevoke}`}
-                              title={usr.userid === user?.uid ? 'Cannot revoke your own admin' : 'Revoke admin privileges'}
-                            >
-                              Revoke Admin
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => handleGrantAdmin(usr.userid)}
-                              disabled={actionLoading === usr.userid}
-                              className={`${styles.btnAction} ${styles.btnGrant}`}
-                            >
-                              Grant Admin
-                            </button>
+                            /* Regular users get action buttons */
+                            <>
+                              {/* Ban/Unban button */}
+                              {usr.status === 'ACTIVE' ? (
+                                <button
+                                  onClick={() => handleBanUser(usr.userid)}
+                                  disabled={actionLoading === usr.userid}
+                                  className={`${styles.btnAction} ${styles.btnBan}`}
+                                  title="Ban this user"
+                                >
+                                  {actionLoading === usr.userid ? 'Banning...' : 'Ban'}
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => handleUnbanUser(usr.userid)}
+                                  disabled={actionLoading === usr.userid}
+                                  className={`${styles.btnAction} ${styles.btnUnban}`}
+                                >
+                                  {actionLoading === usr.userid ? 'Unbanning...' : 'Unban'}
+                                </button>
+                              )}
+                              
+                              {/* Grant Admin button (only for non-admin users) */}
+                              <button
+                                onClick={() => handleGrantAdmin(usr.userid)}
+                                disabled={actionLoading === usr.userid}
+                                className={`${styles.btnAction} ${styles.btnGrant}`}
+                                title="Grant admin privileges"
+                              >
+                                {actionLoading === usr.userid ? 'Granting...' : 'Grant Admin'}
+                              </button>
+                            </>
                           )}
                         </div>
                       </td>

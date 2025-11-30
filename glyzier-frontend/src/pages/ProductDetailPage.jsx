@@ -31,7 +31,7 @@ import styles from '../styles/pages/ProductDetailPage.module.css';
 function ProductDetailPage() {
   const { pid } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth(); // Extract user for ownership checks
   const { updateCartCount } = useCart();
   
   // State management
@@ -43,6 +43,7 @@ function ProductDetailPage() {
   const [contactingLoading, setContactingLoading] = useState(false);
   const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isOwner, setIsOwner] = useState(false); // Check if current user owns this product
   
   /**
    * Fetch product details on component mount
@@ -55,6 +56,14 @@ function ProductDetailPage() {
         const data = await getProductById(pid);
         console.log('Product data received:', data);
         setProduct(data);
+        
+        // Check if current user owns this product (Module 19: Ownership guard)
+        if (user && data.sellerId) {
+          setIsOwner(user.uid === data.sellerId);
+        } else {
+          setIsOwner(false);
+        }
+        
         setError(null);
       } catch (err) {
         console.error('Failed to fetch product:', err);
@@ -66,7 +75,7 @@ function ProductDetailPage() {
     };
     
     fetchProduct();
-  }, [pid]);
+  }, [pid, user]); // Add user to dependency array for ownership checks
 
   /**
    * Update Aurora colors when product image loads
@@ -273,26 +282,60 @@ function ProductDetailPage() {
                 </div>
               )}
               
-              {/* Favorite Button - Module 10 */}
+              {/* Favorite Button - Module 10, Module 19: Disabled for owners */}
               <FavoriteButton 
                 productId={product.pid} 
                 className={styles.favoriteButtonOverlay}
+                disabled={isOwner}
               />
             </div>
           </div>
           
           {/* Right Side - Product Information */}
           <div className={styles.infoSection}>
-            {/* Seller & Shop Name */}
+            {/* Seller & Shop Name - Clickable */}
             <div className={styles.sellerInfo}>
-              <div className={styles.sellerLabel}>
-                {product.sellerDisplayName || 'Unknown Seller'}
-              </div>
-              <div className={styles.shopName}>{product.sellerName || 'Unknown Shop'}</div>
+              {product.sellerId ? (
+                <>
+                  <div 
+                    className={`${styles.sellerLabel} ${styles.clickable}`}
+                    onClick={() => navigate(`/shops/${product.sellerId}`)}
+                    title="View seller shop"
+                  >
+                    {product.sellerDisplayName || 'Unknown Seller'}
+                  </div>
+                  <div 
+                    className={`${styles.shopName} ${styles.clickable}`}
+                    onClick={() => navigate(`/shops/${product.sellerId}`)}
+                    title="Visit shop"
+                  >
+                    {product.sellerName || 'Unknown Shop'}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.sellerLabel}>
+                    {product.sellerDisplayName || 'Unknown Seller'}
+                  </div>
+                  <div className={styles.shopName}>{product.sellerName || 'Unknown Shop'}</div>
+                </>
+              )}
             </div>
             
-            {/* Product Name */}
-            <h1 className={styles.productName}>{product.productname}</h1>
+            {/* Product Name & Owner Badge */}
+            <div className={styles.productHeader}>
+              <h1 className={styles.productName}>{product.productname}</h1>
+              
+              {/* Owner badge - Module 19 */}
+              {isOwner && (
+                <div className={styles.ownerBadge}>
+                  <svg className={styles.badgeIcon} width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                  </svg>
+                  You manage this listing
+                </div>
+              )}
+            </div>
             
             {/* Price */}
             <div className={styles.priceSection}>
@@ -320,17 +363,17 @@ function ProductDetailPage() {
               <button 
                 onClick={handleAddToCart}
                 className={styles.addToCartButton}
-                disabled={cartLoading || isOutOfStock}
+                disabled={cartLoading || isOutOfStock || isOwner}
               >
-                {cartLoading ? '⏳ Adding...' : 'Add to Cart'}
+                {cartLoading ? '⏳ Adding...' : isOwner ? 'Your Product' : 'Add to Cart'}
               </button>
 
               <button 
                 onClick={handleBuyNow}
                 className={styles.buyNowButton}
-                disabled={orderLoading || isOutOfStock}
+                disabled={orderLoading || isOutOfStock || isOwner}
               >
-                {orderLoading ? '⏳ Processing...' : 'Buy Now'}
+                {orderLoading ? '⏳ Processing...' : isOwner ? 'Your Product' : 'Buy Now'}
               </button>
             </div>
             
@@ -343,8 +386,8 @@ function ProductDetailPage() {
         </div>
       </div>
       
-      {/* Floating Contact Seller Button - Module 16 */}
-      {product && product.sellerUserId && (
+      {/* Floating Contact Seller Button - Module 16, Module 19: Hidden for owners */}
+      {product && product.sellerUserId && !isOwner && (
         <button
           className={styles.floatingContactButton}
           onClick={handleContactSeller}

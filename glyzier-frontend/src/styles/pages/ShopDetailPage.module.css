@@ -1,159 +1,298 @@
 /**
- * ShopDetailPage Component Styles (Module 15)
- * Clean design for individual shop pages
+ * ShopDetailPage CSS Module - Glassmorphism Design
+ * 
+ * Modern glass card layout with Aurora background
+ * Features 80/20 split for about/contact section
+ * 
+ * @author Glyzier Team
+ * @version 2.0 (Refactored with glassmorphism)
  */
 
+/* Page Container */
 .page {
-  background-color: #f9fafb;
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  position: relative;
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 100px 2rem 3rem;
+  padding: 40px 20px 80px;
+  position: relative;
+  z-index: 1;
 }
 
-/* --- Loading & Error States --- */
-.loading,
-.error {
+/* Header Card - Glassmorphism */
+.headerCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 32px;
+  padding: 50px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 0 80px rgba(255, 255, 255, 0.03) inset;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
-  padding: 3rem 1rem;
-  color: #64748b;
-  font-size: 1.1rem;
+  margin-bottom: 30px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.error {
-  color: #ef4444;
-  background-color: #fef2f2;
-  border-radius: 12px;
-  padding: 2rem;
-  margin: 2rem auto;
-  max-width: 500px;
-}
-
-.error button {
-  margin-top: 1rem;
-}
-
-/* --- Shop Banner Header (Wireframe Style) --- */
-.shopBanner {
-  background: linear-gradient(135deg, #b8afe8 0%, #c9bfe8 100%);
-  border-radius: 20px;
-  padding: 3rem 2.5rem;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.2);
-  text-align: center;
+.shopAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
 }
 
 .shopTitle {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c2c54;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
+  color: white;
+  margin: 0 0 10px;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.5px;
 }
 
 .shopSubtitle {
-  font-size: 1.25rem;
-  color: #4a4a6a;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
-  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* --- About Section (Wireframe Style) --- */
+/* About Section - 80/20 Split */
 .aboutSection {
-  margin-bottom: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
 }
 
+/* About Card (80% - Left Side) */
 .aboutCard {
-  background: white;
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.aboutCard:hover {
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .sectionTitle {
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #2c2c54;
-  margin: 0 0 1.5rem 0;
+  color: white;
+  margin: 0 0 20px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .aboutText {
-  color: #475569;
   font-size: 1.05rem;
   line-height: 1.8;
-  margin: 0 0 2rem 0;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 30px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .aboutTextPlaceholder {
-  color: #94a3b8;
-  font-style: italic;
-  margin: 0 0 2rem 0;
   font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  margin: 0 0 30px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .shopMetadata {
   display: flex;
-  gap: 3rem;
-  padding-top: 1.5rem;
-  border-top: 2px solid #f1f5f9;
+  gap: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .metaItem {
   display: flex;
-  gap: 0.75rem;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .metaLabel {
-  font-size: 0.95rem;
-  color: #64748b;
-  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .metaValue {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #8b7fc4;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* --- Products Section --- */
+/* Contact Card (20% - Right Side) */
+.contactCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.contactCard:hover {
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.contactTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 12px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.contactDescription {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 20px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.contactButton {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.contactButton:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 1) 0%, rgba(118, 75, 162, 1) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
+}
+
+.contactButton:active {
+  transform: translateY(0);
+}
+
+.contactButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.buttonSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Products Section */
 .productsSection {
-  margin-bottom: 2.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 30px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
 }
 
 .productsSectionTitle {
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #2c2c54;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid #e5e7eb;
+  color: white;
+  margin: 0 0 30px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.titleIcon {
+  font-size: 2rem;
 }
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
-/* --- Product Card --- */
 .productCard {
-  background: white;
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .productCard:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .productLink {
@@ -165,16 +304,16 @@
 .productImageContainer {
   position: relative;
   width: 100%;
-  height: 200px;
-  background-color: #f1f5f9;
+  height: 220px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .productImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .productCard:hover .productImage {
@@ -187,13 +326,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
-  color: #64748b;
-  font-weight: 600;
-  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
 }
 
-/* Favorite Button Overlay */
 .favoriteButtonOverlay {
   position: absolute;
   top: 12px;
@@ -202,166 +339,136 @@
 }
 
 .productInfo {
-  padding: 1.25rem;
+  padding: 20px;
 }
 
 .productName {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.3;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 8px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .productType {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin: 0 0 0.5rem 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 8px;
 }
 
 .productPrice {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #8b7fc4;
-  margin: 0 0 0.25rem 0;
+  color: #ffffff;
+  margin: 0 0 8px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .productStatus {
   font-size: 0.85rem;
-  color: #10b981;
-  margin: 0;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
-/* --- Empty State --- */
 .noProducts {
   text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  color: #64748b;
-}
-
-.noProducts p {
-  margin: 0;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 1.1rem;
 }
 
-/* --- Back Button --- */
-.backButtonContainer {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-/* --- Responsive Design --- */
-@media (max-width: 992px) {
-  .productGrid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .shopStats {
-    gap: 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 90px 1.5rem 2rem;
-  }
-
-  .shopHeader {
-    padding: 1.75rem;
-  }
-
-  .shopName {
-    font-size: 2rem;
-  }
-
-  .shopBio {
-    font-size: 1rem;
-  }
-
-  .productGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-
-  .shopStats {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .statItem {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.75rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .productGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* --- Floating Contact Button --- */
-.floatingContactButton {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.95) 0%, rgba(124, 58, 237, 0.95) 100%);
+/* Back Button - Top Position */
+.backButton {
+  padding: 12px 28px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
   color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: floatIn 0.5s ease-out;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  margin-bottom: 24px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.floatingContactButton:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.5);
-  background: linear-gradient(135deg, rgba(147, 51, 234, 0.95) 0%, rgba(124, 58, 237, 0.95) 100%);
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-3px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
 }
 
-.floatingContactButton:active {
-  transform: translateY(0) scale(0.98);
+.backButton:active {
+  transform: translateX(-1px);
 }
 
-.floatingContactButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.backArrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
 }
 
-.floatingContactButton svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
+.backButton:hover .backArrow {
+  transform: translateX(-3px);
 }
 
-@keyframes floatIn {
+/* Loading & Error States */
+.loading,
+.error {
+  text-align: center;
+  padding: 100px 20px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.error p {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Module 19: Owner Badge */
+.ownerBadgeSmall {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  animation: fadeInOwner 0.5s ease-in-out;
+}
+
+.productCard.ownProduct {
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.productCard.ownProduct:hover {
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* Animations */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -369,32 +476,105 @@
   }
 }
 
-/* Responsive adjustments for floating button */
-@media (max-width: 768px) {
-  .floatingContactButton {
-    bottom: 24px;
-    right: 24px;
-    padding: 14px 20px;
-    font-size: 0.9rem;
+@keyframes fadeInOwner {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
   }
-  
-  .floatingContactButton svg {
-    width: 18px;
-    height: 18px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 576px) {
-  .floatingContactButton {
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 18px;
-    font-size: 0.85rem;
-    gap: 8px;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  .floatingContactButton svg {
-    width: 16px;
-    height: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .aboutSection {
+    grid-template-columns: 1fr;
+  }
+
+  .contactCard {
+    padding: 25px;
+  }
+
+  .headerCard {
+    padding: 40px 30px;
+  }
+
+  .shopTitle {
+    font-size: 2rem;
+  }
+
+  .shopAvatar {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 15px 60px;
+  }
+
+  .headerCard,
+  .aboutCard,
+  .productsSection {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+
+  .shopTitle {
+    font-size: 1.8rem;
+  }
+
+  .sectionTitle,
+  .productsSectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .productGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .shopMetadata {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerCard {
+    padding: 30px 20px;
+  }
+
+  .shopAvatar {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+
+  .shopTitle {
+    font-size: 1.5rem;
+  }
+
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutText,
+  .aboutTextPlaceholder {
+    font-size: 0.95rem;
+  }
+
+  .metaValue {
+    font-size: 1.2rem;
   }
 }

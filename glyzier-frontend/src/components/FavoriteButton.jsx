@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { checkFavoriteStatus, toggleFavorite } from '../services/favoritesService';
+import { showError, showInfo } from './NotificationManager';
 import styles from '../styles/components/FavoriteButton.module.css';
 
 /**
@@ -15,16 +16,19 @@ import styles from '../styles/components/FavoriteButton.module.css';
  * - Login redirect for unauthenticated users
  * - Loading state during API calls
  * - Tooltip feedback
+ * - Disabled state for product owners (Module 19)
  * 
  * Usage:
  * <FavoriteButton productId={product.pid} />
+ * <FavoriteButton productId={product.pid} disabled={true} />
  * 
  * Module 10: Favorites/Wishlist System
+ * Module 19: Seller Self-Interaction Guard
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0
  */
-const FavoriteButton = ({ productId, className = '' }) => {
+const FavoriteButton = ({ productId, className = '', disabled = false }) => {
   const { isAuthenticated } = useAuth();
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,14 +84,19 @@ const FavoriteButton = ({ productId, className = '' }) => {
    * Handle favorite button click
    * Redirects to login if not authenticated
    * Toggles favorite status if authenticated
+   * Prevents action if disabled (Module 19: Owner guard)
    */
   const handleClick = async (e) => {
     e.preventDefault(); // Prevent parent link navigation
     e.stopPropagation(); // Stop event bubbling
     
+    // Prevent action if disabled (owner guard)
+    if (disabled || isLoading) return;
+    
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
-      window.location.href = '/login';
+      showInfo('Please login to add favorites');
+      setTimeout(() => window.location.href = '/login', 1500);
       return;
     }
     
@@ -110,7 +119,15 @@ const FavoriteButton = ({ productId, className = '' }) => {
       
     } catch (error) {
       console.error('Error toggling favorite:', error);
-      alert('Failed to update favorites. Please try again.');
+      
+      // Module 19: Handle ownership denial gracefully
+      const errorMessage = error.response?.data?.error || error.message;
+      
+      if (errorMessage.includes('cannot favorite your own products')) {
+        showInfo('You cannot favorite your own products');
+      } else {
+        showError(errorMessage || 'Failed to update favorites. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -121,17 +138,17 @@ const FavoriteButton = ({ productId, className = '' }) => {
       <div className={`${styles.favoriteButtonContainer} ${className}`}>
         <button
           ref={buttonRef}
-          className={`${styles.favoriteButton} ${isFavorited ? styles.favorited : ''} ${isLoading ? styles.loading : ''}`}
+          className={`${styles.favoriteButton} ${isFavorited ? styles.favorited : ''} ${isLoading ? styles.loading : ''} ${disabled ? styles.disabled : ''}`}
           onClick={handleClick}
-          disabled={isLoading}
-          aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-          title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+          disabled={isLoading || disabled}
+          aria-label={disabled ? 'Cannot favorite own products' : (isFavorited ? 'Remove from favorites' : 'Add to favorites')}
+          title={disabled ? 'You cannot favorite your own products' : (isFavorited ? 'Remove from favorites' : 'Add to favorites')}
         >
           <svg
             className={styles.heartIcon}
             viewBox="0 0 24 24"
-            fill={isFavorited ? 'currentColor' : 'none'}
-            stroke="currentColor"
+            fill={isFavorited && !disabled ? 'currentColor' : 'none'}
+            stroke={disabled ? '#ccc' : 'currentColor'}
             strokeWidth="2"
           >
             <path

@@ -11,7 +11,7 @@
  * @version 5.0 (UI Redesign - Mockup Implementation)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
@@ -82,10 +82,17 @@ const useCarousel = (totalSlides, interval = 5000) => {
  */
 function HomePage() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]); // This will be used for "Hot Arts"
+  const [products, setProducts] = useState([]); // This will be used for "Latest Hot Arts"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
+  
+  // Feed section state
+  const [feedProducts, setFeedProducts] = useState([]);
+  const [feedPage, setFeedPage] = useState(0);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedHasMore, setFeedHasMore] = useState(true);
+  const observerTarget = useRef(null);
   
   // Hero carousel (auto-rotates through first 5 products every 5 seconds)
   const heroSlides = Math.min(products.length, 5);
@@ -97,9 +104,11 @@ function HomePage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // We fetch all products, but for the design, we'll only show the first 6 as "Hot Arts".
+        // Fetch all products and show the latest 8 as "Latest Hot Arts"
         const data = await getAllProducts();
-        setProducts(data.slice(0, 6)); 
+        // Sort by product ID descending to get latest uploaded
+        const sortedData = data.sort((a, b) => b.pid - a.pid);
+        setProducts(sortedData.slice(0, 8)); 
         setError(null);
       } catch (err) {
         console.error('Failed to fetch products:', err);
@@ -110,6 +119,77 @@ function HomePage() {
     };
     fetchProducts();
   }, []);
+
+  /**
+   * Load more products for feed section
+   * Implements pagination by loading products in chunks
+   */
+  const loadMoreFeedProducts = useCallback(async () => {
+    if (feedLoading || !feedHasMore) return;
+    
+    try {
+      setFeedLoading(true);
+      const data = await getAllProducts();
+      
+      // Sort by product ID descending (latest first)
+      const sortedData = data.sort((a, b) => b.pid - a.pid);
+      
+      // Simulate pagination: 12 products per page
+      const pageSize = 12;
+      const startIndex = feedPage * pageSize;
+      const endIndex = startIndex + pageSize;
+      const pageData = sortedData.slice(startIndex, endIndex);
+      
+      if (pageData.length === 0) {
+        setFeedHasMore(false);
+      } else {
+        setFeedProducts(prev => [...prev, ...pageData]);
+        setFeedPage(prev => prev + 1);
+        
+        // Check if we've loaded all products
+        if (endIndex >= sortedData.length) {
+          setFeedHasMore(false);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load more products:', err);
+    } finally {
+      setFeedLoading(false);
+    }
+  }, [feedPage, feedLoading, feedHasMore]);
+
+  /**
+   * Intersection Observer for infinite scroll
+   * Loads more products when user scrolls to the bottom
+   */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && feedHasMore && !feedLoading) {
+          loadMoreFeedProducts();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [loadMoreFeedProducts, feedHasMore, feedLoading]);
+
+  /**
+   * Initial load for feed section
+   */
+  useEffect(() => {
+    loadMoreFeedProducts();
+  }, []); // Empty dependency array - only run once on mount
 
   // Update Aurora colors when carousel index changes
   useEffect(() => {
@@ -221,10 +301,10 @@ function HomePage() {
       </header>
 
       <main>
-        {/* Hot Arts Section */}
+        {/* Latest Hot Arts Section */}
         <section className={styles.hotArtsSection}>
-          <h2>Hot Arts</h2>
-          <p className={styles.sectionSubtitle}>Popular Topping Charts</p>
+          <h2>Latest Hot Arts</h2>
+          <p className={styles.sectionSubtitle}>Latest uploaded arts</p>
           {loading && <p>Loading art...</p>}
           {error && <p className={styles.errorMessage}>{error}</p>}
           {!loading && !error && (
@@ -252,8 +332,67 @@ function HomePage() {
                   </Link>
                 ))
               ) : (
-                <p>No hot arts available yet. Add some products!</p>
+                <p>No arts available yet. Add some products!</p>
               )}
+            </div>
+          )}
+        </section>
+
+        {/* Feed Section - Infinite Scroll */}
+        <section className={styles.feedSection}>
+          <h2>Feed</h2>
+          <p className={styles.sectionSubtitle}>Discover all artworks</p>
+          
+          <div className={styles.feedGrid}>
+            {feedProducts.map((product) => (
+              <Link key={product.pid} to={`/products/${product.pid}`} className={styles.feedCard}>
+                <div className={styles.feedImage}>
+                  {product.screenshotPreviewUrl ? (
+                    <img 
+                      src={product.screenshotPreviewUrl} 
+                      alt={product.productname}
+                      className={styles.productImage}
+                    />
+                  ) : (
+                    <div className={styles.imagePlaceholder}>
+                      [No Image]
+                    </div>
+                  )}
+                  {/* Favorite Button - Module 10 */}
+                  <FavoriteButton 
+                    productId={product.pid} 
+                    className={styles.favoriteButtonOverlay}
+                  />
+                </div>
+                <div className={styles.feedInfo}>
+                  <p className={styles.feedProductName}>{product.productname}</p>
+                  <p className={styles.feedProductPrice}>${product.price}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          {/* Loading indicator */}
+          {feedLoading && (
+            <div className={styles.feedLoading}>
+              <p>Loading more artworks...</p>
+            </div>
+          )}
+          
+          {/* Intersection observer target */}
+          <div ref={observerTarget} className={styles.observerTarget} />
+          
+          {/* End of feed message */}
+          {!feedHasMore && feedProducts.length > 0 && (
+            <div className={styles.feedEnd}>
+              <p>You've seen all the artworks!</p>
+            </div>
+          )}
+          
+          {/* Empty state */}
+          {!feedLoading && feedProducts.length === 0 && (
+            <div className={styles.feedEmpty}>
+              <p>No artworks available yet.</p>
             </div>
           )}
         </section>

@@ -21,6 +21,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import FavoriteButton from '../components/FavoriteButton';
 import Aurora from '../components/Aurora';
+import { useAuth } from '../context/AuthContext'; // Module 19: For ownership checks
 import api from '../services/api';
 import { getAllSellers } from '../services/sellerService';
 import styles from '../styles/pages/SearchPage.module.css';
@@ -46,6 +47,7 @@ const CATEGORIES = [
  * @returns {JSX.Element} The search results page
  */
 function SearchPage() {
+  const { user } = useAuth(); // Module 19: For ownership checks
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [sellers, setSellers] = useState([]);
@@ -58,6 +60,15 @@ function SearchPage() {
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || 'All';
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  
+  /**
+   * Helper function to check ownership (Module 19)
+   * @param {Object} product - Product object with sellerId
+   * @returns {boolean} - True if current user owns the product
+   */
+  const isOwnerOfProduct = (product) => {
+    return user && product.sellerId && user.uid === product.sellerId;
+  };
 
   /**
    * Fetch search results whenever query, category, or search type changes
@@ -279,37 +290,48 @@ function SearchPage() {
           <div className={styles.productsSection}>
             <h2 className={styles.sectionTitle}>Products ({products.length})</h2>
             <div className={styles.resultsGrid}>
-              {products.map((product) => (
-                <Link 
-                  key={product.pid} 
-                  to={`/products/${product.pid}`} 
-                  className={styles.productCard}
-                >
-                  <div className={styles.productImage}>
-                    {product.screenshotPreviewUrl ? (
-                      <img 
-                        src={product.screenshotPreviewUrl} 
-                        alt={product.productname}
-                        className={styles.productImageDisplay}
+              {products.map((product) => {
+                const isOwner = isOwnerOfProduct(product);
+                return (
+                  <Link 
+                    key={product.pid} 
+                    to={`/products/${product.pid}`} 
+                    className={`${styles.productCard} ${isOwner ? styles.ownProduct : ''}`}
+                  >
+                    {/* Owner badge - Module 19 */}
+                    {isOwner && (
+                      <div className={styles.ownerBadgeSmall}>
+                        Your Product
+                      </div>
+                    )}
+                    
+                    <div className={styles.productImage}>
+                      {product.screenshotPreviewUrl ? (
+                        <img 
+                          src={product.screenshotPreviewUrl} 
+                          alt={product.productname}
+                          className={styles.productImageDisplay}
+                        />
+                      ) : (
+                        <div className={styles.imagePlaceholder}>[No Image]</div>
+                      )}
+                      {/* Favorite Button - Module 10, Module 19: Disabled for owners */}
+                      <FavoriteButton 
+                        productId={product.pid} 
+                        className={styles.favoriteButtonOverlay}
+                        disabled={isOwner}
                       />
-                    ) : (
-                      <div className={styles.imagePlaceholder}>[No Image]</div>
-                    )}
-                    {/* Favorite Button */}
-                    <FavoriteButton 
-                      productId={product.pid} 
-                      className={styles.favoriteButtonOverlay}
-                    />
-                  </div>
-                  <div className={styles.productInfo}>
-                    <h3 className={styles.productName}>{product.productname}</h3>
-                    <p className={styles.productPrice}>${product.price?.toFixed(2)}</p>
-                    {product.type && (
-                      <span className={styles.productType}>{product.type}</span>
-                    )}
-                  </div>
-                </Link>
-              ))}
+                    </div>
+                    <div className={styles.productInfo}>
+                      <h3 className={styles.productName}>{product.productname}</h3>
+                      <p className={styles.productPrice}>${product.price?.toFixed(2)}</p>
+                      {product.type && (
+                        <span className={styles.productType}>{product.type}</span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}

@@ -22,13 +22,22 @@ import styles from '../styles/pages/FavoritesPage.module.css';
  * @version 1.0
  */
 const FavoritesPage = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth(); // Module 19: Extract user for ownership checks
   const navigate = useNavigate();
   
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [removingId, setRemovingId] = useState(null);
+  
+  /**
+   * Helper function to check ownership (Module 19)
+   * @param {Object} favorite - Favorite object with sellerId
+   * @returns {boolean} - True if current user owns the product
+   */
+  const isOwnerOfProduct = (favorite) => {
+    return user && favorite.sellerId && user.uid === favorite.sellerId;
+  };
   
   /**
    * Fetch favorites on component mount
@@ -188,30 +197,39 @@ const FavoritesPage = () => {
       ) : (
         // Products Grid
         <div className={styles.productsGrid}>
-          {favorites.map((favorite) => (
-            <div
-              key={favorite.favid}
-              className={styles.productCard}
-            >
-              {/* Remove Button - Top Right */}
-              <button
-                className={styles.removeButton}
-                onClick={(e) => handleRemoveFavorite(favorite.pid, e)}
-                disabled={removingId === favorite.pid}
-                aria-label="Remove from favorites"
-                title="Remove from favorites"
+          {favorites.map((favorite) => {
+            const isOwner = isOwnerOfProduct(favorite);
+            return (
+              <div
+                key={favorite.favid}
+                className={`${styles.productCard} ${isOwner ? styles.ownProduct : ''}`}
               >
-                {removingId === favorite.pid ? (
-                  <span className={styles.removingSpinner}>⏳</span>
-                ) : (
-                  <svg className={styles.trashIcon} viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-                  </svg>
+                {/* Owner badge - Module 19 */}
+                {isOwner && (
+                  <div className={styles.ownerBadgeSmall}>
+                    Your Product
+                  </div>
                 )}
-              </button>
-              
-              {/* Product Image - Clickable */}
-              <Link to={`/products/${favorite.pid}`} className={styles.imageContainer}>
+                
+                {/* Remove Button - Top Right */}
+                <button
+                  className={styles.removeButton}
+                  onClick={(e) => handleRemoveFavorite(favorite.pid, e)}
+                  disabled={removingId === favorite.pid}
+                  aria-label="Remove from favorites"
+                  title="Remove from favorites"
+                >
+                  {removingId === favorite.pid ? (
+                    <span className={styles.removingSpinner}>⏳</span>
+                  ) : (
+                    <svg className={styles.trashIcon} viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                    </svg>
+                  )}
+                </button>
+                
+                {/* Product Image - Clickable */}
+                <Link to={`/products/${favorite.pid}`} className={styles.imageContainer}>
                 {favorite.screenshotPreviewUrl ? (
                   <img
                     src={favorite.screenshotPreviewUrl}
@@ -238,7 +256,8 @@ const FavoritesPage = () => {
                 </div>
               </Link>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
         </div>
