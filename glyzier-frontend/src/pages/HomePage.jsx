@@ -8,7 +8,7 @@
  * - "Category" browsing section.
  * - Sponsor and social media footers.
  * * @author Glyzier Team
- * @version 5.0 (UI Redesign - Mockup Implementation)
+ * @version 5.3 (Fixed missing partner images via imports)
  */
 
 import React, { useState, useEffect } from 'react';
@@ -16,9 +16,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
 import FavoriteButton from '../components/FavoriteButton';
-import { getAllProducts } from '../services/productService'; // We will use this for the "Hot Arts" section
+import { getAllProducts } from '../services/productService'; 
 import { extractColorsFromImage, enhanceColorsForAurora } from '../utils/colorExtractor';
 import styles from '../styles/pages/HomePage.module.css';
+
+// IMPORTS ARE REQUIRED for images in the src folder to load correctly
+import partnerArtLabel from '../assets/partner-artlabel.png';
+import partnerFaber from '../assets/partner-faber.png';
+import partnerGallery from '../assets/partner-gallery.png';
+import partnerMaha from '../assets/partner-maha.png';
+import twitterIcon from '../assets/twitter_site.png';
+import facebookIcon from '../assets/fb_site.png';
+import instagramIcon from '../assets/insta_site.png';
 
 /**
  * Custom hook for auto-rotating carousel with fade effect
@@ -74,8 +83,6 @@ const useCarousel = (totalSlides, interval = 5000) => {
   return { currentIndex, goToNext, goToPrev, goToSlide, isTransitioning };
 };
 
-// Removed artists, categories data for clean minimal homepage
-
 /**
  * HomePage functional component
  * @returns {JSX.Element} The redesigned home page component
@@ -90,8 +97,6 @@ function HomePage() {
   // Hero carousel (auto-rotates through first 5 products every 5 seconds)
   const heroSlides = Math.min(products.length, 5);
   const { currentIndex: heroIndex, goToNext: heroNext, goToPrev: heroPrev, goToSlide: goToHeroSlide, isTransitioning } = useCarousel(heroSlides, 5000);
-
-
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -257,6 +262,29 @@ function HomePage() {
             </div>
           )}
         </section>
+
+        {/* Partners Section - Footer with Partner Images */}
+        <section className={styles.partnersFooter}>
+          <div className={styles.partnersContainer}>
+            <img src={partnerArtLabel} alt="ArtLabel Partner" className={styles.partnerImage} />
+            <img src={partnerFaber} alt="Faber Castell Partner" className={styles.partnerImage} />
+            <img src={partnerGallery} alt="Gallery Partner" className={styles.partnerImage} />
+            <img src={partnerMaha} alt="Maha Partner" className={styles.partnerImage} />
+          </div>
+        </section>
+
+        {/* Social Media Icons - Fixed Bottom Right Corner */}
+        <div className={styles.socialMediaFixed}>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+            <img src={twitterIcon} alt="Twitter" />
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+            <img src={facebookIcon} alt="Facebook" />
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+            <img src={instagramIcon} alt="Instagram" />
+          </a>
+        </div>
 
       </main>
     </div>
