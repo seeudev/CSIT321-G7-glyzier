@@ -110,6 +110,48 @@ public class AdminController {
     }
 
     /**
+     * Grant Admin Privileges
+     * 
+     * Endpoint: POST /api/admin/users/{userid}/grant-admin
+     * 
+     * Grants admin privileges to a user by setting is_admin to true.
+     * The user will be able to access admin panel on next login.
+     * 
+     * @param userid The ID of the user to grant admin privileges
+     * @return Success message
+     */
+    @PostMapping("/users/{userid}/grant-admin")
+    public ResponseEntity<?> grantAdmin(@PathVariable Long userid) {
+        try {
+            adminService.grantAdmin(userid);
+            return ResponseEntity.ok().body("{\"message\": \"Admin privileges granted successfully\"}");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    /**
+     * Revoke Admin Privileges
+     * 
+     * Endpoint: POST /api/admin/users/{userid}/revoke-admin
+     * 
+     * Revokes admin privileges from a user by setting is_admin to false.
+     * The user will lose access to admin panel on next login.
+     * 
+     * @param userid The ID of the user to revoke admin privileges
+     * @return Success message
+     */
+    @PostMapping("/users/{userid}/revoke-admin")
+    public ResponseEntity<?> revokeAdmin(@PathVariable Long userid) {
+        try {
+            adminService.revokeAdmin(userid);
+            return ResponseEntity.ok().body("{\"message\": \"Admin privileges revoked successfully\"}");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    /**
      * Get All Products
      * 
      * Endpoint: GET /api/admin/products
