@@ -1,19 +1,20 @@
 /**
  * SearchPage Styles
  * 
- * Module 11 - Basic Search & Filter
+ * Module 11 - Basic Search & Filter with Glassmorphism
  * 
- * Styles for the product search results page.
- * Reuses patterns from HomePage for product grid consistency.
+ * Styles for the product search results page with Aurora background.
+ * Uses glassmorphism effects for readability.
  * 
  * @author Glyzier Team
- * @version 1.0
+ * @version 2.0
  */
 
 /* Page Container */
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow-x: hidden;
   padding-bottom: 4rem;
 }
 
@@ -23,10 +24,21 @@
   padding: 2rem;
 }
 
+/* Search Header Card - Glassmorphism */
+.searchHeaderCard {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
 /* Header Section */
 .header {
   text-align: center;
-  margin-bottom: 2rem;
   color: white;
 }
 
@@ -34,13 +46,14 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .searchQuery {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   margin-top: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .searchQuery strong {
@@ -53,21 +66,25 @@
   font-weight: 500;
 }
 
-/* Filter Section */
+/* Filter Section - Glassmorphism */
 .filterSection {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .filterLabel {
   display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
   margin-bottom: 1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .categoryButtons {
@@ -78,84 +95,209 @@
 
 .categoryButton {
   padding: 0.6rem 1.2rem;
-  background: #f5f5f5;
-  border: 2px solid transparent;
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
   font-size: 0.95rem;
-  font-weight: 500;
-  color: #555;
+  font-weight: 600;
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .categoryButton:hover {
-  background: #e8e8e8;
-  color: #333;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .categoryButton.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   color: white;
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+}
+
+/* Result Count Card - Glassmorphism */
+.resultCountCard {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* Result Count */
 .resultCount {
   text-align: center;
-  font-size: 1.1rem;
-  color: white;
-  margin-bottom: 2rem;
-  font-weight: 500;
+  font-size: 1.15rem;
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .resultCount strong {
-  color: #ffd700;
-  font-size: 1.3rem;
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 800;
 }
 
-/* Loading, Error, and Empty States */
+/* Loading, Error, and Empty States - Glassmorphism */
 .loadingMessage,
 .errorMessage,
 .emptyState,
 .noResults {
   text-align: center;
   padding: 3rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .loadingMessage {
-  color: #667eea;
+  color: rgba(255, 255, 255, 0.95);
   font-size: 1.2rem;
   font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .errorMessage {
-  color: #e74c3c;
+  color: #ffcccc;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .emptyState p,
 .noResults p {
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .noResults p:first-child {
-  color: #333;
+  color: #fff;
   font-weight: 600;
   font-size: 1.2rem;
 }
 
 .suggestion {
-  color: #888;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   margin-top: 0.5rem;
+}
+
+/* Section Titles */
+.sectionTitle {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: white;
+  margin: 2rem 0 1.5rem;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Sellers Section */
+.sellersSection {
+  margin-bottom: 3rem;
+}
+
+.sellersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.sellerCard {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.sellerCard:hover {
+  transform: translateY(-5px);
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.sellerAvatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sellerInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.sellerName {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.sellerBio {
+  font-size: 0.98rem;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.productCount {
+  font-size: 0.92rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Products Section */
+.productsSection {
+  margin-bottom: 3rem;
 }
 
 /* Results Grid */
@@ -163,25 +305,30 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
-/* Product Card */
+/* Product Card - Glassmorphism */
 .productCard {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
 }
 
 .productCard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Product Image Container */
@@ -190,7 +337,7 @@
   width: 100%;
   height: 250px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .productImageDisplay {
@@ -210,9 +357,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Favorite Button Overlay */
@@ -233,32 +383,38 @@
 
 .productName {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #fff;
   margin-bottom: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .productPrice {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #667eea;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
   margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .productType {
   display: inline-block;
-  padding: 0.3rem 0.8rem;
-  background: #f0f0f0;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: #ffffff;
+  font-weight: 600;
   margin-top: auto;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive Design */
@@ -291,6 +447,10 @@
   .resultsGrid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
+  }
+
+  .sellersGrid {
+    grid-template-columns: 1fr;
   }
 
   .productImage {
