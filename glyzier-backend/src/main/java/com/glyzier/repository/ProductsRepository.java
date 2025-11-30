@@ -46,6 +46,15 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
     List<Products> findByStatus(String status);
 
     /**
+     * Count products by status
+     * Useful for admin dashboard statistics
+     * 
+     * @param status The product status to count
+     * @return Number of products with the specified status
+     */
+    Long countByStatus(String status);
+
+    /**
      * Find products by type
      * Useful for filtering by product category (e.g., "Print", "Digital")
      * 

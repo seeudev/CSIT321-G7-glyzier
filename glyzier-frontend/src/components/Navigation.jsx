@@ -27,7 +27,7 @@ import styles from '../styles/components/Navigation.module.css';
  * @returns {JSX.Element} The navigation bar component
  */
 function Navigation() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, refreshUser } = useAuth();
   
   // Safely get cart count, default to 0 if cart context fails
   let cartCount = 0;
@@ -119,9 +119,20 @@ function Navigation() {
 
   /**
    * Toggle user menu
+   * When opening the menu, refresh user data to get latest admin status
    */
-  const toggleUserMenu = () => {
-    setShowUserMenu(!showUserMenu);
+  const toggleUserMenu = async () => {
+    const newState = !showUserMenu;
+    setShowUserMenu(newState);
+    
+    // Refresh user data when opening the menu
+    if (newState && isAuthenticated) {
+      try {
+        await refreshUser();
+      } catch (error) {
+        console.error('Failed to refresh user data:', error);
+      }
+    }
   };
 
   /**
@@ -246,6 +257,15 @@ function Navigation() {
                         onClick={() => setShowUserMenu(false)}
                       >
                         Seller Dashboard
+                      </Link>
+                    )}
+                    {user?.isAdmin && (
+                      <Link 
+                        to="/admin/dashboard" 
+                        className={styles.dropdownItem}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Admin Dashboard
                       </Link>
                     )}
                     <div className={styles.dropdownDivider}></div>

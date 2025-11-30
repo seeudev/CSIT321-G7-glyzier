@@ -106,7 +106,8 @@ public class AuthService {
             savedUser.getUserid(),
             savedUser.getEmail(),
             savedUser.getDisplayname(),
-            false // New user is not a seller yet
+            false, // New user is not a seller yet
+            savedUser.isAdmin() // Include isAdmin (Module 17)
         );
     }
 
@@ -152,7 +153,8 @@ public class AuthService {
                 user.getUserid(),
                 user.getEmail(),
                 user.getDisplayname(),
-                isSeller
+                isSeller,
+                user.isAdmin() // Include isAdmin (Module 17)
             );
 
         } catch (Exception e) {

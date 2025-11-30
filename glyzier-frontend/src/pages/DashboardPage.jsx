@@ -214,6 +214,11 @@ function DashboardPage() {
                 <span className={styles.infoLabel}>Email</span>
                 <span className={styles.infoValue}>{user.email}</span>
               </div>
+              <div className={styles.cardActions}>
+                <Link to="/profile" className={styles.buttonSecondary}>
+                  Edit Profile
+                </Link>
+              </div>
             </div>
           </div>
           

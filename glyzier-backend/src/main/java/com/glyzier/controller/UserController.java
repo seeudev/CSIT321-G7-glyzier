@@ -88,6 +88,9 @@ public class UserController {
             boolean isSeller = currentUser.getSeller() != null;
             response.put("isSeller", isSeller);
             
+            // Include admin status (Module 17)
+            response.put("isAdmin", currentUser.isAdmin());
+            
             // If user is a seller, include seller information
             if (isSeller) {
                 response.put("sellerid", currentUser.getSeller().getSid());

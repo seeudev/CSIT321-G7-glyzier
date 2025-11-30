@@ -63,6 +63,11 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import ProfilePage from './pages/ProfilePage';
 import MessagesPage from './pages/MessagesPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 /**
  * App functional component
@@ -221,10 +226,55 @@ function App() {
             } 
           />
           
+          {/* Admin routes - require ADMIN role (Module 17) */}
+          
+          {/* Admin Dashboard - overview statistics (PROTECTED - ADMIN ONLY) */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute>
+                <AdminDashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Users - user management (PROTECTED - ADMIN ONLY) */}
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute>
+                <AdminUsersPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Products - product moderation (PROTECTED - ADMIN ONLY) */}
+          <Route 
+            path="/admin/products" 
+            element={
+              <ProtectedRoute>
+                <AdminProductsPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Categories - category management (PROTECTED - ADMIN ONLY) */}
+          <Route 
+            path="/admin/categories" 
+            element={
+              <ProtectedRoute>
+                <AdminCategoriesPage />
+              </ProtectedRoute>
+            } 
+          />
+          
           {/* 
             Additional routes to be added in future modules:
             - /orders/:orderid - Order details (Future module, PROTECTED)
           */}
+          
+          {/* Catch-all route for 404 - must be last */}
+          <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </CartProvider>
       </AuthProvider>

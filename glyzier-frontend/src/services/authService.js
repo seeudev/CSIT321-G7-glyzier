@@ -48,16 +48,18 @@ const login = async (email, password) => {
       password,
     });
     
-    // The response should contain: { token, uid, displayname, email }
+    // The response should contain: { token, uid, displayname, email, isAdmin }
     // Store the token in localStorage for persistent authentication
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       
       // Store user info as well (optional, but useful for UI)
+      // Module 17: Include isAdmin for admin access control
       const userInfo = {
-        uid: response.data.uid,
+        uid: response.data.userid,
         displayname: response.data.displayname,
         email: response.data.email,
+        isAdmin: response.data.isAdmin, // Module 17: Store admin flag
       };
       localStorage.setItem('user', JSON.stringify(userInfo));
     }
@@ -193,6 +195,44 @@ const getCurrentUser = () => {
 };
 
 /**
+ * Get current user info from backend
+ * 
+ * Fetches the latest user information from the backend API.
+ * This ensures the local state is synchronized with the database.
+ * Useful for checking admin status changes or profile updates.
+ * 
+ * Backend endpoint: GET /api/users/me
+ * Response: { userid, displayname, email, phonenumber, isAdmin, createdAt }
+ * 
+ * @returns {Promise<Object>} - Promise that resolves to user data from backend
+ * @throws {Error} - If request fails
+ * 
+ * Usage:
+ * const userData = await authService.getCurrentUserFromBackend();
+ * console.log('Admin status:', userData.isAdmin);
+ */
+const getCurrentUserFromBackend = async () => {
+  try {
+    // Make GET request to /api/users/me endpoint
+    const response = await api.get('/api/users/me');
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || 
+        error.response.data.error || 
+        'Failed to fetch user data'
+      );
+    } else if (error.request) {
+      throw new Error('Unable to reach the server. Please check your connection.');
+    } else {
+      throw new Error('An unexpected error occurred.');
+    }
+  }
+};
+
+/**
  * Check if user is authenticated
  * 
  * Simple helper function to check if a token exists.
@@ -218,6 +258,7 @@ const authService = {
   register,
   logout,
   getCurrentUser,
+  getCurrentUserFromBackend,
   isAuthenticated,
 };
 

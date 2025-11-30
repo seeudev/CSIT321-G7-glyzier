@@ -112,10 +112,12 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.login(email, password);
       
       // Update the context state with the logged-in user
+      // Module 17: Include isAdmin for admin access control
       const userInfo = {
-        uid: data.uid,
+        uid: data.userid,
         displayname: data.displayname,
         email: data.email,
+        isAdmin: data.isAdmin, // Module 17: Store admin flag
       };
       
       setUser(userInfo);
@@ -171,6 +173,48 @@ export const AuthProvider = ({ children }) => {
   };
   
   /**
+   * Refresh user data from backend
+   * 
+   * Fetches the latest user information from the backend to ensure
+   * the local state is synchronized with the database.
+   * Useful for checking admin status changes or profile updates.
+   * 
+   * @returns {Promise<void>}
+   */
+  const refreshUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // No token, clear state
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
+      }
+
+      // Fetch current user from backend
+      const response = await authService.getCurrentUserFromBackend();
+      
+      // Update context and localStorage with fresh data
+      const userInfo = {
+        uid: response.userid,
+        displayname: response.displayname,
+        email: response.email,
+        isAdmin: response.isAdmin || false,
+      };
+      
+      setUser(userInfo);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(userInfo));
+      
+      console.log('AuthContext: User data refreshed', userInfo);
+    } catch (error) {
+      console.error('AuthContext: Failed to refresh user data', error);
+      // If refresh fails, logout the user
+      logout();
+    }
+  };
+
+  /**
    * Logout function
    * 
    * Logs out the current user by clearing the token and user info
@@ -186,12 +230,16 @@ export const AuthProvider = ({ children }) => {
    * };
    */
   const logout = () => {
+    console.log('AuthContext: Logging out user');
+    
     // Call the authService logout function to clear localStorage
     authService.logout();
     
     // Clear the context state
     setUser(null);
     setIsAuthenticated(false);
+    
+    console.log('AuthContext: User logged out successfully');
   };
   
   /**
@@ -205,6 +253,7 @@ export const AuthProvider = ({ children }) => {
     login,             // Function to log in
     register,          // Function to register
     logout,            // Function to log out
+    refreshUser,       // Function to refresh user data from backend
   };
   
   // Removed blocking loading screen to allow HomePage to render immediately
