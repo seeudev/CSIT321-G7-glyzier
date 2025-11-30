@@ -18,21 +18,20 @@
 
 /* Header */
 .header {
-  padding: 48px 0;
+  padding: 60px 20px;
   color: white;
   position: relative;
   overflow: hidden;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
-  margin-top: 0;
   margin-bottom: 40px;
 }
 
 .headerCard {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.5rem;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -40,11 +39,6 @@
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   position: relative;
-  overflow: hidden;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
-  margin-top: 0;
 }
 
 .header::before {
