@@ -293,12 +293,33 @@ function ProductDetailPage() {
           
           {/* Right Side - Product Information */}
           <div className={styles.infoSection}>
-            {/* Seller & Shop Name */}
+            {/* Seller & Shop Name - Clickable */}
             <div className={styles.sellerInfo}>
-              <div className={styles.sellerLabel}>
-                {product.sellerDisplayName || 'Unknown Seller'}
-              </div>
-              <div className={styles.shopName}>{product.sellerName || 'Unknown Shop'}</div>
+              {product.sellerId ? (
+                <>
+                  <div 
+                    className={`${styles.sellerLabel} ${styles.clickable}`}
+                    onClick={() => navigate(`/shops/${product.sellerId}`)}
+                    title="View seller shop"
+                  >
+                    {product.sellerDisplayName || 'Unknown Seller'}
+                  </div>
+                  <div 
+                    className={`${styles.shopName} ${styles.clickable}`}
+                    onClick={() => navigate(`/shops/${product.sellerId}`)}
+                    title="Visit shop"
+                  >
+                    {product.sellerName || 'Unknown Shop'}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.sellerLabel}>
+                    {product.sellerDisplayName || 'Unknown Seller'}
+                  </div>
+                  <div className={styles.shopName}>{product.sellerName || 'Unknown Shop'}</div>
+                </>
+              )}
             </div>
             
             {/* Product Name & Owner Badge */}

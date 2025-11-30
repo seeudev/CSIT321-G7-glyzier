@@ -163,6 +163,15 @@ function ShopDetailPage() {
       <Navigation />
       
       <div className={styles.container}>
+        {/* Back Button */}
+        <button 
+          className={styles.backButton}
+          onClick={() => navigate(-1)}
+        >
+          <span className={styles.backArrow}>←</span>
+          Back
+        </button>
+
         {/* Shop Header - Glass Card */}
         <div className={styles.headerCard}>
           <div className={styles.shopAvatar}>
@@ -231,7 +240,6 @@ function ShopDetailPage() {
         {/* Products Section - Glass Card */}
         <div className={styles.productsSection}>
           <h2 className={styles.productsSectionTitle}>
-            <span className={styles.titleIcon}>🎨</span>
             Shop Products
           </h2>
           
@@ -291,17 +299,6 @@ function ShopDetailPage() {
               <p>This shop doesn't have any products yet.</p>
             </div>
           )}
-        </div>
-
-        {/* Back Button */}
-        <div className={styles.backButtonContainer}>
-          <button 
-            className={styles.backButton}
-            onClick={() => navigate('/shops')}
-          >
-            <span className={styles.backArrow}>←</span>
-            Back to All Shops
-          </button>
         </div>
       </div>
     </div>

@@ -176,12 +176,28 @@
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
 
 .shopName {
   font-size: 1em;
   color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable.sellerLabel:hover {
+  color: rgba(102, 126, 234, 1);
+  text-decoration: underline;
+}
+
+.clickable.shopName:hover {
+  color: rgba(102, 126, 234, 1);
+  transform: translateX(3px);
 }
 
 /* Product Name */
