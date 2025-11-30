@@ -263,6 +263,21 @@
   color: #78350f;
 }
 
+.badgeSelf {
+  background: #667eea;
+  color: white;
+  font-weight: 700;
+  padding: 0.5rem 1.5rem;
+}
+
+.badgeAdminAction {
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  color: #78350f;
+  font-weight: 700;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(252, 211, 77, 0.3);
+}
+
 /* Action Buttons */
 .actionButtons {
   display: flex;
@@ -276,73 +291,119 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  isolation: isolate;
+}
+
+.btnAction:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .btnBan {
   background: #fc8181;
   color: white;
+  will-change: transform;
 }
 
-.btnBan:hover {
+.btnBan:hover:not(:disabled) {
   background: #f56565;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(252, 129, 129, 0.3);
+}
+
+.btnBan:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
 }
 
 .btnUnban {
   background: #68d391;
   color: white;
+  will-change: transform;
 }
 
-.btnUnban:hover {
+.btnUnban:hover:not(:disabled) {
   background: #48bb78;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(104, 211, 145, 0.3);
 }
 
+.btnUnban:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
+
 .btnGrant {
   background: #9b8dd4;
   color: white;
+  will-change: transform;
 }
 
-.btnGrant:hover {
+.btnGrant:hover:not(:disabled) {
   background: #8b7fc4;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(139, 127, 196, 0.3);
 }
 
+.btnGrant:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
+
 .btnRevoke {
   background: #ed8936;
   color: white;
+  will-change: transform;
 }
 
-.btnRevoke:hover {
+.btnRevoke:hover:not(:disabled) {
   background: #dd6b20;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(237, 137, 54, 0.3);
 }
 
+.btnRevoke:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
+
 .btnRemove {
   background: #fc8181;
   color: white;
+  will-change: transform;
 }
 
-.btnRemove:hover {
+.btnRemove:hover:not(:disabled) {
   background: #f56565;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(252, 129, 129, 0.3);
 }
 
+.btnRemove:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
+
 .btnRestore {
   background: #4299e1;
   color: white;
+  will-change: transform;
 }
 
-.btnRestore:hover {
+.btnRestore:hover:not(:disabled) {
   background: #3182ce;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+}
+
+.btnRestore:active:not(:disabled) {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
 }
 
 /* Loading & Error States */
