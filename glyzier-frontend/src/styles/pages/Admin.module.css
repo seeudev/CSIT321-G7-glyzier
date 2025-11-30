@@ -8,7 +8,8 @@
 /* Admin Layout */
 .adminLayout {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* Account for navbar height */
+  margin-top: 80px; /* Offset for fixed navbar */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
@@ -275,6 +276,28 @@
   background: #48bb78;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(104, 211, 145, 0.3);
+}
+
+.btnGrant {
+  background: #9b8dd4;
+  color: white;
+}
+
+.btnGrant:hover {
+  background: #8b7fc4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(139, 127, 196, 0.3);
+}
+
+.btnRevoke {
+  background: #ed8936;
+  color: white;
+}
+
+.btnRevoke:hover {
+  background: #dd6b20;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(237, 137, 54, 0.3);
 }
 
 .btnRemove {
