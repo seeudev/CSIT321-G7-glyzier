@@ -33,7 +33,8 @@ public class ProductResponse {
     
     // Seller information
     private Long sellerId;
-    private String sellerName;
+    private String sellerName; // Shop name (sellername)
+    private String sellerDisplayName; // Actual seller's display name from Users
     private Long sellerUserId; // User ID of the seller for messaging
     
     // Inventory information
@@ -124,9 +125,10 @@ public class ProductResponse {
         if (product.getSeller() != null) {
             this.sellerId = product.getSeller().getSid();
             this.sellerName = product.getSeller().getSellername();
-            // Set seller's user ID for messaging
+            // Set seller's user ID and display name for messaging
             if (product.getSeller().getUser() != null) {
                 this.sellerUserId = product.getSeller().getUser().getUserid();
+                this.sellerDisplayName = product.getSeller().getUser().getDisplayname();
             }
         }
         
@@ -239,6 +241,14 @@ public class ProductResponse {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public String getSellerDisplayName() {
+        return sellerDisplayName;
+    }
+
+    public void setSellerDisplayName(String sellerDisplayName) {
+        this.sellerDisplayName = sellerDisplayName;
     }
 
     public Long getSellerUserId() {
