@@ -38,10 +38,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   color: white;
   position: relative;
-  overflow: hidden;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
 }
 
 .header::before {
