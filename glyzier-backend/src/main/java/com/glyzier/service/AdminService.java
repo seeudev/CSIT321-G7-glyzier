@@ -122,6 +122,50 @@ public class AdminService {
     }
 
     /**
+     * Grant Admin Privileges
+     * 
+     * Sets is_admin to true for the specified user.
+     * User will be able to access admin panel on next login.
+     * 
+     * @param userid The ID of the user to grant admin privileges
+     * @throws RuntimeException if user not found
+     */
+    @Transactional
+    public void grantAdmin(Long userid) {
+        Users user = userRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userid));
+
+        if (user.isAdmin()) {
+            throw new RuntimeException("User already has admin privileges");
+        }
+
+        user.setAdmin(true);
+        userRepository.save(user);
+    }
+
+    /**
+     * Revoke Admin Privileges
+     * 
+     * Sets is_admin to false for the specified user.
+     * User will lose access to admin panel on next login.
+     * 
+     * @param userid The ID of the user to revoke admin privileges
+     * @throws RuntimeException if user not found
+     */
+    @Transactional
+    public void revokeAdmin(Long userid) {
+        Users user = userRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userid));
+
+        if (!user.isAdmin()) {
+            throw new RuntimeException("User does not have admin privileges");
+        }
+
+        user.setAdmin(false);
+        userRepository.save(user);
+    }
+
+    /**
      * Get All Products for Admin Moderation
      * 
      * Retrieves all products (including soft-deleted) with seller information.
