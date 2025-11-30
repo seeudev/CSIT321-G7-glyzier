@@ -195,6 +195,44 @@ const getCurrentUser = () => {
 };
 
 /**
+ * Get current user info from backend
+ * 
+ * Fetches the latest user information from the backend API.
+ * This ensures the local state is synchronized with the database.
+ * Useful for checking admin status changes or profile updates.
+ * 
+ * Backend endpoint: GET /api/users/me
+ * Response: { userid, displayname, email, phonenumber, isAdmin, createdAt }
+ * 
+ * @returns {Promise<Object>} - Promise that resolves to user data from backend
+ * @throws {Error} - If request fails
+ * 
+ * Usage:
+ * const userData = await authService.getCurrentUserFromBackend();
+ * console.log('Admin status:', userData.isAdmin);
+ */
+const getCurrentUserFromBackend = async () => {
+  try {
+    // Make GET request to /api/users/me endpoint
+    const response = await api.get('/api/users/me');
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || 
+        error.response.data.error || 
+        'Failed to fetch user data'
+      );
+    } else if (error.request) {
+      throw new Error('Unable to reach the server. Please check your connection.');
+    } else {
+      throw new Error('An unexpected error occurred.');
+    }
+  }
+};
+
+/**
  * Check if user is authenticated
  * 
  * Simple helper function to check if a token exists.
@@ -220,6 +258,7 @@ const authService = {
   register,
   logout,
   getCurrentUser,
+  getCurrentUserFromBackend,
   isAuthenticated,
 };
 

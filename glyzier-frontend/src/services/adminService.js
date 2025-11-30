@@ -106,11 +106,41 @@ export const restoreProduct = async (pid) => {
   return response.data;
 };
 
+/**
+ * Grant admin privileges to a user
+ * 
+ * Sets is_admin to true for the specified user.
+ * User will be able to access admin panel on next login.
+ * 
+ * @param {number} userid - The ID of the user to grant admin privileges
+ * @returns {Promise} Promise resolving to success message
+ */
+export const grantAdmin = async (userid) => {
+  const response = await api.post(`/api/admin/users/${userid}/grant-admin`);
+  return response.data;
+};
+
+/**
+ * Revoke admin privileges from a user
+ * 
+ * Sets is_admin to false for the specified user.
+ * User will lose access to admin panel on next login.
+ * 
+ * @param {number} userid - The ID of the user to revoke admin privileges
+ * @returns {Promise} Promise resolving to success message
+ */
+export const revokeAdmin = async (userid) => {
+  const response = await api.post(`/api/admin/users/${userid}/revoke-admin`);
+  return response.data;
+};
+
 export default {
   getDashboardStats,
   getAllUsers,
   banUser,
   unbanUser,
+  grantAdmin,
+  revokeAdmin,
   getAllProducts,
   removeProduct,
   restoreProduct,
