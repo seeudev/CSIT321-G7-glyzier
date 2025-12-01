@@ -60,6 +60,7 @@ import CommunityPage from './pages/CommunityPage';
 import MorePage from './pages/MorePage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import ProfilePage from './pages/ProfilePage';
 import MessagesPage from './pages/MessagesPage';
@@ -202,6 +203,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <OrderConfirmationPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Order History page - view all orders (PROTECTED) */}
+          <Route 
+            path="/orders" 
+            element={
+              <ProtectedRoute>
+                <OrderHistoryPage />
               </ProtectedRoute>
             } 
           />

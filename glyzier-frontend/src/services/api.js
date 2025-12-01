@@ -29,7 +29,7 @@ import axios from 'axios';
  * This eliminates CORS issues and simplifies deployment.
  */
 const api = axios.create({
-  timeout: 10000, // 10 seconds timeout for requests
+  timeout: 60000, // 60 seconds timeout for requests (increased for file uploads)
   headers: {
     'Content-Type': 'application/json',
   },

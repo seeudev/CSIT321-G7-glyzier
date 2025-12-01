@@ -455,6 +455,62 @@
   }
 }
 
+/* Module 20: Download Button for Digital Products */
+.downloadButton {
+  width: 100%;
+  padding: 16px 24px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+  backdrop-filter: blur(10px);
+  color: #10b981;
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.downloadButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.downloadButton:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.downloadButton:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.downloadButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.downloadButton svg {
+  width: 20px;
+  height: 20px;
+}
+
 .addToCartButton:disabled,
 .buyNowButton:disabled {
   opacity: 0.5;
@@ -468,6 +524,18 @@
   color: rgba(255, 255, 255, 0.7);
   margin-top: 12px;
   font-style: italic;
+}
+
+.purchasedNote {
+  text-align: center;
+  font-size: 0.95em;
+  color: rgba(16, 185, 129, 0.95);
+  margin-top: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 /* Stock Badge */

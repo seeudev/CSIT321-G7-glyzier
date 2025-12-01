@@ -28,3 +28,25 @@ spring.datasource.hikari.max-lifetime=1800000
 # Show SQL for debugging (disable in production)
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
+
+# ===========================================================
+# Supabase Storage Configuration (Module 20)
+# ===========================================================
+
+# Supabase Project URL
+supabase.url=https://YOUR_PROJECT_ID.supabase.co
+
+# Supabase API Key (Anon Public Key)
+supabase.key=YOUR_SUPABASE_ANON_KEY
+
+# Supabase Storage API URL
+supabase.storage.url=https://YOUR_PROJECT_ID.supabase.co/storage/v1
+
+# Storage Bucket Names
+supabase.bucket.images=product-images
+supabase.bucket.previews=product-previews
+supabase.bucket.digital=digital-products
+
+# File Upload Limits
+file.upload.max-size=100MB
+file.upload.allowed-types=image/jpeg,image/png,image/webp,application/pdf,application/zip,application/x-rar,application/x-zip-compressed,application/vnd.adobe.photoshop,application/postscript

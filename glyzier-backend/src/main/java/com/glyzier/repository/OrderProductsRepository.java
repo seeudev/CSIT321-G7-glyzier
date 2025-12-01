@@ -49,4 +49,20 @@ public interface OrderProductsRepository extends JpaRepository<OrderProducts, Lo
      * @param orderid The order ID
      */
     void deleteByOrderOrderid(Long orderid);
+    
+    /**
+     * Check if User Purchased Product
+     * 
+     * Verifies if a user has purchased a specific product in any order.
+     * Used for purchase verification before allowing digital product downloads.
+     * 
+     * Query: Check if OrderProducts record exists where:
+     * - order.user.userid = userId
+     * - product.pid = productId
+     * 
+     * @param userId User ID to check
+     * @param productId Product ID to check
+     * @return true if user purchased this product, false otherwise
+     */
+    boolean existsByOrderUserUseridAndProductPid(Long userId, Long productId);
 }

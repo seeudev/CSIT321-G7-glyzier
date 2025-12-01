@@ -101,7 +101,26 @@ export const createProduct = async (productData) => {
     const response = await api.post('/api/products', productData);
     return response.data;
   } catch (error) {
-    console.error('Error creating product:', error);
+    console.error('Error deleting product:', error);
+    throw error;
+  }
+};
+
+/**
+ * Check if user has purchased a product
+ * 
+ * Used to determine if digital products can be re-purchased.
+ * Frontend calls this to show appropriate buttons (Buy vs Download).
+ * 
+ * @param {number} pid - Product ID
+ * @returns {Promise<{purchased: boolean}>} Purchase status
+ */
+export const checkPurchaseStatus = async (pid) => {
+  try {
+    const response = await api.get(`/api/products/${pid}/purchase-status`);
+    return response.data;
+  } catch (error) {
+    console.error('Error checking purchase status:', error);
     throw error;
   }
 };

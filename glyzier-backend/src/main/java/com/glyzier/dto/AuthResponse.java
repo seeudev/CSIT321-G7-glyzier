@@ -46,6 +46,7 @@ public class AuthResponse {
      * Indicates if the user is an admin
      * Module 17: Admin System
      */
+    @com.fasterxml.jackson.annotation.JsonProperty("isAdmin")
     private boolean isAdmin;
 
     // Constructors

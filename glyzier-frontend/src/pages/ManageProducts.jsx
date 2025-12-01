@@ -22,6 +22,8 @@ import { showSuccess, showError, showInfo, showConfirm } from '../components/Not
 import { PackageIcon, PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, InfinityIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
+import FileUpload from '../components/FileUpload';
+import fileService from '../services/fileService';
 import styles from '../styles/pages/ManageProducts.module.css';
 
 function ManageProducts() {
@@ -34,6 +36,11 @@ function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
+  
+  // File management state (Module 20)
+  const [productFiles, setProductFiles] = useState({});
+  const [fileLoadingStates, setFileLoadingStates] = useState({});
+  const [createFormDigitalFile, setCreateFormDigitalFile] = useState(null);
   
   // Form states
   const [createFormData, setCreateFormData] = useState({
@@ -170,8 +177,21 @@ function ManageProducts() {
         })
       };
       
-      await createProduct(productData);
-      showSuccess('Product created successfully!');
+      const createdProduct = await createProduct(productData);
+      const newProductId = createdProduct.pid;
+      
+      // Upload digital file if provided
+      if (createFormData.type === 'Digital' && createFormDigitalFile) {
+        try {
+          await fileService.uploadFile(newProductId, createFormDigitalFile, 'digital_download');
+          showSuccess('Product and digital file created successfully!');
+        } catch (uploadErr) {
+          console.error('File upload failed:', uploadErr);
+          showError('Product created but file upload failed. Please edit the product to upload the file.');
+        }
+      } else {
+        showSuccess('Product created successfully!');
+      }
       
       // Reset form
       setCreateFormData({
@@ -185,6 +205,7 @@ function ManageProducts() {
         qtyonhand: '10',
         qtyreserved: '0'
       });
+      setCreateFormDigitalFile(null);
       setShowCreateForm(false);
       
       // Reload products
@@ -275,6 +296,94 @@ function ManageProducts() {
       showError(err.response?.data?.error || 'Failed to delete product');
     }
   };
+
+  // Load product files (images, previews, digital downloads)
+  const loadProductFiles = async (productId) => {
+    if (!productId) return;
+    
+    try {
+      const response = await fileService.getProductFiles(productId);
+      const files = response.data || [];
+      
+      // Group files by type
+      const grouped = {
+        images: files.filter(f => f.fileType === 'product_image'),
+        preview: files.filter(f => f.fileType === 'preview'),
+        digital: files.filter(f => f.fileType === 'digital_download')
+      };
+      
+      setProductFiles(prev => ({
+        ...prev,
+        [productId]: grouped
+      }));
+    } catch (err) {
+      console.error('Error loading product files:', err);
+      // Silently fail - files are optional
+    }
+  };
+
+  // Delete a product file
+  const handleDeleteFile = async (fileId, productId) => {
+    const confirmed = await showConfirm('Are you sure you want to delete this file? This action cannot be undone.');
+    if (!confirmed) return;
+
+    setFileLoadingStates(prev => ({
+      ...prev,
+      [fileId]: 'deleting'
+    }));
+
+    try {
+      await fileService.deleteFile(fileId);
+      showSuccess('File deleted successfully');
+      
+      // Reload files for this product
+      await loadProductFiles(productId);
+    } catch (err) {
+      console.error('Error deleting file:', err);
+      showError(err.response?.data?.error || 'Failed to delete file');
+    } finally {
+      setFileLoadingStates(prev => ({
+        ...prev,
+        [fileId]: null
+      }));
+    }
+  };
+
+  // Replace a product file
+  const handleReplaceFile = async (fileId, productId) => {
+    const confirmed = await showConfirm('Replace the current file? The old file will be deleted from storage.');
+    if (!confirmed) return;
+
+    setFileLoadingStates(prev => ({
+      ...prev,
+      [fileId]: 'replacing'
+    }));
+
+    try {
+      // Delete the old file first
+      await fileService.deleteFile(fileId);
+      
+      // Reload files to show empty state and allow new upload
+      await loadProductFiles(productId);
+      
+      showInfo('Old file deleted. Please upload the new file below.');
+    } catch (err) {
+      console.error('Error replacing file:', err);
+      showError(err.response?.data?.error || 'Failed to replace file');
+    } finally {
+      setFileLoadingStates(prev => ({
+        ...prev,
+        [fileId]: null
+      }));
+    }
+  };
+
+  // Load files when editing a product
+  useEffect(() => {
+    if (editingProductId) {
+      loadProductFiles(editingProductId);
+    }
+  }, [editingProductId]);
   
   if (loading) {
     return (
@@ -313,7 +422,6 @@ function ManageProducts() {
       </div>
       
       <div className={styles.container}>
-        <div className={styles.content}>
         {/* Create Product Section */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -515,6 +623,70 @@ function ManageProducts() {
                 />
               </div>
               
+              {/* Digital File Upload Section (Module 20) */}
+              {createFormData.type === 'Digital' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>
+                    💾 Digital Product File <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="file"
+                    className={styles.formInput}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Validate file size (max 100MB)
+                        const maxSize = 100 * 1024 * 1024;
+                        if (file.size > maxSize) {
+                          showError('File size must be less than 100MB');
+                          e.target.value = '';
+                          return;
+                        }
+                        setCreateFormDigitalFile(file);
+                        showInfo(`File "${file.name}" ready to upload (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                      }
+                    }}
+                    accept="*/*"
+                    disabled={createFormLoading}
+                  />
+                  <small className={styles.formHint}>
+                    Upload the digital file customers will download (all file types supported). Max 100MB.
+                  </small>
+                  {createFormDigitalFile && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      padding: '12px', 
+                      background: '#e3f2fd', 
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <span style={{ fontSize: '1.5em' }}>✅</span>
+                      <div>
+                        <strong style={{ color: '#1976d2' }}>{createFormDigitalFile.name}</strong>
+                        <div style={{ fontSize: '0.85em', color: '#555' }}>
+                          {(createFormDigitalFile.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCreateFormDigitalFile(null)}
+                        style={{
+                          marginLeft: 'auto',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '1.2em'
+                        }}
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+              
               <div className={styles.formActions}>
                 <button
                   type="submit"
@@ -560,7 +732,7 @@ function ManageProducts() {
                         </div>
                         
                         <div className={styles.formGroup}>
-                          <label className={styles.formLabel}>Price (₱) *</label>
+                          <label className={styles.formLabel}>Price ($) *</label>
                           <input
                             type="number"
                             name="price"
@@ -667,6 +839,60 @@ function ManageProducts() {
                         </small>
                       </div>
                       
+                      {/* File Upload Section - Digital Products Only (Module 20) */}
+                      {editFormData.type === 'Digital' && (
+                        <div className={styles.fileUploadSection} data-type="digital">
+                          <h4>📦 Digital Product File</h4>
+                          <p style={{ fontSize: '0.9em', color: '#7f8c8d', marginTop: '-8px', marginBottom: '12px' }}>
+                            Upload the digital file that customers will download after purchase. Only one file allowed.
+                          </p>
+                          
+                          {productFiles[product.pid]?.digital?.length > 0 ? (
+                            <div className={styles.uploadedFiles}>
+                              {productFiles[product.pid].digital.map((file) => (
+                                <div key={file.fileId} className={styles.fileItem}>
+                                  <div style={{ fontSize: '3em' }}>💾</div>
+                                  <p><strong>Digital File Uploaded</strong></p>
+                                  <p style={{ fontSize: '0.85em', color: '#7f8c8d', marginTop: '4px' }}>
+                                    {file.fileFormat?.toUpperCase()} • Uploaded {new Date(file.uploadedAt).toLocaleDateString()}
+                                  </p>
+                                  <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                                    <button
+                                      className={styles.replaceFileButton}
+                                      onClick={() => handleReplaceFile(file.fileId, product.pid)}
+                                      disabled={fileLoadingStates[file.fileId] === 'replacing'}
+                                    >
+                                      {fileLoadingStates[file.fileId] === 'replacing' ? '⏳ Replacing...' : '🔄 Replace File'}
+                                    </button>
+                                    <button
+                                      className={styles.deleteFileButton}
+                                      onClick={() => handleDeleteFile(file.fileId, product.pid)}
+                                      disabled={fileLoadingStates[file.fileId] === 'deleting'}
+                                    >
+                                      {fileLoadingStates[file.fileId] === 'deleting' ? '⏳ Deleting...' : '🗑️ Delete'}
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <FileUpload
+                              productId={product.pid}
+                              fileType="digital_download"
+                              onUploadSuccess={(files) => {
+                                showSuccess('Digital file uploaded successfully!');
+                                loadProductFiles(product.pid);
+                              }}
+                              onUploadError={(error) => {
+                                showError('Failed to upload file: ' + error);
+                              }}
+                              multiple={false}
+                              maxFiles={1}
+                            />
+                          )}
+                        </div>
+                      )}
+                      
                       <div className={styles.productActions}>
                         <button
                           className={styles.saveButton}
@@ -693,7 +919,7 @@ function ManageProducts() {
                           <p className={styles.productDescription}>{product.productdesc}</p>
                         )}
                         <div className={styles.productMeta}>
-                          <span className={styles.productPrice}>₱{product.price?.toFixed(2)}</span>
+                          <span className={styles.productPrice}>${product.price?.toFixed(2)}</span>
                           <span className={styles.productType}>{product.type}</span>
                           <span className={`${styles.productStatus} ${
                             product.status === 'Available' ? styles.statusAvailable : styles.statusUnavailable
@@ -742,7 +968,6 @@ function ManageProducts() {
             )}
           </div>
         </div>
-      </div>
       </div>
     </div>
   );

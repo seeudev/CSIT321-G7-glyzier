@@ -60,6 +60,20 @@ public class OrderService {
     private SellerRepository sellerRepository;
 
     /**
+     * Check if user has purchased a specific product
+     * 
+     * This method verifies if a user has completed an order containing the specified product.
+     * Used to prevent re-purchasing digital products and enable download access.
+     * 
+     * @param userId The user's ID
+     * @param productId The product's ID
+     * @return true if user has purchased the product, false otherwise
+     */
+    public boolean hasUserPurchasedProduct(Long userId, Long productId) {
+        return orderProductsRepository.existsByOrderUserUseridAndProductPid(userId, productId);
+    }
+
+    /**
      * Place an order for the authenticated user (SIMULATED)
      * 
      * This method simulates the order placement process:
@@ -100,7 +114,12 @@ public class OrderService {
         // Step 2: Create the main order record (initially without total)
         Orders order = new Orders();
         order.setUser(user);
-        order.setStatus("Pending"); // Initial status
+        
+        // Check if this is a digital-only order (Module 20)
+        // Digital orders are automatically completed since no shipping is needed
+        boolean isDigitalOnly = request.getAddress() != null && "DIGITAL_ONLY".equals(request.getAddress());
+        order.setStatus(isDigitalOnly ? "Completed" : "Pending"); // Auto-complete digital orders
+        
         order.setTotal(BigDecimal.ZERO); // Will be calculated below
         // Capture delivery address from request if provided
         if (request.getAddress() != null) {
@@ -201,9 +220,9 @@ public class OrderService {
         // Get all orders for this user, ordered by date (newest first)
         List<Orders> orders = ordersRepository.findByUserUseridOrderByPlacedAtDesc(userId);
 
-        // Convert to DTOs without detailed items (for performance)
+        // Convert to DTOs with detailed items for dashboard display
         return orders.stream()
-                .map(order -> new OrderResponse(order, false)) // false = don't include items
+                .map(order -> new OrderResponse(order, true)) // true = include items for product links
                 .collect(Collectors.toList());
     }
 

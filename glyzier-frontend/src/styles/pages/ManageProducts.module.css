@@ -112,8 +112,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Content */
-.content {
+/* Container */
+.container {
   max-width: 1200px;
   margin: -32px auto 48px;
   padding: 0 24px;
@@ -534,4 +534,200 @@
   .productActions {
     flex-direction: column;
   }
+}
+
+/* File Upload Sections */
+.fileUploadSection {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.fileUploadSection:hover {
+  border-color: #8b7fc4;
+  background: #fafafa;
+}
+
+.fileUploadSection h4 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fileUploadSection h4::before {
+  content: '📁';
+  font-size: 1.2em;
+}
+
+/* Uploaded Files Display */
+.uploadedFiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.fileItem {
+  position: relative;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.fileItem:hover {
+  border-color: #8b7fc4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.fileThumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.fileItem p {
+  margin: 0;
+  font-size: 0.85em;
+  color: #555;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.deleteFileButton {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+}
+
+.deleteFileButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ee5a6f 0%, #dc143c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.deleteFileButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.replaceFileButton {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+}
+
+.replaceFileButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.replaceFileButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* File Upload Notice */
+.fileUploadNotice {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-left: 4px solid #2196f3;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #1565c0;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fileUploadNotice::before {
+  content: 'ℹ️';
+  font-size: 1.3em;
+}
+
+/* Empty State for Files */
+.noFiles {
+  text-align: center;
+  padding: 24px;
+  color: #95a5a6;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+/* File Section Icons */
+.fileUploadSection[data-type="images"] h4::before {
+  content: '🖼️';
+}
+
+.fileUploadSection[data-type="preview"] h4::before {
+  content: '👁️';
+}
+
+.fileUploadSection[data-type="digital"] h4::before {
+  content: '💾';
+}
+
+/* Loading State for File Operations */
+.fileItem[data-loading="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.fileItem[data-loading="true"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #8b7fc4;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }

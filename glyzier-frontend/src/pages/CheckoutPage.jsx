@@ -32,6 +32,7 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [isDigitalOnly, setIsDigitalOnly] = useState(false);
   
   // Address fields
   const [fullName, setFullName] = useState('');
@@ -53,6 +54,14 @@ const CheckoutPage = () => {
     loadCart();
   }, []);
 
+  // Check if cart contains only digital products (Module 20)
+  useEffect(() => {
+    if (cart && cart.items) {
+      const allDigital = cart.items.every(item => item.type === 'Digital');
+      setIsDigitalOnly(allDigital);
+    }
+  }, [cart]);
+
   // Redirect if cart is empty
   useEffect(() => {
     if (!loading && (!cart || !cart.items || cart.items.length === 0)) {
@@ -65,24 +74,31 @@ const CheckoutPage = () => {
    * Handle form submission
    * 
    * Validates inputs, constructs address string, and places order.
+   * For digital-only orders, skips address validation and uses "DIGITAL_ONLY" marker.
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Basic validation
-    if (!fullName.trim() || !streetAddress.trim() || !city.trim() || !postalCode.trim() || !phone.trim()) {
-      setError('All address fields are required');
-      return;
+    // Address validation - skip for digital-only orders (Module 20)
+    if (!isDigitalOnly) {
+      if (!fullName.trim() || !streetAddress.trim() || !city.trim() || !postalCode.trim() || !phone.trim()) {
+        setError('All address fields are required');
+        return;
+      }
     }
 
+    // Payment validation
     if (cardNumber.length !== 16) {
       setError('Card number must be 16 digits');
       return;
     }
 
-    // Construct address string (multiline format)
-    const addressString = `${fullName}\n${streetAddress}\n${city}, ${postalCode}\nPhone: ${phone}`;
+    // Construct address string
+    // For digital-only orders, use special marker to skip shipping
+    const addressString = isDigitalOnly 
+      ? 'DIGITAL_ONLY'
+      : `${fullName}\n${streetAddress}\n${city}, ${postalCode}\nPhone: ${phone}`;
 
     try {
       setProcessing(true);
@@ -94,7 +110,9 @@ const CheckoutPage = () => {
       });
 
       // Show success message
-      showSuccess('Order placed successfully!');
+      showSuccess(isDigitalOnly 
+        ? 'Digital order placed successfully! Check your email for download links.'
+        : 'Order placed successfully!');
 
       // Update cart count and refresh
       await updateCartCount();
@@ -165,87 +183,105 @@ const CheckoutPage = () => {
               </div>
             )}
 
-            {/* Delivery Address Section */}
-            <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Delivery Address</h2>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="fullName" className={styles.label}>
-                  Full Name <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className={styles.input}
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="streetAddress" className={styles.label}>
-                  Street Address <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  id="streetAddress"
-                  value={streetAddress}
-                  onChange={(e) => setStreetAddress(e.target.value)}
-                  className={styles.input}
-                  placeholder="123 Main St, Building A, Unit 4B"
-                  required
-                />
-              </div>
-
-              <div className={styles.formRow}>
+            {/* Delivery Address Section - Skip for digital-only orders (Module 20) */}
+            {!isDigitalOnly && (
+              <div className={styles.section}>
+                <h2 className={styles.sectionTitle}>Delivery Address</h2>
+                
                 <div className={styles.formGroup}>
-                  <label htmlFor="city" className={styles.label}>
-                    City <span className={styles.required}>*</span>
+                  <label htmlFor="fullName" className={styles.label}>
+                    Full Name <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
-                    id="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     className={styles.input}
-                    placeholder="Manila"
+                    placeholder="John Doe"
                     required
                   />
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="postalCode" className={styles.label}>
-                    Postal Code <span className={styles.required}>*</span>
+                  <label htmlFor="streetAddress" className={styles.label}>
+                    Street Address <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
-                    id="postalCode"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    id="streetAddress"
+                    value={streetAddress}
+                    onChange={(e) => setStreetAddress(e.target.value)}
                     className={styles.input}
-                    placeholder="1000"
+                    placeholder="123 Main St, Building A, Unit 4B"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="city" className={styles.label}>
+                      City <span className={styles.required}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className={styles.input}
+                      placeholder="Manila"
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="postalCode" className={styles.label}>
+                      Postal Code <span className={styles.required}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="postalCode"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                      className={styles.input}
+                      placeholder="1000"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="phone" className={styles.label}>
+                    Phone Number <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    className={styles.input}
+                    placeholder="09123456789"
                     required
                   />
                 </div>
               </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="phone" className={styles.label}>
-                  Phone Number <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={phone}
-                  onChange={handlePhoneChange}
-                  className={styles.input}
-                  placeholder="09123456789"
-                  required
-                />
+            )}
+            
+            {/* Digital Order Notice (Module 20) */}
+            {isDigitalOnly && (
+              <div className={styles.digitalNotice}>
+                <svg className={styles.digitalIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                </svg>
+                <div className={styles.digitalNoticeContent}>
+                  <h3 className={styles.digitalNoticeTitle}>Digital Products Only</h3>
+                  <p className={styles.digitalNoticeText}>
+                    Your cart contains only digital products. No shipping address required.
+                    Download links will be available immediately after purchase.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Payment Section */}
             <div className={styles.section}>
@@ -300,7 +336,7 @@ const CheckoutPage = () => {
                       {item.productname} × {item.quantity}
                     </span>
                     <span className={styles.itemPrice}>
-                      ₱{item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ${item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 ))}
@@ -308,9 +344,9 @@ const CheckoutPage = () => {
 
               {/* Total */}
               <div className={styles.summaryTotal}>
-                <span className={styles.totalLabel}>Total:</span>
+                <span className={styles.totalLabel}>Total</span>
                 <span className={styles.totalPrice}>
-                  ₱{cart.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ${cart.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>

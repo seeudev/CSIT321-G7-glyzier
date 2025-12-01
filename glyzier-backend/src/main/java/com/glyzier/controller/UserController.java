@@ -3,9 +3,11 @@ package com.glyzier.controller;
 import com.glyzier.dto.UpdateProfileRequest;
 import com.glyzier.dto.ChangePasswordRequest;
 import com.glyzier.model.Users;
+import com.glyzier.repository.UserRepository;
 import com.glyzier.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,12 @@ public class UserController {
      */
     @Autowired
     private UserService userService;
+
+    /**
+     * Repository for direct user database access (for admin operations)
+     */
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Get current authenticated user's information
@@ -90,7 +98,10 @@ public class UserController {
             response.put("isSeller", isSeller);
             
             // Include admin status (Module 17)
-            response.put("isAdmin", currentUser.isAdmin());
+            boolean adminStatus = currentUser.isAdmin();
+            System.out.println("[/me ENDPOINT] User: " + currentUser.getEmail());
+            System.out.println("[/me ENDPOINT] isAdmin field value: " + adminStatus);
+            response.put("isAdmin", adminStatus);
             
             // If user is a seller, include seller information
             if (isSeller) {
@@ -104,6 +115,37 @@ public class UserController {
             // Error getting user (shouldn't happen if JWT is valid)
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Unauthorized: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * TEMPORARY ADMIN ENDPOINT: Set admin status
+     * Use this to manually set a user as admin for testing
+     */
+    @PostMapping("/admin/set-admin/{userid}")
+    public ResponseEntity<?> setAdminStatus(
+            @PathVariable Long userid,
+            @RequestBody Map<String, Boolean> request) {
+        try {
+            Users user = userRepository.findById(userid)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            
+            boolean isAdmin = request.getOrDefault("isAdmin", false);
+            user.setAdmin(isAdmin);
+            userRepository.save(user);
+            
+            System.out.println("[SET ADMIN] User " + user.getEmail() + " admin status set to: " + isAdmin);
+            
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Admin status updated",
+                    "userid", user.getUserid(),
+                    "email", user.getEmail(),
+                    "isAdmin", user.isAdmin()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to update admin status: " + e.getMessage()));
         }
     }
 

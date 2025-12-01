@@ -43,6 +43,12 @@ public class ProductController {
     @Autowired
     private SellerService sellerService;
 
+    @Autowired
+    private com.glyzier.service.OrderService orderService;
+
+    @Autowired
+    private com.glyzier.repository.UserRepository userRepository;
+
     // ==================== SELLER ENDPOINTS (Protected) ====================
 
     /**
@@ -384,6 +390,50 @@ public class ProductController {
             
         } catch (IllegalArgumentException e) {
             // Handle validation errors
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
+    /**
+     * Check Purchase Status Endpoint
+     * 
+     * Endpoint: GET /api/products/{pid}/purchase-status
+     * Access: Authenticated users only
+     * 
+     * This endpoint checks if the authenticated user has purchased a product.
+     * Used by frontend to determine if digital products should show download
+     * button instead of purchase buttons.
+     * 
+     * Response:
+     * - purchased: true if user has purchased this product, false otherwise
+     * 
+     * @param pid The product ID to check
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity with purchase status
+     */
+    @GetMapping("/{pid}/purchase-status")
+    public ResponseEntity<?> checkPurchaseStatus(
+            @PathVariable Long pid,
+            Authentication authentication) {
+        
+        try {
+            // Get authenticated user
+            String email = authentication.getName();
+            com.glyzier.model.Users user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            
+            // Check if user purchased this product
+            boolean purchased = orderService.hasUserPurchasedProduct(user.getUserid(), pid);
+            
+            // Return status
+            Map<String, Object> response = new HashMap<>();
+            response.put("purchased", purchased);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

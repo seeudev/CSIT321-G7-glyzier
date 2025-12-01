@@ -140,10 +140,10 @@ const OrderConfirmationPage = () => {
                   </div>
                   <div className={styles.itemPricing}>
                     <span className={styles.itemUnitPrice}>
-                      ₱{item.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} each
+                      ${item.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} each
                     </span>
                     <span className={styles.itemLineTotal}>
-                      ₱{item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ${item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ const OrderConfirmationPage = () => {
           <div className={styles.totalSection}>
             <span className={styles.totalLabel}>Order Total:</span>
             <span className={styles.totalAmount}>
-              ₱{order.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ${order.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
         </div>
