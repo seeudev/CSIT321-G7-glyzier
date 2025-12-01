@@ -19,6 +19,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 import { addToCart } from '../services/cartService';
 import { createOrGetConversation } from '../services/messageService';
+import fileService from '../services/fileService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { showSuccess, showError, showInfo, showConfirm } from '../components/NotificationManager';
@@ -44,6 +45,8 @@ function ProductDetailPage() {
   const [auroraColors, setAuroraColors] = useState(['#c9bfe8', '#b8afe8', '#9b8dd4']);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isOwner, setIsOwner] = useState(false); // Check if current user owns this product
+  const [productFiles, setProductFiles] = useState([]); // Product files (Module 20)
+  const [downloadLoading, setDownloadLoading] = useState(false); // Download state (Module 20)
   
   /**
    * Fetch product details on component mount
@@ -76,6 +79,26 @@ function ProductDetailPage() {
     
     fetchProduct();
   }, [pid, user]); // Add user to dependency array for ownership checks
+
+  /**
+   * Fetch product files (Module 20)
+   * Loads digital download files for purchased products
+   */
+  useEffect(() => {
+    const fetchProductFiles = async () => {
+      if (product && product.productType === 'Digital') {
+        try {
+          const response = await fileService.getProductFiles(pid);
+          setProductFiles(response.files || []);
+        } catch (err) {
+          console.error('Failed to fetch product files:', err);
+          // Silent fail - files are optional
+        }
+      }
+    };
+    
+    fetchProductFiles();
+  }, [product, pid]);
 
   /**
    * Update Aurora colors when product image loads
@@ -155,6 +178,56 @@ function ProductDetailPage() {
       showError(errorMessage);
     } finally {
       setOrderLoading(false);
+    }
+  };
+
+  /**
+   * Handle Download Digital Product (Module 20)
+   * 
+   * Downloads digital product file after purchase verification.
+   * Backend validates that user purchased the product before
+   * generating signed download URL.
+   * 
+   * Logic:
+   * - Check authentication
+   * - Find digital_download file
+   * - Request signed URL from backend (with purchase check)
+   * - Trigger browser download
+   */
+  const handleDownload = async () => {
+    if (!isAuthenticated) {
+      showInfo('Please login to download');
+      setTimeout(() => navigate('/login'), 1500);
+      return;
+    }
+
+    if (downloadLoading) return;
+
+    // Find digital download file
+    const downloadFile = productFiles.find(f => f.fileType === 'digital_download');
+    if (!downloadFile) {
+      showError('Download file not available');
+      return;
+    }
+
+    try {
+      setDownloadLoading(true);
+      
+      // Download file (backend checks purchase)
+      await fileService.downloadFile(downloadFile.fileId, `${product.productname} - Digital Download`);
+      
+      showSuccess('Download started!');
+    } catch (err) {
+      console.error('Download error:', err);
+      
+      // Handle specific error messages
+      if (err.toString().includes('must purchase')) {
+        showError('You must purchase this product to download it');
+      } else {
+        showError('Failed to download file. Please try again.');
+      }
+    } finally {
+      setDownloadLoading(false);
     }
   };
 
@@ -376,6 +449,28 @@ function ProductDetailPage() {
                 {orderLoading ? '⏳ Processing...' : isOwner ? 'Your Product' : 'Buy Now'}
               </button>
             </div>
+            
+            {/* Download Button for Digital Products (Module 20) */}
+            {product && product.productType === 'Digital' && productFiles.length > 0 && (
+              <button 
+                onClick={handleDownload}
+                className={styles.downloadButton}
+                disabled={downloadLoading}
+              >
+                {downloadLoading ? (
+                  <>⏳ Preparing Download...</>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download Digital Product
+                  </>
+                )}
+              </button>
+            )}
             
             {!isAuthenticated && (
               <p className={styles.loginNote}>
