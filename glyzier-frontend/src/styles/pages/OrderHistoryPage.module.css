@@ -1,0 +1,400 @@
+/**
+ * OrderHistoryPage CSS Module
+ * 
+ * Dedicated styling for the order history page with:
+ * - Clean, organized layout
+ * - Status badges with distinct colors
+ * - Responsive card design
+ * - Digital product indicators
+ * 
+ * @author Glyzier Team
+ * @version 1.0 (Module 20 Enhancement)
+ */
+
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.header {
+  margin-bottom: 40px;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+/* Loading & Error States */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  font-size: 18px;
+}
+
+.error {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 12px;
+  padding: 20px;
+  color: #d32f2f;
+  text-align: center;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.emptyTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.emptyText {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.shopButton {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #8b7fc4 0%, #a991d4 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 127, 196, 0.3);
+}
+
+.shopButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 127, 196, 0.4);
+}
+
+/* Orders List */
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Order Card */
+.orderCard {
+  background: white;
+  border-radius: 16px;
+  border: 2px solid #f0f0f0;
+  padding: 24px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.orderCard:hover {
+  border-color: #8b7fc4;
+  box-shadow: 0 4px 16px rgba(139, 127, 196, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Order Header */
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 16px;
+}
+
+.orderInfo {
+  flex: 1;
+}
+
+.orderNumber {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px;
+}
+
+.orderDate {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.orderMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.statusBadge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusPending {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+  color: #856404;
+}
+
+.statusProcessing {
+  background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+  color: #084298;
+}
+
+.statusCompleted {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+}
+
+.statusCancelled {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+  color: #721c24;
+}
+
+.orderTotal {
+  font-size: 24px;
+  font-weight: 700;
+  color: #8b7fc4;
+}
+
+/* Order Items */
+.orderItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.orderItem:hover {
+  background: #e9ecef;
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemName {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: color 0.2s ease;
+}
+
+.itemName:hover {
+  color: #5568d3;
+  text-decoration: underline;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemQuantity {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.digitalBadge {
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.itemPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+.noItems {
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Order Actions */
+.orderActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.viewDetailsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #8b7fc4 0%, #a991d4 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 127, 196, 0.2);
+}
+
+.viewDetailsButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.3);
+}
+
+.downloadNotice {
+  font-size: 13px;
+  color: #6366f1;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .orderCard {
+    padding: 16px;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .orderMeta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .orderTotal {
+    font-size: 20px;
+  }
+
+  .orderItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .itemPrice {
+    align-self: flex-end;
+  }
+
+  .orderActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .viewDetailsButton {
+    justify-content: center;
+  }
+
+  .downloadNotice {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .orderNumber {
+    font-size: 18px;
+  }
+
+  .orderTotal {
+    font-size: 18px;
+  }
+}
