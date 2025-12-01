@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
         uid: data.userid,
         displayname: data.displayname,
         email: data.email,
-        isAdmin: data.isAdmin, // Module 17: Store admin flag
+        isAdmin: data.isAdmin || data.admin || false, // Module 17: Store admin flag (check both field names)
       };
       
       setUser(userInfo);
@@ -199,7 +199,7 @@ export const AuthProvider = ({ children }) => {
         uid: response.userid,
         displayname: response.displayname,
         email: response.email,
-        isAdmin: response.isAdmin || false,
+        isAdmin: response.isAdmin || response.admin || false,
       };
       
       setUser(userInfo);

@@ -193,7 +193,7 @@ function OrderHistoryPage() {
                   </Link>
                   
                   {/* Show download message for completed digital orders */}
-                  {order.status === 'Completed' && hasDigitalProducts(order) && (
+                  {(order.status === 'Completed' || order.status === 'Delivered') && hasDigitalProducts(order) && (
                     <span className={styles.downloadNotice}>
                       Digital products available for download in order details
                     </span>
