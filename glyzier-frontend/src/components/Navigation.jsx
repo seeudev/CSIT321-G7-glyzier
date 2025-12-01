@@ -313,7 +313,7 @@ function Navigation() {
                         Seller Dashboard
                       </Link>
                     )}
-                    {user?.admin && (
+                    {(user?.admin || user?.isAdmin) && (
                       <Link 
                         to="/admin/dashboard" 
                         className={styles.dropdownItem}

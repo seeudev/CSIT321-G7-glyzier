@@ -55,6 +55,9 @@ public class FileController {
 
     @Autowired
     private OrderProductsRepository orderProductsRepository;
+
+    @Autowired
+    private com.glyzier.repository.ProductFilesRepository productFilesRepository;
     
     @Autowired
     private com.glyzier.config.SupabaseConfig supabaseConfig;
@@ -207,10 +210,8 @@ public class FileController {
             Users user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            // Fetch file record
-            ProductFiles file = fileStorageService.getProductFiles(0L).stream()
-                    .filter(f -> f.getPfileid().equals(fileId))
-                    .findFirst()
+            // Fetch file record directly from repository
+            ProductFiles file = productFilesRepository.findById(fileId)
                     .orElseThrow(() -> new IllegalArgumentException("File not found"));
 
             Products product = file.getProduct();
@@ -277,9 +278,7 @@ public class FileController {
             }
 
             // Fetch file to verify ownership
-            ProductFiles file = fileStorageService.getProductFiles(0L).stream()
-                    .filter(f -> f.getPfileid().equals(fileId))
-                    .findFirst()
+            ProductFiles file = productFilesRepository.findById(fileId)
                     .orElseThrow(() -> new IllegalArgumentException("File not found"));
 
             Products product = file.getProduct();

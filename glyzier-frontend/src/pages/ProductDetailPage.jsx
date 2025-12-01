@@ -462,7 +462,7 @@ function ProductDetailPage() {
               <div className={styles.actionSection}>
                 <button 
                   onClick={handleDownload}
-                  className={styles.downloadButton}
+                  className={styles.buyNowButton}
                   disabled={downloadLoading}
                 >
                   {downloadLoading ? (
