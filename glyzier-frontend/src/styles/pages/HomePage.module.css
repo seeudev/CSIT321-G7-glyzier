@@ -15,9 +15,10 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  padding: 4rem 5%;
+  padding: 3rem 5%;
   gap: 2rem;
-  min-height: 600px;
+  min-height: 500px;
+  max-height: 85vh;
   overflow: hidden;
 }
 
@@ -66,12 +67,12 @@
 .heroText {
   flex: 1;
   max-width: 600px;
-  min-height: 440px;
+  min-height: 380px;
   z-index: 2;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  padding: 3rem 2.75rem;
+  padding: 2.5rem 2.5rem;
   border-radius: 32px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
@@ -140,12 +141,12 @@
 }
 
 .heroText h1 {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   line-height: 1.15;
-  height: 8rem;
+  height: 7rem;
   display: flex;
   align-items: center;
   word-wrap: break-word;
@@ -161,27 +162,27 @@
 
 /* Dynamic font sizing based on title length */
 .heroText h1[data-length="short"] {
-  font-size: 3.5rem;
-}
-
-.heroText h1[data-length="medium"] {
   font-size: 3rem;
 }
 
+.heroText h1[data-length="medium"] {
+  font-size: 2.6rem;
+}
+
 .heroText h1[data-length="long"] {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 .heroText h1[data-length="very-long"] {
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .heroText p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
   color: rgba(255, 255, 255, 0.92);
-  height: 9.35rem;
+  height: 8rem;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 5;
@@ -247,7 +248,7 @@
   justify-content: center;
   align-items: center;
   max-width: 560px;
-  min-height: 440px;
+  min-height: 380px;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px) saturate(160%);
@@ -279,7 +280,7 @@
 .heroImagePlaceholder {
   width: 100%;
   max-width: 520px;
-  height: 420px;
+  height: 360px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
   display: flex;
   justify-content: center;
@@ -294,7 +295,7 @@
 .heroImageDisplay {
   width: 100%;
   max-width: 520px;
-  height: 420px;
+  height: 360px;
   object-fit: cover;
   border-radius: 24px;
   box-shadow: 
@@ -722,16 +723,87 @@
 }
 
 /* --- Responsive Design --- */
+
+/* Medium screens (1366x768 and similar) - Optimize hero height */
+@media (max-width: 1400px) and (max-height: 800px) {
+  .heroSection {
+    padding: 2.5rem 5%;
+    min-height: 450px;
+    max-height: 75vh;
+  }
+  
+  .heroText {
+    min-height: 340px;
+    padding: 2rem 2rem;
+  }
+  
+  .heroText h1 {
+    font-size: 2.6rem;
+    height: 6rem;
+    margin-bottom: 1rem;
+  }
+  
+  .heroText p {
+    font-size: 0.95rem;
+    height: 7rem;
+    margin-bottom: 1.75rem;
+  }
+  
+  .getItNowButton {
+    padding: 0.9rem 2.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .heroImageContainer {
+    min-height: 340px;
+  }
+  
+  .heroImagePlaceholder,
+  .heroImageDisplay {
+    height: 320px;
+  }
+  
+  .carouselArrow {
+    width: 55px;
+    height: 55px;
+    font-size: 1.7rem;
+  }
+}
+
 @media (max-width: 1200px) {
   .categoryGrid {
     grid-template-columns: repeat(3, 1fr);
   }
+  
+  .hotArtsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .heroSection {
-    padding: 3rem 5%;
+    padding: 3rem 4%;
     min-height: 500px;
+  }
+  
+  .artistGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .categoryGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .hotArtsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Layout Breakpoint - Stack all grids vertically */
+  .heroSection {
+    padding: 2rem 3%;
+    min-height: auto;
   }
   
   .heroContent {
@@ -742,57 +814,310 @@
   .heroText {
     text-align: center;
     max-width: 100%;
+    min-height: auto;
+    padding: 2rem 1.5rem;
   }
 
   .heroText h1 {
-    font-size: 2.8rem;
+    font-size: 2rem;
+    height: auto;
+    min-height: 4rem;
+  }
+
+  .heroText p {
+    font-size: 0.95rem;
+    height: auto;
+    min-height: 6rem;
+    -webkit-line-clamp: 4;
+  }
+  
+  .getItNowButton {
+    padding: 0.9rem 2rem;
+    font-size: 0.95rem;
   }
 
   .heroImageContainer {
     max-width: 100%;
+    min-height: 320px;
+    padding: 1rem;
+  }
+  
+  .heroImagePlaceholder,
+  .heroImageDisplay {
+    height: 300px;
+  }
+  
+  .detailsButton {
+    padding: 0.75rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  .carouselArrow {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 
   .carouselArrow:first-of-type {
-    left: 15px;
+    left: 10px;
   }
 
   .carouselArrow:last-of-type {
-    right: 15px;
+    right: 10px;
   }
   
+  .carouselIndicators {
+    bottom: 20px;
+    padding: 10px 20px;
+  }
+  
+  /* Section titles */
+  .artistsSection h2,
+  .hotArtsSection h2,
+  .categorySection h2,
+  .feedSection h2 {
+    font-size: 2rem;
+  }
+  
+  /* Section padding */
+  .artistsSection,
+  .categorySection,
+  .feedSection {
+    padding: 4rem 3%;
+  }
+  
+  .hotArtsSection {
+    padding: 4rem 3%;
+    margin: 3rem 3% 0 3%;
+  }
+  
+  /* Grids - Stack to 2 columns */
   .artistGrid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
+  
   .categoryGrid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
+  
   .hotArtsGrid {
-    grid-template-columns: repeat(8, 1fr);
-    grid-auto-flow: column;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
-}
-
-@media (max-width: 768px) {
-  .heroText h1 {
-    font-size: 2.5rem;
+  
+  .feedGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
+  
+  /* Partners section */
   .partnersSection {
     flex-wrap: wrap;
     gap: 2rem;
+    padding: 3rem 3%;
+  }
+  
+  .partnerLogo {
+    width: 120px;
+    height: 40px;
   }
 }
 
-@media (max-width: 576px) {
-  .artistGrid, .categoryGrid {
+@media (max-width: 480px) {
+  /* Mobile optimizations - Single column */
+  .heroSection {
+    padding: 1.5rem 4%;
+  }
+  
+  .heroText {
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .heroText h1 {
+    font-size: 1.6rem;
+    min-height: 3rem;
+  }
+  
+  .heroText p {
+    font-size: 0.9rem;
+    min-height: 5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .getItNowButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .heroImageContainer {
+    min-height: 280px;
+    padding: 0.75rem;
+    border-radius: 20px;
+  }
+  
+  .heroImagePlaceholder,
+  .heroImageDisplay {
+    height: 260px;
+    border-radius: 16px;
+  }
+  
+  .detailsButton {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .carouselArrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  .carouselIndicators {
+    bottom: 15px;
+    padding: 8px 16px;
+    gap: 8px;
+  }
+  
+  .indicator {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .indicator.active {
+    width: 28px;
+  }
+  
+  /* Section titles */
+  .artistsSection h2,
+  .hotArtsSection h2,
+  .categorySection h2,
+  .feedSection h2 {
+    font-size: 1.6rem;
+  }
+  
+  .sectionSubtitle {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Section padding */
+  .artistsSection,
+  .categorySection,
+  .feedSection {
+    padding: 3rem 4%;
+  }
+  
+  .hotArtsSection {
+    padding: 3rem 4%;
+    margin: 2rem 4% 0 4%;
+    border-radius: 20px;
+  }
+  
+  /* All grids to single column */
+  .artistGrid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
-  .hotArtsGrid {
-    grid-template-columns: repeat(8, minmax(150px, 1fr));
-    grid-auto-flow: column;
-  }
-  .feedGrid {
-    grid-template-columns: repeat(2, 1fr);
+  
+  .categoryGrid {
+    grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .hotArtsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .feedGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  /* Artist card */
+  .artistImage {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .artistInfo h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Hot arts card */
+  .hotArtImage {
+    height: 200px;
+  }
+  
+  /* Category card */
+  .categoryCard {
+    height: 220px;
+  }
+  
+  .categoryInfo h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Feed card */
+  .feedImage {
+    height: 240px;
+  }
+  
+  .feedInfo {
+    padding: 1rem;
+  }
+  
+  .feedProductName {
+    font-size: 0.95rem;
+  }
+  
+  .feedProductPrice {
+    font-size: 1rem;
+  }
+  
+  /* Partners */
+  .partnersSection {
+    flex-direction: column;
+    padding: 2rem 4%;
+    gap: 1.5rem;
+  }
+  
+  .partnerLogo {
+    width: 100px;
+    height: 35px;
+  }
+  
+  /* Footer */
+  .footer {
+    padding: 1.5rem 4%;
+    font-size: 0.9rem;
+  }
+  
+  .socialIcons a {
+    margin: 0 0.3rem;
+  }
+}
+
+@media (max-width: 320px) {
+  /* Ultra-small screens */
+  .heroText h1 {
+    font-size: 1.4rem;
+  }
+  
+  .heroText p {
+    font-size: 0.85rem;
+  }
+  
+  .heroImageContainer {
+    min-height: 240px;
+  }
+  
+  .heroImagePlaceholder,
+  .heroImageDisplay {
+    height: 220px;
   }
 }
 /* --- Carousel Indicators --- */

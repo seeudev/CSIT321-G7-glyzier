@@ -418,9 +418,26 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .resultsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .sellersGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
+  /* Layout Breakpoint - Stack grids to fewer columns */
   .container {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .searchHeaderCard {
+    padding: 1.5rem;
+    border-radius: 12px;
   }
 
   .header h1 {
@@ -432,7 +449,13 @@
   }
 
   .filterSection {
-    padding: 1rem;
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+  
+  .filterLabel {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .categoryButtons {
@@ -443,32 +466,276 @@
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }
+  
+  .resultCountCard {
+    padding: 1.25rem;
+  }
+  
+  .resultCount {
+    font-size: 1rem;
+  }
+  
+  .resultCount strong {
+    font-size: 1.2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.6rem;
+    margin: 1.5rem 0 1rem;
+  }
 
   .resultsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 
   .sellersGrid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .sellerCard {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+  
+  .sellerAvatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+  
+  .sellerName {
+    font-size: 1.2rem;
+  }
+  
+  .sellerBio {
+    font-size: 0.9rem;
+  }
+  
+  .productCount {
+    font-size: 0.85rem;
   }
 
   .productImage {
     height: 200px;
   }
+  
+  .productInfo {
+    padding: 1rem;
+  }
+  
+  .productName {
+    font-size: 1rem;
+  }
+  
+  .productPrice {
+    font-size: 1.2rem;
+  }
+  
+  .productType {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .loadingMessage,
+  .errorMessage,
+  .emptyState,
+  .noResults {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .loadingMessage {
+    font-size: 1.1rem;
+  }
+  
+  .errorMessage {
+    font-size: 1rem;
+  }
+  
+  .emptyState p,
+  .noResults p {
+    font-size: 1rem;
+  }
+  
+  .noResults p:first-child {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .resultsGrid {
-    grid-template-columns: 1fr;
+  .container {
+    padding: 1rem;
   }
-
+  
+  .searchHeaderCard {
+    padding: 1.25rem;
+  }
+  
+  .header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .searchQuery {
+    font-size: 0.95rem;
+  }
+  
+  .filterSection {
+    padding: 1rem;
+  }
+  
+  .filterLabel {
+    font-size: 0.95rem;
+  }
+  
   .categoryButtons {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .categoryButton {
     width: 100%;
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  .resultCountCard {
+    padding: 1rem;
+  }
+  
+  .resultCount {
+    font-size: 0.95rem;
+  }
+  
+  .resultCount strong {
+    font-size: 1.1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.4rem;
+    margin: 1.25rem 0 0.75rem;
+  }
+  
+  .resultsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .sellersGrid {
+    gap: 1rem;
+  }
+  
+  .sellerCard {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .sellerAvatar {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    margin: 0 auto;
+  }
+  
+  .sellerInfo {
+    text-align: center;
+  }
+  
+  .sellerName {
+    font-size: 1.15rem;
+  }
+  
+  .sellerBio {
+    font-size: 0.85rem;
+  }
+  
+  .productCount {
+    font-size: 0.8rem;
+  }
+  
+  .productCard {
+    border-radius: 12px;
+  }
+  
+  .productImage {
+    height: 220px;
+  }
+  
+  .productInfo {
+    padding: 0.9rem;
+  }
+  
+  .productName {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 2;
+  }
+  
+  .productPrice {
+    font-size: 1.15rem;
+  }
+  
+  .productType {
+    padding: 0.25rem 0.65rem;
+    font-size: 0.75rem;
+  }
+  
+  .favoriteButtonOverlay {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .ownerBadgeSmall {
+    top: 6px;
+    left: 6px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .loadingMessage,
+  .errorMessage,
+  .emptyState,
+  .noResults {
+    padding: 2rem 1rem;
+    border-radius: 12px;
+  }
+  
+  .loadingMessage {
+    font-size: 1rem;
+  }
+  
+  .errorMessage {
+    font-size: 0.95rem;
+  }
+  
+  .emptyState p,
+  .noResults p {
+    font-size: 0.95rem;
+  }
+  
+  .noResults p:first-child {
+    font-size: 1rem;
+  }
+  
+  .suggestion {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .productImage {
+    height: 200px;
+  }
+  
+  .sellerAvatar {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
   }
 }
 

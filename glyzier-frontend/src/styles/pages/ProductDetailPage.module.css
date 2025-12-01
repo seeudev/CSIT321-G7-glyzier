@@ -18,7 +18,7 @@
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 30px 20px;
   position: relative;
   z-index: 1;
 }
@@ -29,7 +29,7 @@
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-radius: 32px;
-  padding: 50px;
+  padding: 40px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.18) inset,
@@ -37,7 +37,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 50px;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -90,6 +90,7 @@
 .productImage {
   width: 100%;
   aspect-ratio: 4/3;
+  max-height: 450px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 24px;
   overflow: hidden;
@@ -161,7 +162,7 @@
 .infoSection {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Seller & Shop Name */
@@ -202,7 +203,7 @@
 
 /* Product Name */
 .productName {
-  font-size: 2.5em;
+  font-size: 2.2em;
   font-weight: 800;
   color: #ffffff;
   line-height: 1.2;
@@ -216,13 +217,13 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 20px 0;
+  padding: 16px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideInFromLeft 0.5s ease 0.2s both;
 }
 
 .price {
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: 700;
   color: #ffffff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -255,7 +256,7 @@
 .descriptionSection {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  padding: 24px;
+  padding: 20px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideInFromRight 0.5s ease 0.3s both;
@@ -263,15 +264,15 @@
 }
 
 .descriptionTitle {
-  font-size: 1.1em;
+  font-size: 1em;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .descriptionText {
-  font-size: 1em;
-  line-height: 1.7;
+  font-size: 0.95em;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -288,7 +289,7 @@
 
 /* Stock Section */
 .stockSection {
-  padding: 16px 0;
+  padding: 12px 0;
   animation: slideInFromLeft 0.5s ease 0.4s both;
 }
 
@@ -314,8 +315,8 @@
 .addToCartButton,
 .buyNowButton {
   flex: 1;
-  padding: 18px 32px;
-  font-size: 1.1em;
+  padding: 16px 28px;
+  font-size: 1em;
   font-weight: 700;
   border-radius: 25px;
   border: none;
@@ -620,11 +621,125 @@
 }
 
 /* Responsive Design */
-@media (max-width: 968px) {
+
+/* Medium screens (1366x768 and similar) - Compact view to fit without scrolling */
+@media (max-width: 1400px) and (max-height: 900px) {
+  .container {
+    padding: 20px 20px;
+  }
+  
+  .productLayout {
+    padding: 30px;
+    gap: 40px;
+    border-radius: 24px;
+  }
+  
+  .productImage {
+    aspect-ratio: 4/3;
+    max-height: 380px;
+  }
+  
+  .infoSection {
+    gap: 16px;
+  }
+  
+  .productName {
+    font-size: 2em;
+    line-height: 1.2;
+  }
+  
+  .price {
+    font-size: 1.6em;
+  }
+  
+  .priceSection {
+    padding: 14px 0;
+  }
+  
+  .descriptionSection {
+    padding: 18px;
+  }
+  
+  .descriptionTitle {
+    font-size: 0.95em;
+    margin-bottom: 8px;
+  }
+  
+  .descriptionText {
+    font-size: 0.9em;
+    line-height: 1.55;
+    max-height: 4.5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  
+  .stockSection {
+    padding: 10px 0;
+  }
+  
+  .stockBadge {
+    padding: 6px 14px;
+    font-size: 0.85em;
+  }
+  
+  .addToCartButton,
+  .buyNowButton {
+    padding: 14px 24px;
+    font-size: 0.95em;
+  }
+  
+  .backButtonTop {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  
+  .floatingContactButton {
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .floatingContactButton svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .sellerLabel {
+    font-size: 0.8em;
+  }
+  
+  .shopName {
+    font-size: 0.95em;
+  }
+}
+
+/* Smaller laptops and tablets in landscape */
+@media (max-width: 1024px) {
+  .productLayout {
+    gap: 50px;
+    padding: 40px;
+  }
+  
+  .infoSection {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Layout Breakpoint - Stack image and info vertically */
+  .container {
+    padding: 30px 15px;
+  }
+  
   .productLayout {
     grid-template-columns: 1fr;
     gap: 40px;
     padding: 30px;
+    border-radius: 24px;
   }
 
   .productName {
@@ -634,14 +749,66 @@
   .price {
     font-size: 1.6em;
   }
+  
+  .priceSection {
+    flex-wrap: wrap;
+    padding: 16px 0;
+  }
+  
+  .productType {
+    font-size: 0.85em;
+    padding: 5px 14px;
+  }
+  
+  .descriptionSection {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  .descriptionTitle {
+    font-size: 1em;
+  }
+  
+  .descriptionText {
+    font-size: 0.95em;
+  }
 
   .actionSection {
     flex-direction: column;
+    gap: 12px;
+  }
+  
+  .addToCartButton,
+  .buyNowButton {
+    padding: 16px 28px;
+    font-size: 1em;
   }
 
   .backButtonTop {
     padding: 10px 20px;
     font-size: 0.95rem;
+  }
+  
+  .floatingContactButton {
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    gap: 10px;
+  }
+  
+  .floatingContactButton svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .productImage {
+    aspect-ratio: 3/2;
+  }
+  
+  .favoriteButtonOverlay {
+    top: 16px;
+    right: 16px;
   }
 }
 
@@ -653,30 +820,165 @@
   .productLayout {
     padding: 20px;
     border-radius: 16px;
+    gap: 30px;
   }
 
   .productName {
     font-size: 1.6em;
+    line-height: 1.3;
   }
 
   .price {
     font-size: 1.4em;
+  }
+  
+  .priceSection {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 0;
+    gap: 12px;
+  }
+  
+  .productType {
+    font-size: 0.8em;
+    padding: 4px 12px;
+  }
+  
+  .sellerInfo {
+    gap: 3px;
+  }
+  
+  .sellerLabel {
+    font-size: 0.8em;
+  }
+  
+  .shopName {
+    font-size: 0.95em;
+  }
+  
+  .descriptionSection {
+    padding: 16px;
+  }
+  
+  .descriptionTitle {
+    font-size: 0.95em;
+    margin-bottom: 10px;
+  }
+  
+  .descriptionText {
+    font-size: 0.9em;
+    line-height: 1.6;
+  }
+  
+  .stockSection {
+    padding: 12px 0;
+  }
+  
+  .stockBadge {
+    padding: 6px 12px;
+    font-size: 0.85em;
   }
 
   .addToCartButton,
   .buyNowButton {
     padding: 16px 24px;
     font-size: 1em;
+    border-radius: 20px;
+  }
+  
+  .loginNote {
+    font-size: 0.85em;
+    margin-top: 10px;
   }
 
   .backButtonTop {
     padding: 8px 16px;
     font-size: 0.9rem;
     gap: 6px;
+    border-radius: 40px;
   }
 
   .backArrow {
     font-size: 1.1rem;
+  }
+  
+  .floatingContactButton {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    gap: 8px;
+    border-radius: 40px;
+  }
+  
+  .floatingContactButton svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .floatingButtonText {
+    display: none;
+  }
+  
+  .productImage {
+    aspect-ratio: 1/1;
+    border-radius: 16px;
+  }
+  
+  .favoriteButtonOverlay {
+    top: 12px;
+    right: 12px;
+  }
+  
+  .imagePlaceholder p {
+    font-size: 1rem;
+    margin-top: 15px;
+  }
+  
+  .productHeader {
+    gap: 12px;
+  }
+  
+  .ownerBadge {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  .loading,
+  .error {
+    padding: 30px 20px;
+    min-height: 50vh;
+  }
+  
+  .loading {
+    font-size: 1.1em;
+  }
+  
+  .backButton {
+    padding: 12px 24px;
+    font-size: 0.95em;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 320px) {
+  .productName {
+    font-size: 1.4em;
+  }
+  
+  .price {
+    font-size: 1.2em;
+  }
+  
+  .descriptionText {
+    font-size: 0.85em;
+  }
+  
+  .addToCartButton,
+  .buyNowButton {
+    padding: 14px 20px;
+    font-size: 0.95em;
   }
 }
 

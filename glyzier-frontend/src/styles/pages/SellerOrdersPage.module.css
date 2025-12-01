@@ -168,6 +168,12 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* Table Scroll Wrapper - For mobile horizontal scrolling */
+.tableScrollWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .tableHeader {
   padding: 20px 30px;
   border-bottom: 1px solid #e2e8f0;
@@ -425,23 +431,97 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .content {
+    padding: 0 15px 30px;
+  }
+  
+  .header {
+    padding: 50px 20px;
+  }
+  
+  .headerCard {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 15px;
+  }
+  
+  /* Hide less critical columns on tablets */
   .ordersTable th:nth-child(2),
   .ordersTable td:nth-child(2) {
     display: none;
   }
+  
+  .tableScrollWrapper {
+    overflow-x: auto;
+  }
 }
 
 @media (max-width: 768px) {
+  /* Layout Breakpoint - Enable horizontal scroll for tables */
   .content {
-    padding: 60px 15px 30px;
+    padding: 0 10px 30px;
+  }
+  
+  .header {
+    padding: 40px 15px;
+  }
+  
+  .headerCard {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .headerIcon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .headerIcon svg {
+    width: 28px;
+    height: 28px;
   }
 
   .title {
     font-size: 24px;
   }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  .tableContainer {
+    border-radius: 12px;
+  }
+  
+  .tableHeader {
+    padding: 15px 20px;
+  }
+  
+  .orderCount {
+    font-size: 13px;
+  }
+  
+  /* Enable full horizontal scroll */
+  .tableScrollWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
   .ordersTable {
     font-size: 13px;
+    min-width: 700px; /* Force horizontal scroll instead of cramming */
   }
 
   .ordersTable th,
@@ -449,6 +529,7 @@
     padding: 12px 10px;
   }
 
+  /* Hide date column on mobile */
   .ordersTable th:nth-child(3),
   .ordersTable td:nth-child(3) {
     display: none;
@@ -457,18 +538,195 @@
   .statusSelect {
     min-width: 100px;
     font-size: 12px;
+    padding: 6px 10px;
   }
 
   .orderDetails {
-    padding: 20px;
+    padding: 20px 15px;
+  }
+  
+  .detailsGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .detailsSection h3 {
+    font-size: 16px;
   }
 
   .itemsTable {
     font-size: 13px;
+    min-width: 500px; /* Force horizontal scroll for items table */
   }
 
   .itemsTable th,
   .itemsTable td {
     padding: 10px 12px;
+  }
+  
+  .address {
+    padding: 14px;
+    font-size: 13px;
+  }
+  
+  .loadingContainer,
+  .errorContainer,
+  .emptyContainer {
+    padding: 60px 15px;
+    border-radius: 12px;
+  }
+  
+  .emptyContainer svg {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .emptyContainer h2 {
+    font-size: 20px;
+  }
+  
+  .emptyContainer p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 0 10px 20px;
+  }
+  
+  .header {
+    padding: 30px 10px;
+  }
+  
+  .headerCard {
+    padding: 1.25rem;
+  }
+  
+  .headerIcon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .headerIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .subtitle {
+    font-size: 13px;
+  }
+  
+  .tableHeader {
+    padding: 12px 15px;
+  }
+  
+  .orderCount {
+    font-size: 12px;
+  }
+  
+  .ordersTable {
+    font-size: 12px;
+    min-width: 600px;
+  }
+  
+  .ordersTable th,
+  .ordersTable td {
+    padding: 10px 8px;
+  }
+  
+  .statusBadge {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .statusSelect {
+    min-width: 90px;
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+  
+  .expandButton {
+    padding: 6px;
+  }
+  
+  .expandButton svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .orderDetails {
+    padding: 15px;
+  }
+  
+  .detailsSection h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .itemsTable {
+    font-size: 12px;
+    min-width: 450px;
+  }
+  
+  .itemsTable th,
+  .itemsTable td {
+    padding: 8px 10px;
+  }
+  
+  .address {
+    padding: 12px;
+    font-size: 12px;
+  }
+  
+  .loadingContainer,
+  .errorContainer,
+  .emptyContainer {
+    padding: 50px 10px;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .emptyContainer svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .emptyContainer h2 {
+    font-size: 18px;
+  }
+  
+  .emptyContainer p {
+    font-size: 13px;
+  }
+  
+  .errorText {
+    font-size: 14px;
+  }
+  
+  .retryButton {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 320px) {
+  .title {
+    font-size: 18px;
+  }
+  
+  .ordersTable {
+    min-width: 550px;
+  }
+  
+  .itemsTable {
+    min-width: 400px;
   }
 }
