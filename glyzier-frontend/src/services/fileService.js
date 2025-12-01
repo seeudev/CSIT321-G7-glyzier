@@ -178,14 +178,28 @@ const fileService = {
       // Get signed URL
       const { downloadUrl } = await fileService.getDownloadUrl(fileId);
       
-      // Create temporary anchor and trigger download
+      console.log('Starting download from URL:', downloadUrl);
+      
+      // Fetch the file as blob
+      const response = await fetch(downloadUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch file');
+      }
+      
+      const blob = await response.blob();
+      console.log('File downloaded, size:', blob.size);
+      
+      // Create blob URL and trigger download
+      const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = downloadUrl;
+      link.href = blobUrl;
       link.download = fileName;
-      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
+      
+      // Cleanup
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
       
     } catch (error) {
       console.error('Download failed:', error);

@@ -159,19 +159,23 @@ public class FileStorageService {
      * @return Signed URL valid for 1 hour
      * @throws IllegalArgumentException if URL generation fails
      */
-    public String generateSignedUrl(String fileKey) throws IllegalArgumentException {
+    public String generateSignedUrl(String fileKey, String fileType) throws IllegalArgumentException {
         try {
-            // Extract bucket name from fileKey (format: bucket/path)
-            String[] parts = fileKey.split("/", 2);
-            if (parts.length != 2) {
-                throw new IllegalArgumentException("Invalid file key format");
-            }
+            // Get bucket name based on file type
+            String bucketName = getBucketForFileType(fileType);
             
-            String bucketName = parts[0];
-            String filePath = parts[1];
+            // fileKey is already in format: productId/uuid.ext
+            String filePath = fileKey;
             
-            // Construct sign endpoint
-            String signUrl = supabaseConfig.getStorageUrl() + "/object/sign/" + bucketName + "/" + filePath;
+            // Debug logging
+            System.out.println("[SIGNED URL] FileKey: " + fileKey);
+            System.out.println("[SIGNED URL] FileType: " + fileType);
+            System.out.println("[SIGNED URL] Bucket: " + bucketName);
+            System.out.println("[SIGNED URL] Full path: " + bucketName + "/" + filePath);
+            
+            // Construct sign endpoint - use bucket name only in URL, path goes in body
+            String signUrl = supabaseConfig.getStorageUrl() + "/object/sign/" + bucketName;
+            System.out.println("[SIGNED URL] Sign URL: " + signUrl);
             
             // Prepare headers
             HttpHeaders headers = new HttpHeaders();
@@ -179,26 +183,68 @@ public class FileStorageService {
             headers.set("apikey", supabaseConfig.getSupabaseKey());
             headers.setContentType(MediaType.APPLICATION_JSON);
             
-            // Request body with expiration time (1 hour)
-            Map<String, Integer> body = new HashMap<>();
+            // Request body with paths array and expiration time
+            Map<String, Object> body = new HashMap<>();
             body.put("expiresIn", 3600);
+            body.put("paths", new String[]{filePath});
+            System.out.println("[SIGNED URL] Request body paths: [" + filePath + "]");
             
-            HttpEntity<Map<String, Integer>> requestEntity = new HttpEntity<>(body, headers);
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             
-            // Generate signed URL
-            @SuppressWarnings("rawtypes")
-            ResponseEntity<Map> response = restTemplate.exchange(
+            // Generate signed URL - use String response type for flexibility
+            ResponseEntity<String> response = restTemplate.exchange(
                 signUrl,
                 HttpMethod.POST,
                 requestEntity,
-                Map.class
+                String.class
             );
             
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                String signedPath = (String) response.getBody().get("signedURL");
-                return supabaseConfig.getSupabaseUrl() + signedPath;
+                // Parse JSON response
+                String responseBody = response.getBody();
+                System.out.println("[SIGNED URL] Response: " + responseBody);
+                
+                // Check for error in response
+                if (responseBody.contains("\"error\"") || responseBody.contains("\"message\"")) {
+                    // Extract error message
+                    String errorMsg = responseBody;
+                    if (responseBody.contains("\"message\":\"")) {
+                        int msgStart = responseBody.indexOf("\"message\":\"") + 11;
+                        int msgEnd = responseBody.indexOf("\"", msgStart);
+                        errorMsg = responseBody.substring(msgStart, msgEnd);
+                    }
+                    throw new IllegalArgumentException("Supabase error: " + errorMsg);
+                }
+                
+                // Extract signedURL from response - handle both single and array formats
+                if (responseBody.contains("signedURLs")) {
+                    // Array format: {"signedURLs": [{"signedURL": "/path", "path": "..."}]}
+                    int signedUrlStart = responseBody.indexOf("\"signedURL\":\"") + 13;
+                    if (signedUrlStart > 12) {
+                        int signedUrlEnd = responseBody.indexOf("\"", signedUrlStart);
+                        if (signedUrlEnd > signedUrlStart) {
+                            String signedPath = responseBody.substring(signedUrlStart, signedUrlEnd);
+                            String fullUrl = supabaseConfig.getSupabaseUrl() + signedPath;
+                            System.out.println("[SIGNED URL] Final URL: " + fullUrl);
+                            return fullUrl;
+                        }
+                    }
+                } else if (responseBody.contains("signedURL")) {
+                    // Single format: {"signedURL": "/path"}
+                    int signedUrlStart = responseBody.indexOf("\"signedURL\":\"") + 13;
+                    if (signedUrlStart > 12) {
+                        int signedUrlEnd = responseBody.indexOf("\"", signedUrlStart);
+                        if (signedUrlEnd > signedUrlStart) {
+                            String signedPath = responseBody.substring(signedUrlStart, signedUrlEnd);
+                            String fullUrl = supabaseConfig.getSupabaseUrl() + signedPath;
+                            System.out.println("[SIGNED URL] Final URL: " + fullUrl);
+                            return fullUrl;
+                        }
+                    }
+                }
+                throw new IllegalArgumentException("No signed URL in response: " + responseBody);
             } else {
-                throw new IllegalArgumentException("Failed to generate signed URL");
+                throw new IllegalArgumentException("Failed to generate signed URL: HTTP " + response.getStatusCode());
             }
             
         } catch (Exception e) {

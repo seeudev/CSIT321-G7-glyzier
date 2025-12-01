@@ -114,6 +114,8 @@ function ProductDetailPage() {
       if (product && product.type === 'Digital') {
         try {
           const response = await fileService.getProductFiles(pid);
+          console.log('Product files response:', response);
+          console.log('Product files array:', response.files);
           setProductFiles(response.files || []);
         } catch (err) {
           console.error('Failed to fetch product files:', err);
@@ -457,6 +459,16 @@ function ProductDetailPage() {
             </div>
             
             {/* Action Buttons - Conditional rendering based on purchase status */}
+            {(() => {
+              console.log('Download button condition check:', {
+                productType: product?.type,
+                hasPurchased,
+                productFilesLength: productFiles.length,
+                productFiles,
+                showDownload: product?.type === 'Digital' && hasPurchased && productFiles.length > 0
+              });
+              return null;
+            })()}
             {product && product.type === 'Digital' && hasPurchased && productFiles.length > 0 ? (
               // Show download button for purchased digital products
               <div className={styles.actionSection}>

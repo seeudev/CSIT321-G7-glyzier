@@ -168,19 +168,114 @@ public class FileController {
             response.put("productId", productId);
             response.put("files", files.stream().map(file -> {
                 String bucketName = getBucketForFileType(file.getFileType());
-                return Map.of(
-                    "fileId", file.getPfileid(),
-                    "fileType", file.getFileType(),
-                    "fileUrl", supabaseConfig.getPublicUrl(bucketName, file.getFileKey()),
-                    "uploadedAt", file.getCreatedAt()
-                );
+                System.out.println("[GET FILES DEBUG] File: " + file.getPfileid() + ", Type: " + file.getFileType() + ", Bucket: " + bucketName);
+                
+                Map<String, Object> fileMap = new HashMap<>();
+                fileMap.put("fileId", file.getPfileid());
+                fileMap.put("fileType", file.getFileType());
+                fileMap.put("fileFormat", file.getFileFormat());
+                fileMap.put("fileUrl", supabaseConfig.getPublicUrl(bucketName, file.getFileKey()));
+                
+                // Handle null createdAt
+                if (file.getCreatedAt() != null) {
+                    fileMap.put("uploadedAt", file.getCreatedAt());
+                } else {
+                    fileMap.put("uploadedAt", null);
+                }
+                
+                return fileMap;
             }).toList());
 
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            System.err.println("[GET FILES ERROR] " + errorMsg);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch files: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to fetch files: " + errorMsg));
+        }
+    }
+
+    /**
+     * TEMPORARY ADMIN ENDPOINT: Update file key
+     * 
+     * Updates the file_key field in an existing ProductFiles record.
+     * Use this to fix file key mismatches between database and Supabase Storage.
+     * 
+     * @param fileId ProductFiles ID to update
+     * @param request Request body with new fileKey
+     * @return Updated ProductFiles record
+     */
+    @PutMapping("/admin/update-file-key/{fileId}")
+    public ResponseEntity<?> updateFileKey(
+            @PathVariable Long fileId,
+            @RequestBody Map<String, String> request) {
+        try {
+            ProductFiles file = productFilesRepository.findById(fileId)
+                    .orElseThrow(() -> new IllegalArgumentException("File not found"));
+
+            String oldKey = file.getFileKey();
+            String newKey = request.get("fileKey");
+            
+            file.setFileKey(newKey);
+            ProductFiles saved = productFilesRepository.save(file);
+
+            System.out.println("[UPDATE FILE KEY] File ID: " + fileId);
+            System.out.println("[UPDATE FILE KEY] Old key: " + oldKey);
+            System.out.println("[UPDATE FILE KEY] New key: " + newKey);
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "File key updated successfully",
+                    "fileId", saved.getPfileid(),
+                    "oldKey", oldKey,
+                    "newKey", saved.getFileKey()
+            ));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to update file key: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * TEMPORARY ADMIN ENDPOINT: Link existing Supabase file to product
+     * 
+     * Creates ProductFiles database record for files already in Supabase Storage.
+     * Use this to fix orphaned files that exist in storage but not in database.
+     * 
+     * @param productId Product ID to link file to
+     * @param request Request body with fileKey, fileType, fileFormat
+     * @return Created ProductFiles record
+     */
+    @PostMapping("/admin/link-file/{productId}")
+    public ResponseEntity<?> linkExistingFile(
+            @PathVariable Long productId,
+            @RequestBody Map<String, String> request) {
+        try {
+            Products product = productsRepository.findById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+            ProductFiles file = new ProductFiles();
+            file.setProduct(product);
+            file.setFileKey(request.get("fileKey"));
+            file.setFileType(request.get("fileType"));
+            file.setFileFormat(request.get("fileFormat"));
+
+            ProductFiles saved = productFilesRepository.save(file);
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "File linked successfully",
+                    "fileId", saved.getPfileid(),
+                    "fileKey", saved.getFileKey(),
+                    "fileType", saved.getFileType()
+            ));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to link file: " + e.getMessage()));
         }
     }
 
@@ -225,14 +320,23 @@ public class FileController {
                         .body(Map.of("error", "You must purchase this product to download it"));
             }
 
-            // Generate signed URL
-            String signedUrl = fileStorageService.generateSignedUrl(file.getFileKey());
+            // Debug logging
+            System.out.println("[DOWNLOAD DEBUG] File ID: " + fileId);
+            System.out.println("[DOWNLOAD DEBUG] File Key: " + file.getFileKey());
+            System.out.println("[DOWNLOAD DEBUG] File Type: " + file.getFileType());
+            String bucketName = getBucketForFileType(file.getFileType());
+            System.out.println("[DOWNLOAD DEBUG] Bucket: " + bucketName);
+            System.out.println("[DOWNLOAD DEBUG] Product Type: " + product.getType());
+
+            // Since bucket is public, use public URL directly instead of signed URL
+            String downloadUrl = supabaseConfig.getPublicUrl(bucketName, file.getFileKey());
+            System.out.println("[DOWNLOAD DEBUG] Public URL: " + downloadUrl);
 
             // Prepare response
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("downloadUrl", signedUrl);
-            response.put("expiresIn", 3600); // 1 hour
+            response.put("downloadUrl", downloadUrl);
+            response.put("expiresIn", null); // Public URL doesn't expire
             response.put("fileName", product.getProductname() + " - Digital Download");
 
             return ResponseEntity.ok(response);

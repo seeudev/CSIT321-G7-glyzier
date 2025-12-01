@@ -122,6 +122,8 @@ function Navigation() {
    * Toggle user menu
    */
   const toggleUserMenu = () => {
+    console.log('User object:', user);
+    console.log('Admin check:', user?.admin, user?.isAdmin);
     setShowUserMenu(!showUserMenu);
   };
 
