@@ -267,11 +267,11 @@ function DashboardPage() {
             </div>
           </div>
           
-          {/* Recent Orders Card */}
+          {/* Orders Card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <span className={styles.cardIcon}><PackageIcon size={32} color="#8b7fc4" /></span>
-              <h2 className={styles.cardTitle}>Recent Orders</h2>
+              <h2 className={styles.cardTitle}>Order History</h2>
             </div>
             <div className={styles.cardContent}>
               {ordersLoading ? (
@@ -287,36 +287,12 @@ function DashboardPage() {
                   </Link>
                 </div>
               ) : (
-                <>
-                  <ul className={styles.orderList}>
-                    {orders.slice(0, 3).map((order) => (
-                      <li key={order.orderid} className={styles.orderItem}>
-                        <div className={styles.orderDetails}>
-                          <div className={styles.orderHeader}>
-                            <span className={styles.orderNumber}>Order #{order.orderid}</span>
-                            <span className={`${styles.orderStatus} ${
-                              order.status === 'Completed' ? styles.statusCompleted : styles.statusPending
-                            }`}>
-                              {order.status}
-                            </span>
-                          </div>
-                          <div className={styles.orderMeta}>
-                            <span className={styles.orderDate}>{formatDate(order.placedAt)}</span>
-                            <span className={styles.orderAmount}>₱{order.total.toFixed(2)}</span>
-                          </div>
-                          <div className={styles.orderItems}>{order.itemCount} item(s)</div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                  {orders.length > 3 && (
-                    <div className={styles.cardActions}>
-                      <button className={styles.buttonSecondary}>
-                        View All Orders ({orders.length})
-                      </button>
-                    </div>
-                  )}
-                </>
+                <div className={styles.orderSummary}>
+                  <p className={styles.orderCount}>You have {orders.length} order{orders.length !== 1 ? 's' : ''}</p>
+                  <Link to="/orders" className={styles.button}>
+                    View All Orders
+                  </Link>
+                </div>
               )}
             </div>
           </div>
