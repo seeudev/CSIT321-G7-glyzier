@@ -112,8 +112,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Content */
-.content {
+/* Container */
+.container {
   max-width: 1200px;
   margin: -32px auto 48px;
   padding: 0 24px;
@@ -635,6 +635,34 @@
 }
 
 .deleteFileButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.replaceFileButton {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+}
+
+.replaceFileButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.replaceFileButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

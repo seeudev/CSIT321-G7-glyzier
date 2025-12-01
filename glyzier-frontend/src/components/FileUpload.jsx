@@ -49,18 +49,15 @@ const FileUpload = ({
   /**
    * Get Accept Attribute for File Input
    * 
-   * Determines accepted file types based on fileType prop.
+   * Accepts all file types for digital products.
    * 
    * @returns {string} Accept attribute value
    */
   const getAcceptAttribute = () => {
     if (accept) return accept;
     
-    if (fileType === 'product_image' || fileType === 'preview') {
-      return 'image/jpeg,image/png,image/webp';
-    }
-    
-    return '.zip,.pdf,.psd,.ai,.jpg,.jpeg,.png';
+    // Accept all file types for digital products
+    return '*/*';
   };
 
   /**
@@ -294,9 +291,7 @@ const FileUpload = ({
           <p className={styles.dropHint}>or click to browse</p>
           
           <p className={styles.fileTypes}>
-            {fileType === 'product_image' || fileType === 'preview'
-              ? 'Supported: JPEG, PNG, WebP (Max 10MB)'
-              : 'Supported: ZIP, PDF, PSD, AI (Max 100MB)'}
+            All file types supported (Max 100MB)
           </p>
         </div>
       </div>

@@ -40,6 +40,7 @@ function ManageProducts() {
   // File management state (Module 20)
   const [productFiles, setProductFiles] = useState({});
   const [fileLoadingStates, setFileLoadingStates] = useState({});
+  const [createFormDigitalFile, setCreateFormDigitalFile] = useState(null);
   
   // Form states
   const [createFormData, setCreateFormData] = useState({
@@ -176,8 +177,21 @@ function ManageProducts() {
         })
       };
       
-      await createProduct(productData);
-      showSuccess('Product created successfully!');
+      const createdProduct = await createProduct(productData);
+      const newProductId = createdProduct.pid;
+      
+      // Upload digital file if provided
+      if (createFormData.type === 'Digital' && createFormDigitalFile) {
+        try {
+          await fileService.uploadFile(newProductId, createFormDigitalFile, 'digital_download');
+          showSuccess('Product and digital file created successfully!');
+        } catch (uploadErr) {
+          console.error('File upload failed:', uploadErr);
+          showError('Product created but file upload failed. Please edit the product to upload the file.');
+        }
+      } else {
+        showSuccess('Product created successfully!');
+      }
       
       // Reset form
       setCreateFormData({
@@ -191,6 +205,7 @@ function ManageProducts() {
         qtyonhand: '10',
         qtyreserved: '0'
       });
+      setCreateFormDigitalFile(null);
       setShowCreateForm(false);
       
       // Reload products
@@ -309,7 +324,7 @@ function ManageProducts() {
 
   // Delete a product file
   const handleDeleteFile = async (fileId, productId) => {
-    const confirmed = await showConfirm('Are you sure you want to delete this file?');
+    const confirmed = await showConfirm('Are you sure you want to delete this file? This action cannot be undone.');
     if (!confirmed) return;
 
     setFileLoadingStates(prev => ({
@@ -326,6 +341,35 @@ function ManageProducts() {
     } catch (err) {
       console.error('Error deleting file:', err);
       showError(err.response?.data?.error || 'Failed to delete file');
+    } finally {
+      setFileLoadingStates(prev => ({
+        ...prev,
+        [fileId]: null
+      }));
+    }
+  };
+
+  // Replace a product file
+  const handleReplaceFile = async (fileId, productId) => {
+    const confirmed = await showConfirm('Replace the current file? The old file will be deleted from storage.');
+    if (!confirmed) return;
+
+    setFileLoadingStates(prev => ({
+      ...prev,
+      [fileId]: 'replacing'
+    }));
+
+    try {
+      // Delete the old file first
+      await fileService.deleteFile(fileId);
+      
+      // Reload files to show empty state and allow new upload
+      await loadProductFiles(productId);
+      
+      showInfo('Old file deleted. Please upload the new file below.');
+    } catch (err) {
+      console.error('Error replacing file:', err);
+      showError(err.response?.data?.error || 'Failed to replace file');
     } finally {
       setFileLoadingStates(prev => ({
         ...prev,
@@ -378,7 +422,6 @@ function ManageProducts() {
       </div>
       
       <div className={styles.container}>
-        <div className={styles.content}>
         {/* Create Product Section */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -580,12 +623,69 @@ function ManageProducts() {
                 />
               </div>
               
-              {/* File Upload Section - Note: Only works after product is created (Module 20) */}
-              <div className={styles.fileUploadNotice}>
-                <p className={styles.noticeText}>
-                  📁 <strong>File Uploads:</strong> You can upload product images and files after creating the product in the edit section below.
-                </p>
-              </div>
+              {/* Digital File Upload Section (Module 20) */}
+              {createFormData.type === 'Digital' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>
+                    💾 Digital Product File <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="file"
+                    className={styles.formInput}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Validate file size (max 100MB)
+                        const maxSize = 100 * 1024 * 1024;
+                        if (file.size > maxSize) {
+                          showError('File size must be less than 100MB');
+                          e.target.value = '';
+                          return;
+                        }
+                        setCreateFormDigitalFile(file);
+                        showInfo(`File "${file.name}" ready to upload (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                      }
+                    }}
+                    accept="*/*"
+                    disabled={createFormLoading}
+                  />
+                  <small className={styles.formHint}>
+                    Upload the digital file customers will download (all file types supported). Max 100MB.
+                  </small>
+                  {createFormDigitalFile && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      padding: '12px', 
+                      background: '#e3f2fd', 
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <span style={{ fontSize: '1.5em' }}>✅</span>
+                      <div>
+                        <strong style={{ color: '#1976d2' }}>{createFormDigitalFile.name}</strong>
+                        <div style={{ fontSize: '0.85em', color: '#555' }}>
+                          {(createFormDigitalFile.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCreateFormDigitalFile(null)}
+                        style={{
+                          marginLeft: 'auto',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '1.2em'
+                        }}
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
               
               <div className={styles.formActions}>
                 <button
@@ -739,108 +839,56 @@ function ManageProducts() {
                         </small>
                       </div>
                       
-                      {/* File Upload Sections (Module 20) */}
-                      <div className={styles.fileUploadSection} data-type="images">
-                        <h4>Product Images (Multiple)</h4>
-                        <FileUpload
-                          productId={product.pid}
-                          fileType="product_image"
-                          onUploadSuccess={(files) => {
-                            showSuccess(`${files.length} image(s) uploaded successfully!`);
-                            loadProductFiles(product.pid);
-                          }}
-                          onUploadError={(error) => {
-                            showError('Failed to upload images: ' + error);
-                          }}
-                          multiple={true}
-                          maxFiles={5}
-                        />
-                        {productFiles[product.pid]?.images?.length > 0 && (
-                          <div className={styles.uploadedFiles}>
-                            {productFiles[product.pid].images.map((file) => (
-                              <div key={file.fileId} className={styles.fileItem}>
-                                <img src={file.fileUrl} alt="Product" className={styles.fileThumbnail} />
-                                <button
-                                  className={styles.deleteFileButton}
-                                  onClick={() => handleDeleteFile(file.fileId, product.pid)}
-                                  disabled={fileLoadingStates[file.fileId] === 'deleting'}
-                                >
-                                  {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={styles.fileUploadSection} data-type="preview">
-                        <h4>Preview/Thumbnail Image (Single)</h4>
-                        <FileUpload
-                          productId={product.pid}
-                          fileType="preview"
-                          onUploadSuccess={(files) => {
-                            showSuccess('Preview image uploaded successfully!');
-                            loadProductFiles(product.pid);
-                          }}
-                          onUploadError={(error) => {
-                            showError('Failed to upload preview: ' + error);
-                          }}
-                          multiple={false}
-                          maxFiles={1}
-                        />
-                        {productFiles[product.pid]?.preview?.length > 0 && (
-                          <div className={styles.uploadedFiles}>
-                            {productFiles[product.pid].preview.map((file) => (
-                              <div key={file.fileId} className={styles.fileItem}>
-                                <img src={file.fileUrl} alt="Preview" className={styles.fileThumbnail} />
-                                <button
-                                  className={styles.deleteFileButton}
-                                  onClick={() => handleDeleteFile(file.fileId, product.pid)}
-                                  disabled={fileLoadingStates[file.fileId] === 'deleting'}
-                                >
-                                  {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      
+                      {/* File Upload Section - Digital Products Only (Module 20) */}
                       {editFormData.type === 'Digital' && (
                         <div className={styles.fileUploadSection} data-type="digital">
-                          <h4>Digital Product File (Single)</h4>
+                          <h4>📦 Digital Product File</h4>
                           <p style={{ fontSize: '0.9em', color: '#7f8c8d', marginTop: '-8px', marginBottom: '12px' }}>
-                            Upload the digital file that customers will download after purchase
+                            Upload the digital file that customers will download after purchase. Only one file allowed.
                           </p>
-                          <FileUpload
-                            productId={product.pid}
-                            fileType="digital_download"
-                            onUploadSuccess={(files) => {
-                              showSuccess('Digital file uploaded successfully!');
-                              loadProductFiles(product.pid);
-                            }}
-                            onUploadError={(error) => {
-                              showError('Failed to upload file: ' + error);
-                            }}
-                            multiple={false}
-                            maxFiles={1}
-                          />
-                          {productFiles[product.pid]?.digital?.length > 0 && (
+                          
+                          {productFiles[product.pid]?.digital?.length > 0 ? (
                             <div className={styles.uploadedFiles}>
                               {productFiles[product.pid].digital.map((file) => (
                                 <div key={file.fileId} className={styles.fileItem}>
                                   <div style={{ fontSize: '3em' }}>💾</div>
-                                  <p><strong>Digital File</strong></p>
-                                  <button
-                                    className={styles.deleteFileButton}
-                                    onClick={() => handleDeleteFile(file.fileId, product.pid)}
-                                    disabled={fileLoadingStates[file.fileId] === 'deleting'}
-                                  >
-                                    {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
-                                  </button>
+                                  <p><strong>Digital File Uploaded</strong></p>
+                                  <p style={{ fontSize: '0.85em', color: '#7f8c8d', marginTop: '4px' }}>
+                                    {file.fileFormat?.toUpperCase()} • Uploaded {new Date(file.uploadedAt).toLocaleDateString()}
+                                  </p>
+                                  <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                                    <button
+                                      className={styles.replaceFileButton}
+                                      onClick={() => handleReplaceFile(file.fileId, product.pid)}
+                                      disabled={fileLoadingStates[file.fileId] === 'replacing'}
+                                    >
+                                      {fileLoadingStates[file.fileId] === 'replacing' ? '⏳ Replacing...' : '🔄 Replace File'}
+                                    </button>
+                                    <button
+                                      className={styles.deleteFileButton}
+                                      onClick={() => handleDeleteFile(file.fileId, product.pid)}
+                                      disabled={fileLoadingStates[file.fileId] === 'deleting'}
+                                    >
+                                      {fileLoadingStates[file.fileId] === 'deleting' ? '⏳ Deleting...' : '🗑️ Delete'}
+                                    </button>
+                                  </div>
                                 </div>
                               ))}
                             </div>
+                          ) : (
+                            <FileUpload
+                              productId={product.pid}
+                              fileType="digital_download"
+                              onUploadSuccess={(files) => {
+                                showSuccess('Digital file uploaded successfully!');
+                                loadProductFiles(product.pid);
+                              }}
+                              onUploadError={(error) => {
+                                showError('Failed to upload file: ' + error);
+                              }}
+                              multiple={false}
+                              maxFiles={1}
+                            />
                           )}
                         </div>
                       )}
@@ -920,7 +968,6 @@ function ManageProducts() {
             )}
           </div>
         </div>
-      </div>
       </div>
     </div>
   );

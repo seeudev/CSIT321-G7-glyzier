@@ -20,17 +20,14 @@ const fileService = {
   /**
    * Upload File for Product
    * 
-   * Uploads file to Supabase Storage bucket based on file type.
+   * Uploads digital product file to Supabase Storage (digital-products bucket).
    * Requires authentication (seller must own product).
    * 
-   * File Types:
-   * - product_image: Gallery photo (JPEG, PNG, WebP)
-   * - preview: Thumbnail image for product card
-   * - digital_download: Downloadable file (ZIP, PDF, PSD, etc.)
+   * All files are stored in the digital-products bucket.
    * 
    * @param {number} productId - Product ID to associate file with
    * @param {File} file - File object from input or drag-drop
-   * @param {string} fileType - File type enum value
+   * @param {string} fileType - File type enum value (typically 'digital_download')
    * @param {function} onProgress - Progress callback (0-100)
    * @returns {Promise<Object>} Response with file details
    */
@@ -69,13 +66,10 @@ const fileService = {
   /**
    * Get Product Files
    * 
-   * Fetches all files associated with a product.
+   * Fetches all digital files associated with a product.
    * Public endpoint - no authentication required.
    * 
-   * Returns:
-   * - product_image: Array of gallery images
-   * - preview: Thumbnail image
-   * - digital_download: Downloadable file
+   * Returns array of digital product files.
    * 
    * @param {number} productId - Product ID to fetch files for
    * @returns {Promise<Object>} Response with files array
@@ -227,54 +221,16 @@ const fileService = {
       return { valid: false, error: 'No file selected' };
     }
 
-    // Size limits
-    const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+    // Size limit for digital products
     const MAX_DIGITAL_SIZE = 100 * 1024 * 1024; // 100MB
 
-    // Type restrictions
-    const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-    const DIGITAL_TYPES = [
-      'application/pdf',
-      'application/zip',
-      'application/x-rar',
-      'application/x-zip-compressed',
-      'application/vnd.adobe.photoshop',
-      'application/postscript'
-    ];
-
-    // Validate based on file type
-    if (fileType === 'product_image' || fileType === 'preview') {
-      // Image validation
-      if (!IMAGE_TYPES.includes(file.type)) {
-        return { 
-          valid: false, 
-          error: 'Only JPEG, PNG, and WebP images are allowed' 
-        };
-      }
-      
-      if (file.size > MAX_IMAGE_SIZE) {
-        return { 
-          valid: false, 
-          error: 'Image size must not exceed 10MB' 
-        };
-      }
-    } else if (fileType === 'digital_download') {
-      // Digital file validation
-      const isValidType = IMAGE_TYPES.includes(file.type) || DIGITAL_TYPES.includes(file.type);
-      
-      if (!isValidType) {
-        return { 
-          valid: false, 
-          error: 'File type not supported. Allowed: ZIP, PDF, PSD, AI, JPEG, PNG' 
-        };
-      }
-      
-      if (file.size > MAX_DIGITAL_SIZE) {
-        return { 
-          valid: false, 
-          error: 'File size must not exceed 100MB' 
-        };
-      }
+    // All file types are allowed for digital products
+    // Only validate size
+    if (file.size > MAX_DIGITAL_SIZE) {
+      return { 
+        valid: false, 
+        error: 'File size must not exceed 100MB' 
+      };
     }
 
     return { valid: true, error: null };
@@ -311,14 +267,8 @@ const fileService = {
   getPublicUrl: (fileKey, fileType) => {
     const SUPABASE_URL = 'https://fkkwqnddqnfywbwnhhkw.supabase.co';
     
-    // Map file type to bucket name
-    const bucketMap = {
-      'product_image': 'product-images',
-      'preview': 'product-previews',
-      'digital_download': 'digital-products'
-    };
-    
-    const bucket = bucketMap[fileType] || 'product-images';
+    // Only use digital-products bucket
+    const bucket = 'digital-products';
     return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileKey}`;
   }
 };
