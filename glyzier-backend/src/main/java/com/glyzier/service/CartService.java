@@ -49,6 +49,9 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderProductsRepository orderProductsRepository;
+
     /**
      * Get or create a cart for the user
      * 
@@ -125,6 +128,14 @@ public class CartService {
         Seller productSeller = product.getSeller();
         if (productSeller != null && productSeller.getUser().getUserid().equals(userId)) {
             throw new IllegalArgumentException("Operation denied: You cannot purchase your own products.");
+        }
+
+        // Prevent re-purchasing digital products
+        if ("Digital".equalsIgnoreCase(product.getType())) {
+            boolean alreadyPurchased = orderProductsRepository.existsByOrderUserUseridAndProductPid(userId, productId);
+            if (alreadyPurchased) {
+                throw new IllegalArgumentException("You have already purchased this digital product. Visit the product page to download it.");
+            }
         }
 
         // Check stock availability

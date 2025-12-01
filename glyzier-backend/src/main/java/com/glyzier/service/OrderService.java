@@ -60,6 +60,20 @@ public class OrderService {
     private SellerRepository sellerRepository;
 
     /**
+     * Check if user has purchased a specific product
+     * 
+     * This method verifies if a user has completed an order containing the specified product.
+     * Used to prevent re-purchasing digital products and enable download access.
+     * 
+     * @param userId The user's ID
+     * @param productId The product's ID
+     * @return true if user has purchased the product, false otherwise
+     */
+    public boolean hasUserPurchasedProduct(Long userId, Long productId) {
+        return orderProductsRepository.existsByOrderUserUseridAndProductPid(userId, productId);
+    }
+
+    /**
      * Place an order for the authenticated user (SIMULATED)
      * 
      * This method simulates the order placement process:
