@@ -22,6 +22,8 @@ import { showSuccess, showError, showInfo, showConfirm } from '../components/Not
 import { PackageIcon, PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, InfinityIcon } from '../components/Icons';
 import Navigation from '../components/Navigation';
 import Aurora from '../components/Aurora';
+import FileUpload from '../components/FileUpload';
+import fileService from '../services/fileService';
 import styles from '../styles/pages/ManageProducts.module.css';
 
 function ManageProducts() {
@@ -34,6 +36,10 @@ function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
+  
+  // File management state (Module 20)
+  const [productFiles, setProductFiles] = useState({});
+  const [fileLoadingStates, setFileLoadingStates] = useState({});
   
   // Form states
   const [createFormData, setCreateFormData] = useState({
@@ -275,6 +281,65 @@ function ManageProducts() {
       showError(err.response?.data?.error || 'Failed to delete product');
     }
   };
+
+  // Load product files (images, previews, digital downloads)
+  const loadProductFiles = async (productId) => {
+    if (!productId) return;
+    
+    try {
+      const response = await fileService.getProductFiles(productId);
+      const files = response.data || [];
+      
+      // Group files by type
+      const grouped = {
+        images: files.filter(f => f.fileType === 'product_image'),
+        preview: files.filter(f => f.fileType === 'preview'),
+        digital: files.filter(f => f.fileType === 'digital_download')
+      };
+      
+      setProductFiles(prev => ({
+        ...prev,
+        [productId]: grouped
+      }));
+    } catch (err) {
+      console.error('Error loading product files:', err);
+      // Silently fail - files are optional
+    }
+  };
+
+  // Delete a product file
+  const handleDeleteFile = async (fileId, productId) => {
+    const confirmed = await showConfirm('Are you sure you want to delete this file?');
+    if (!confirmed) return;
+
+    setFileLoadingStates(prev => ({
+      ...prev,
+      [fileId]: 'deleting'
+    }));
+
+    try {
+      await fileService.deleteFile(fileId);
+      showSuccess('File deleted successfully');
+      
+      // Reload files for this product
+      await loadProductFiles(productId);
+    } catch (err) {
+      console.error('Error deleting file:', err);
+      showError(err.response?.data?.error || 'Failed to delete file');
+    } finally {
+      setFileLoadingStates(prev => ({
+        ...prev,
+        [fileId]: null
+      }));
+    }
+  };
+
+  // Load files when editing a product
+  useEffect(() => {
+    if (editingProductId) {
+      loadProductFiles(editingProductId);
+    }
+  }, [editingProductId]);
   
   if (loading) {
     return (
@@ -515,6 +580,13 @@ function ManageProducts() {
                 />
               </div>
               
+              {/* File Upload Section - Note: Only works after product is created (Module 20) */}
+              <div className={styles.fileUploadNotice}>
+                <p className={styles.noticeText}>
+                  📁 <strong>File Uploads:</strong> You can upload product images and files after creating the product in the edit section below.
+                </p>
+              </div>
+              
               <div className={styles.formActions}>
                 <button
                   type="submit"
@@ -560,7 +632,7 @@ function ManageProducts() {
                         </div>
                         
                         <div className={styles.formGroup}>
-                          <label className={styles.formLabel}>Price (₱) *</label>
+                          <label className={styles.formLabel}>Price ($) *</label>
                           <input
                             type="number"
                             name="price"
@@ -667,6 +739,112 @@ function ManageProducts() {
                         </small>
                       </div>
                       
+                      {/* File Upload Sections (Module 20) */}
+                      <div className={styles.fileUploadSection} data-type="images">
+                        <h4>Product Images (Multiple)</h4>
+                        <FileUpload
+                          productId={product.pid}
+                          fileType="product_image"
+                          onUploadSuccess={(files) => {
+                            showSuccess(`${files.length} image(s) uploaded successfully!`);
+                            loadProductFiles(product.pid);
+                          }}
+                          onUploadError={(error) => {
+                            showError('Failed to upload images: ' + error);
+                          }}
+                          multiple={true}
+                          maxFiles={5}
+                        />
+                        {productFiles[product.pid]?.images?.length > 0 && (
+                          <div className={styles.uploadedFiles}>
+                            {productFiles[product.pid].images.map((file) => (
+                              <div key={file.fileId} className={styles.fileItem}>
+                                <img src={file.fileUrl} alt="Product" className={styles.fileThumbnail} />
+                                <button
+                                  className={styles.deleteFileButton}
+                                  onClick={() => handleDeleteFile(file.fileId, product.pid)}
+                                  disabled={fileLoadingStates[file.fileId] === 'deleting'}
+                                >
+                                  {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className={styles.fileUploadSection} data-type="preview">
+                        <h4>Preview/Thumbnail Image (Single)</h4>
+                        <FileUpload
+                          productId={product.pid}
+                          fileType="preview"
+                          onUploadSuccess={(files) => {
+                            showSuccess('Preview image uploaded successfully!');
+                            loadProductFiles(product.pid);
+                          }}
+                          onUploadError={(error) => {
+                            showError('Failed to upload preview: ' + error);
+                          }}
+                          multiple={false}
+                          maxFiles={1}
+                        />
+                        {productFiles[product.pid]?.preview?.length > 0 && (
+                          <div className={styles.uploadedFiles}>
+                            {productFiles[product.pid].preview.map((file) => (
+                              <div key={file.fileId} className={styles.fileItem}>
+                                <img src={file.fileUrl} alt="Preview" className={styles.fileThumbnail} />
+                                <button
+                                  className={styles.deleteFileButton}
+                                  onClick={() => handleDeleteFile(file.fileId, product.pid)}
+                                  disabled={fileLoadingStates[file.fileId] === 'deleting'}
+                                >
+                                  {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {editFormData.type === 'Digital' && (
+                        <div className={styles.fileUploadSection} data-type="digital">
+                          <h4>Digital Product File (Single)</h4>
+                          <p style={{ fontSize: '0.9em', color: '#7f8c8d', marginTop: '-8px', marginBottom: '12px' }}>
+                            Upload the digital file that customers will download after purchase
+                          </p>
+                          <FileUpload
+                            productId={product.pid}
+                            fileType="digital_download"
+                            onUploadSuccess={(files) => {
+                              showSuccess('Digital file uploaded successfully!');
+                              loadProductFiles(product.pid);
+                            }}
+                            onUploadError={(error) => {
+                              showError('Failed to upload file: ' + error);
+                            }}
+                            multiple={false}
+                            maxFiles={1}
+                          />
+                          {productFiles[product.pid]?.digital?.length > 0 && (
+                            <div className={styles.uploadedFiles}>
+                              {productFiles[product.pid].digital.map((file) => (
+                                <div key={file.fileId} className={styles.fileItem}>
+                                  <div style={{ fontSize: '3em' }}>💾</div>
+                                  <p><strong>Digital File</strong></p>
+                                  <button
+                                    className={styles.deleteFileButton}
+                                    onClick={() => handleDeleteFile(file.fileId, product.pid)}
+                                    disabled={fileLoadingStates[file.fileId] === 'deleting'}
+                                  >
+                                    {fileLoadingStates[file.fileId] === 'deleting' ? '...' : '🗑️ Delete'}
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
                       <div className={styles.productActions}>
                         <button
                           className={styles.saveButton}
@@ -693,7 +871,7 @@ function ManageProducts() {
                           <p className={styles.productDescription}>{product.productdesc}</p>
                         )}
                         <div className={styles.productMeta}>
-                          <span className={styles.productPrice}>₱{product.price?.toFixed(2)}</span>
+                          <span className={styles.productPrice}>${product.price?.toFixed(2)}</span>
                           <span className={styles.productType}>{product.type}</span>
                           <span className={`${styles.productStatus} ${
                             product.status === 'Available' ? styles.statusAvailable : styles.statusUnavailable
