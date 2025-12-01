@@ -69,7 +69,7 @@ const fileService = {
    * Fetches all digital files associated with a product.
    * Public endpoint - no authentication required.
    * 
-   * Returns array of digital product files.
+   * Backend returns: { success: true, productId: X, files: [...] }
    * 
    * @param {number} productId - Product ID to fetch files for
    * @returns {Promise<Object>} Response with files array
@@ -77,6 +77,8 @@ const fileService = {
   getProductFiles: async (productId) => {
     try {
       const response = await api.get(`/api/files/product/${productId}`);
+      console.log('[FileService] Raw response for product', productId, ':', response.data);
+      // Return the data object directly (contains success, productId, files)
       return response.data;
     } catch (error) {
       console.error('Failed to fetch product files:', error);

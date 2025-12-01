@@ -282,23 +282,42 @@ public class FileStorageService {
             
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
             
-            // Delete file from storage
-            ResponseEntity<Void> response = restTemplate.exchange(
-                deleteUrl,
-                HttpMethod.DELETE,
-                requestEntity,
-                Void.class
-            );
+            boolean fileDeletedFromStorage = false;
             
-            if (response.getStatusCode() == HttpStatus.OK || 
-                response.getStatusCode() == HttpStatus.NO_CONTENT) {
+            try {
+                // Delete file from storage
+                ResponseEntity<Void> response = restTemplate.exchange(
+                    deleteUrl,
+                    HttpMethod.DELETE,
+                    requestEntity,
+                    Void.class
+                );
                 
-                // Delete database record
-                productFilesRepository.delete(file);
-            } else {
-                throw new IllegalArgumentException("Delete failed with status: " + response.getStatusCode());
+                if (response.getStatusCode() == HttpStatus.OK || 
+                    response.getStatusCode() == HttpStatus.NO_CONTENT) {
+                    fileDeletedFromStorage = true;
+                }
+            } catch (Exception storageException) {
+                // Check if error is 404 (file already deleted)
+                String errorMsg = storageException.getMessage();
+                if (errorMsg != null && errorMsg.contains("404") || errorMsg != null && errorMsg.contains("not_found")) {
+                    // File already deleted from storage, continue to delete database record
+                    fileDeletedFromStorage = true;
+                } else {
+                    // Different error, re-throw
+                    throw storageException;
+                }
             }
             
+            // Delete database record if file was deleted or already missing from storage
+            if (fileDeletedFromStorage) {
+                productFilesRepository.delete(file);
+            } else {
+                throw new IllegalArgumentException("Delete failed: unexpected error");
+            }
+            
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to delete file: " + e.getMessage());
         }
