@@ -88,7 +88,7 @@ function ProductDetailPage() {
    */
   useEffect(() => {
     const checkPurchase = async () => {
-      if (isAuthenticated && product && product.productType === 'Digital' && !isOwner) {
+      if (isAuthenticated && product && product.type === 'Digital' && !isOwner) {
         try {
           setCheckingPurchase(true);
           const response = await checkPurchaseStatus(pid);
@@ -111,7 +111,7 @@ function ProductDetailPage() {
    */
   useEffect(() => {
     const fetchProductFiles = async () => {
-      if (product && product.productType === 'Digital') {
+      if (product && product.type === 'Digital') {
         try {
           const response = await fileService.getProductFiles(pid);
           setProductFiles(response.files || []);
@@ -457,7 +457,7 @@ function ProductDetailPage() {
             </div>
             
             {/* Action Buttons - Conditional rendering based on purchase status */}
-            {product && product.productType === 'Digital' && hasPurchased && productFiles.length > 0 ? (
+            {product && product.type === 'Digital' && hasPurchased && productFiles.length > 0 ? (
               // Show download button for purchased digital products
               <div className={styles.actionSection}>
                 <button 
@@ -488,22 +488,22 @@ function ProductDetailPage() {
                 <button 
                   onClick={handleAddToCart}
                   className={styles.addToCartButton}
-                  disabled={cartLoading || isOutOfStock || isOwner || (product?.productType === 'Digital' && hasPurchased)}
+                  disabled={cartLoading || isOutOfStock || isOwner || (product?.type === 'Digital' && hasPurchased)}
                 >
                   {cartLoading ? '⏳ Adding...' : 
                    isOwner ? 'Your Product' : 
-                   (product?.productType === 'Digital' && hasPurchased) ? 'Already Purchased' : 
+                   (product?.type === 'Digital' && hasPurchased) ? 'Already Purchased' : 
                    'Add to Cart'}
                 </button>
 
                 <button 
                   onClick={handleBuyNow}
                   className={styles.buyNowButton}
-                  disabled={orderLoading || isOutOfStock || isOwner || (product?.productType === 'Digital' && hasPurchased)}
+                  disabled={orderLoading || isOutOfStock || isOwner || (product?.type === 'Digital' && hasPurchased)}
                 >
                   {orderLoading ? '⏳ Processing...' : 
                    isOwner ? 'Your Product' : 
-                   (product?.productType === 'Digital' && hasPurchased) ? 'Already Purchased' : 
+                   (product?.type === 'Digital' && hasPurchased) ? 'Already Purchased' : 
                    'Buy Now'}
                 </button>
               </div>
