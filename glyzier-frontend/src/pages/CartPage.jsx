@@ -245,7 +245,7 @@ const CartPage = () => {
 
               {/* Price */}
               <div className={styles.itemPrice}>
-                ₱{item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ${item.lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
 
               {/* Remove button */}
@@ -264,8 +264,8 @@ const CartPage = () => {
         <div className={styles.bottomBar}>
           <div className={styles.totalSection}>
             <span className={styles.totalLabel}>Total:</span>
-            <span className={styles.totalPrice}>
-              ₱{cart.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <span className={styles.totalAmount}>
+              ${cart.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
 
