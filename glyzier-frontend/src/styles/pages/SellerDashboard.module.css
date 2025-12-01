@@ -853,29 +853,176 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  
+  .quickActionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Layout Breakpoint - Stack all sections vertically */
+  .container {
+    padding: 30px 15px;
+  }
+  
   .header {
-    padding: 30px 0;
+    padding: 40px 0;
+  }
+  
+  .headerCard {
+    padding: 2rem 1.5rem;
   }
 
   .headerContent {
     padding: 0 20px;
+    flex-direction: column;
+    align-items: flex-start;
   }
-
+  
   .title {
-    font-size: 1.8em;
+    font-size: 2rem;
   }
 
   .subtitle {
-    font-size: 1em;
+    font-size: 1.1rem;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  .logoutButton,
+  .homeLink,
+  .dashboardLink {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 
   .content {
-    padding: 20px;
+    padding: 30px 15px;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .statCard {
+    padding: 1.5rem;
+  }
+  
+  .statIconWrapper {
+    min-width: 50px;
+    height: 50px;
+  }
+  
+  .quickActionsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+  
+  .cardTitle {
+    font-size: 1.4em;
+  }
+  
+  .productCard {
+    padding: 1.25rem;
+  }
+  
+  .productMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .formActions,
+  .productActions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formActions button,
+  .productActions button {
+    width: 100%;
+  }
+  
+  .tabContainer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tabs {
+    display: inline-flex;
+    min-width: 100%;
+  }
+  
+  .tab {
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px;
+  }
+  
+  .header {
+    padding: 30px 0;
+  }
+  
+  .headerCard {
+    padding: 1.5rem 1rem;
+  }
+
+  .headerContent {
+    padding: 0 15px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .content {
+    padding: 20px 10px;
   }
 
   .card {
     padding: 20px;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .cardIcon {
+    font-size: 2em;
+  }
+  
+  .cardTitle {
+    font-size: 1.2em;
   }
 
   .headerActions {
@@ -889,10 +1036,75 @@
     width: 100%;
     justify-content: center;
   }
+  
+  .statsGrid {
+    gap: 0.75rem;
+  }
+  
+  .statCard {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  
+  .statIconWrapper {
+    min-width: 45px;
+    height: 45px;
+  }
+  
+  .statLabel {
+    font-size: 0.8rem;
+  }
+  
+  .statValue {
+    font-size: 1.4rem;
+  }
+  
+  .quickActionsGrid {
+    gap: 0.75rem;
+  }
+  
+  .quickActionCard {
+    padding: 1.25rem;
+  }
+  
+  .actionIcon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .actionTitle {
+    font-size: 1rem;
+  }
+  
+  .actionDescription {
+    font-size: 0.8rem;
+  }
+  
+  .productCard {
+    padding: 1rem;
+  }
+  
+  .productImage {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .productName {
+    font-size: 1rem;
+  }
+  
+  .productPrice {
+    font-size: 1.1rem;
+  }
+  
+  .productStatus {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
 
   .productMeta {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 
   .formActions,
@@ -903,5 +1115,39 @@
   .formActions button,
   .productActions button {
     width: 100%;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+  
+  .emptyIcon {
+    font-size: 3em;
+  }
+  
+  .emptyText {
+    font-size: 1rem;
+  }
+  
+  .tab {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .title {
+    font-size: 1.4rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .productImage {
+    width: 60px;
+    height: 60px;
   }
 }

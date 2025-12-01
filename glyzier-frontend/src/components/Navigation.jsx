@@ -44,6 +44,7 @@ function Navigation() {
   const [checkingSeller, setCheckingSeller] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   /**
    * Check if user is a seller on component mount
@@ -148,6 +149,22 @@ function Navigation() {
     }
   };
 
+  /**
+   * Toggle mobile menu
+   * Closes user menu if open when hamburger is clicked
+   */
+  const toggleMobileMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    if (showUserMenu) setShowUserMenu(false);
+  };
+
+  /**
+   * Close mobile menu when a link is clicked
+   */
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -171,7 +188,19 @@ function Navigation() {
           />
         </form>
 
-        {/* Navigation Tabs - Show for all users */}
+        {/* Hamburger Menu Button - Visible on tablets and below (1024px) */}
+        <button 
+          className={styles.hamburger}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+        >
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
+        </button>
+
+        {/* Navigation Tabs - Desktop only, hidden on tablets/mobile */}
         <div className={styles.navTabs}>
           <Link to="/" className={styles.navTab}>
             Home
@@ -186,6 +215,42 @@ function Navigation() {
             More
           </Link>
         </div>
+
+        {/* Mobile Menu Drawer - Visible when hamburger is clicked */}
+        {isMenuOpen && (
+          <>
+            <div className={styles.mobileBackdrop} onClick={closeMobileMenu}></div>
+            <div className={styles.mobileMenu}>
+              <div className={styles.mobileMenuHeader}>
+                <span className={styles.mobileMenuTitle}>Menu</span>
+                <button 
+                  className={styles.mobileMenuClose}
+                  onClick={closeMobileMenu}
+                  aria-label="Close menu"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <nav className={styles.mobileMenuNav}>
+                <Link to="/" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
+                  Home
+                </Link>
+                <Link to="/shops" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
+                  Shops
+                </Link>
+                <Link to="/community" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
+                  Community
+                </Link>
+                <Link to="/more" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
+                  More
+                </Link>
+              </nav>
+            </div>
+          </>
+        )}
 
         {/* Action Icons */}
         <div className={styles.actions}>
