@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductById } from '../services/productService';
+import { getProductById, checkPurchaseStatus } from '../services/productService';
 import { addToCart } from '../services/cartService';
 import { createOrGetConversation } from '../services/messageService';
 import fileService from '../services/fileService';
@@ -47,6 +47,8 @@ function ProductDetailPage() {
   const [isOwner, setIsOwner] = useState(false); // Check if current user owns this product
   const [productFiles, setProductFiles] = useState([]); // Product files (Module 20)
   const [downloadLoading, setDownloadLoading] = useState(false); // Download state (Module 20)
+  const [hasPurchased, setHasPurchased] = useState(false); // Check if user purchased this product
+  const [checkingPurchase, setCheckingPurchase] = useState(false); // Loading state for purchase check
   
   /**
    * Fetch product details on component mount
@@ -79,6 +81,29 @@ function ProductDetailPage() {
     
     fetchProduct();
   }, [pid, user]); // Add user to dependency array for ownership checks
+
+  /**
+   * Check if user has purchased this product (Module 20 Enhancement)
+   * Required for showing download button and preventing re-purchase
+   */
+  useEffect(() => {
+    const checkPurchase = async () => {
+      if (isAuthenticated && product && product.productType === 'Digital' && !isOwner) {
+        try {
+          setCheckingPurchase(true);
+          const response = await checkPurchaseStatus(pid);
+          setHasPurchased(response.purchased);
+        } catch (err) {
+          console.error('Failed to check purchase status:', err);
+          setHasPurchased(false);
+        } finally {
+          setCheckingPurchase(false);
+        }
+      }
+    };
+    
+    checkPurchase();
+  }, [isAuthenticated, product, pid, isOwner]);
 
   /**
    * Fetch product files (Module 20)
@@ -431,45 +456,57 @@ function ProductDetailPage() {
               </span>
             </div>
             
-            {/* Action Buttons */}
-            <div className={styles.actionSection}>
-              <button 
-                onClick={handleAddToCart}
-                className={styles.addToCartButton}
-                disabled={cartLoading || isOutOfStock || isOwner}
-              >
-                {cartLoading ? '⏳ Adding...' : isOwner ? 'Your Product' : 'Add to Cart'}
-              </button>
+            {/* Action Buttons - Conditional rendering based on purchase status */}
+            {product && product.productType === 'Digital' && hasPurchased && productFiles.length > 0 ? (
+              // Show download button for purchased digital products
+              <div className={styles.actionSection}>
+                <button 
+                  onClick={handleDownload}
+                  className={styles.downloadButton}
+                  disabled={downloadLoading}
+                >
+                  {downloadLoading ? (
+                    <>⏳ Preparing Download...</>
+                  ) : (
+                    <>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                      Download Digital Product
+                    </>
+                  )}
+                </button>
+                <p className={styles.purchasedNote}>
+                  ✅ You own this digital product
+                </p>
+              </div>
+            ) : (
+              // Show purchase buttons for non-purchased or physical products
+              <div className={styles.actionSection}>
+                <button 
+                  onClick={handleAddToCart}
+                  className={styles.addToCartButton}
+                  disabled={cartLoading || isOutOfStock || isOwner || (product?.productType === 'Digital' && hasPurchased)}
+                >
+                  {cartLoading ? '⏳ Adding...' : 
+                   isOwner ? 'Your Product' : 
+                   (product?.productType === 'Digital' && hasPurchased) ? 'Already Purchased' : 
+                   'Add to Cart'}
+                </button>
 
-              <button 
-                onClick={handleBuyNow}
-                className={styles.buyNowButton}
-                disabled={orderLoading || isOutOfStock || isOwner}
-              >
-                {orderLoading ? '⏳ Processing...' : isOwner ? 'Your Product' : 'Buy Now'}
-              </button>
-            </div>
-            
-            {/* Download Button for Digital Products (Module 20) */}
-            {product && product.productType === 'Digital' && productFiles.length > 0 && (
-              <button 
-                onClick={handleDownload}
-                className={styles.downloadButton}
-                disabled={downloadLoading}
-              >
-                {downloadLoading ? (
-                  <>⏳ Preparing Download...</>
-                ) : (
-                  <>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Download Digital Product
-                  </>
-                )}
-              </button>
+                <button 
+                  onClick={handleBuyNow}
+                  className={styles.buyNowButton}
+                  disabled={orderLoading || isOutOfStock || isOwner || (product?.productType === 'Digital' && hasPurchased)}
+                >
+                  {orderLoading ? '⏳ Processing...' : 
+                   isOwner ? 'Your Product' : 
+                   (product?.productType === 'Digital' && hasPurchased) ? 'Already Purchased' : 
+                   'Buy Now'}
+                </button>
+              </div>
             )}
             
             {!isAuthenticated && (

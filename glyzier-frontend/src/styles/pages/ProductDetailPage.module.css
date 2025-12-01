@@ -526,6 +526,18 @@
   font-style: italic;
 }
 
+.purchasedNote {
+  text-align: center;
+  font-size: 0.95em;
+  color: rgba(16, 185, 129, 0.95);
+  margin-top: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 /* Stock Badge */
 .stockBadge {
   display: inline-flex;
