@@ -155,7 +155,7 @@ function OrderHistoryPage() {
                         <div key={idx} className={styles.orderItem}>
                           <div className={styles.itemInfo}>
                             <Link 
-                              to={`/product/${item.pid}`}
+                              to={`/products/${item.pid}`}
                               className={styles.itemName}
                             >
                               {item.productName || item.productNameSnapshot}
