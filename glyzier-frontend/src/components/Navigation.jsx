@@ -120,20 +120,9 @@ function Navigation() {
 
   /**
    * Toggle user menu
-   * When opening the menu, refresh user data to get latest admin status
    */
-  const toggleUserMenu = async () => {
-    const newState = !showUserMenu;
-    setShowUserMenu(newState);
-    
-    // Refresh user data when opening the menu
-    if (newState && isAuthenticated) {
-      try {
-        await refreshUser();
-      } catch (error) {
-        console.error('Failed to refresh user data:', error);
-      }
-    }
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
   };
 
   /**
