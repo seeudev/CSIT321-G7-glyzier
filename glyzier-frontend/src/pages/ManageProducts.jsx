@@ -303,7 +303,11 @@ function ManageProducts() {
     
     try {
       const response = await fileService.getProductFiles(productId);
-      const files = response.data || [];
+      // Backend returns: { success: true, productId: X, files: [...] }
+      // Axios wraps in data: response.data = { success, productId, files }
+      const files = response.files || [];
+      
+      console.log('[ManageProducts] Loaded files for product', productId, ':', files);
       
       // Group files by type
       const grouped = {
@@ -311,6 +315,8 @@ function ManageProducts() {
         preview: files.filter(f => f.fileType === 'preview'),
         digital: files.filter(f => f.fileType === 'digital_download')
       };
+      
+      console.log('[ManageProducts] Grouped files:', grouped);
       
       setProductFiles(prev => ({
         ...prev,
