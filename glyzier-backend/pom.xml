@@ -53,6 +53,14 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		
+		<!-- SendGrid Email API (for Render deployment) -->
+		<!-- Render blocks SMTP ports (465, 587), SendGrid uses HTTP API -->
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>sendgrid-java</artifactId>
+			<version>4.10.2</version>
+		</dependency>
+		
 		<!-- JWT Dependencies -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
