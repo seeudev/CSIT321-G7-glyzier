@@ -175,8 +175,23 @@ public class EmailService {
             request.setBody(mail.build());
             Response response = sg.api(request);
             
-            if (response.getStatusCode() >= 400) {
+            // Log detailed response for debugging
+            System.out.println("  SendGrid Response Status: " + response.getStatusCode());
+            
+            if (response.getStatusCode() == 202) {
+                // 202 = Accepted (email queued for delivery)
+                System.out.println("  ✓ Email queued successfully");
+                System.out.println("  ");
+                System.out.println("  📧 Check your inbox (may take 1-2 minutes)");
+                System.out.println("  💡 Tips if email doesn't arrive:");
+                System.out.println("     - Check spam/junk folder");
+                System.out.println("     - Verify sender in SendGrid: https://app.sendgrid.com/settings/sender_auth");
+                System.out.println("     - Check SendGrid activity: https://app.sendgrid.com/email_activity");
+            } else if (response.getStatusCode() >= 400) {
                 throw new IOException("SendGrid returned status " + response.getStatusCode() + ": " + response.getBody());
+            } else {
+                System.out.println("  ⚠ Unexpected status: " + response.getStatusCode());
+                System.out.println("  Response: " + response.getBody());
             }
         } catch (IOException ex) {
             throw ex;
