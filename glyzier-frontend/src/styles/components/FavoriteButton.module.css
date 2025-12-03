@@ -4,7 +4,7 @@
 .favoriteButtonContainer {
   position: relative;
   display: inline-block;
-  z-index: 10000;
+  z-index: 100;
   isolation: isolate;
 }
 
@@ -24,7 +24,7 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
-  z-index: 10001;
+  z-index: 101;
 }
 
 .favoriteButton:hover {

@@ -10,7 +10,22 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import java.io.IOException;
 
+/**
+ * EmailService
+ * 
+ * Handles email sending with automatic fallback:
+ * 1. SendGrid HTTP API (for Render/production - ports 80/443 never blocked)
+ * 2. SMTP (for local development)
+ * 3. Console logging (if neither configured)
+ * 
+ * Render blocks SMTP ports (465, 587) so SendGrid is required for production.
+ */
 @Service
 public class EmailService {
     
@@ -29,32 +44,51 @@ public class EmailService {
     @Value("${spring.mail.host:}")
     private String mailHost;
     
+    @Value("${sendgrid.api.key:}")
+    private String sendGridApiKey;
+    
     @PostConstruct
     public void init() {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("EMAIL SERVICE INITIALIZATION");
         System.out.println("=".repeat(60));
         
-        boolean isConfigured = isEmailConfigurationValid();
+        boolean hasSendGrid = sendGridApiKey != null && !sendGridApiKey.isEmpty() && !sendGridApiKey.contains("your-");
+        boolean hasSmtp = isEmailConfigurationValid();
         
-        if (isConfigured && mailSender != null) {
-            System.out.println("✓ Email service: CONFIGURED");
+        if (hasSendGrid) {
+            System.out.println("✓ Email service: SENDGRID (HTTP API)");
+            System.out.println("  Provider: SendGrid");
+            System.out.println("  API Key: " + maskApiKey(sendGridApiKey));
+            System.out.println("  From: " + fromEmail);
+            System.out.println("  Status: Production-ready (works on Render)");
+            System.out.println("  Note: Uses HTTP API (port 443) - never blocked");
+        } else if (hasSmtp && mailSender != null) {
+            System.out.println("✓ Email service: SMTP");
             System.out.println("  Host: " + mailHost);
             System.out.println("  Username: " + maskEmail(mailUsername));
             System.out.println("  From: " + fromEmail);
-            System.out.println("  Status: Ready to send emails");
+            System.out.println("  Status: Ready (local development)");
+            System.out.println("  ⚠ WARNING: SMTP blocked on Render - use SendGrid for production");
         } else {
             System.out.println("⚠ Email service: NOT CONFIGURED");
             System.out.println("  Status: Console mode (codes will be logged)");
-            if (mailSender == null) {
-                System.out.println("  Reason: JavaMailSender bean not available");
-            }
-            if (!isConfigured) {
-                System.out.println("  Reason: Email credentials not set or using placeholders");
-                System.out.println("  Action: Configure in application.properties");
-            }
+            System.out.println("  ");
+            System.out.println("  For PRODUCTION (Render):");
+            System.out.println("    1. Create SendGrid account (free): https://signup.sendgrid.com/");
+            System.out.println("    2. Get API key from Settings → API Keys");
+            System.out.println("    3. Add to Render: SENDGRID_API_KEY=SG.xxx...");
+            System.out.println("  ");
+            System.out.println("  For LOCAL development:");
+            System.out.println("    1. Configure Gmail in application-supabase.properties");
+            System.out.println("    2. Use App Password (not regular password)");
         }
         System.out.println("=".repeat(60) + "\n");
+    }
+    
+    private String maskApiKey(String key) {
+        if (key == null || key.length() < 10) return "***";
+        return key.substring(0, 8) + "..." + key.substring(key.length() - 4);
     }
     
     private String maskEmail(String email) {
@@ -79,51 +113,103 @@ public class EmailService {
         System.out.println("This code expires in 10 minutes.");
         System.out.println("=".repeat(50) + "\n");
         
-        // Check if email is properly configured
-        boolean isEmailConfigured = isEmailConfigurationValid();
-        
-        if (!isEmailConfigured || mailSender == null) {
-            // Email not configured - code is already logged above
-            System.out.println("NOTE: Email sending is not configured.");
-            System.out.println("The code is displayed above. To enable email sending:");
-            System.out.println("1. Edit: glyzier-backend/src/main/resources/application-supabase.properties");
-            System.out.println("2. Add your Gmail credentials");
-            System.out.println("3. Generate App Password: https://myaccount.google.com/apppasswords");
-            System.out.println("4. Restart the application\n");
-            return;
-        }
-        
-        // Try to send email with HTML template
-        try {
-            // Create HTML email
-            org.springframework.mail.javamail.MimeMessagePreparator preparator = mimeMessage -> {
-                mimeMessage.setFrom(fromEmail);
-                mimeMessage.setRecipient(jakarta.mail.Message.RecipientType.TO, new jakarta.mail.internet.InternetAddress(toEmail));
-                mimeMessage.setSubject("Glyzier - Password Reset Code");
-                
-                // HTML email body with glassmorphism theme
-                String htmlContent = createPasswordResetEmailHtml(code);
-                mimeMessage.setContent(htmlContent, "text/html; charset=utf-8");
-            };
-            
-            mailSender.send(preparator);
-            System.out.println("✓ Email sent successfully to: " + toEmail);
-            System.out.println("  (Code is also displayed above for reference)\n");
-        } catch (MailException e) {
-            System.err.println("\n✗ Failed to send email to: " + toEmail);
-            System.err.println("Error: " + e.getMessage());
-            System.err.println("\nThe code is displayed above. Please use it to reset your password.");
-            System.err.println("\nTo fix email sending:");
-            System.err.println("1. Verify your email credentials in application-supabase.properties");
-            System.err.println("2. For Gmail: Make sure you're using an App Password (not regular password)");
-            System.err.println("3. Check that 2-Step Verification is enabled");
-            System.err.println("4. Verify SMTP settings are correct\n");
-            
-            // Don't throw exception - code is logged, user can proceed
-            if (e.getCause() != null) {
-                System.err.println("Root cause: " + e.getCause().getMessage());
+        // Try SendGrid first (production - works on Render)
+        boolean hasSendGrid = sendGridApiKey != null && !sendGridApiKey.isEmpty() && !sendGridApiKey.contains("your-");
+        if (hasSendGrid) {
+            try {
+                sendViaSendGrid(toEmail, code);
+                System.out.println("✓ Email sent via SendGrid to: " + toEmail);
+                System.out.println("  Provider: SendGrid HTTP API");
+                System.out.println("  (Code is also displayed above for reference)\n");
+                return;
+            } catch (Exception e) {
+                System.err.println("✗ SendGrid failed: " + e.getMessage());
+                System.err.println("  Falling back to SMTP...\n");
+                // Fall through to SMTP
             }
         }
+        
+        // Try SMTP (local development)
+        boolean hasSmtp = isEmailConfigurationValid();
+        if (hasSmtp && mailSender != null) {
+            try {
+                sendViaSMTP(toEmail, code);
+                System.out.println("✓ Email sent via SMTP to: " + toEmail);
+                System.out.println("  (Code is also displayed above for reference)\n");
+                return;
+            } catch (MailException e) {
+                System.err.println("\n✗ SMTP failed: " + e.getMessage());
+                if (e.getCause() != null) {
+                    System.err.println("  Root cause: " + e.getCause().getMessage());
+                }
+                System.err.println("\n  ⚠ This is expected on Render (SMTP ports blocked)");
+                System.err.println("  To fix: Set up SendGrid (see documentation)\n");
+            }
+        }
+        
+        // Neither configured - console mode
+        System.out.println("ℹ Email not sent (no provider configured)");
+        System.out.println("  The code is displayed above. Use it to reset your password.");
+        System.out.println("  ");
+        System.out.println("  To enable email:");
+        System.out.println("  - PRODUCTION: Add SendGrid API key to Render");
+        System.out.println("  - LOCAL: Configure Gmail in application-supabase.properties\n");
+    }
+    
+    /**
+     * Send email via SendGrid HTTP API (production - works on Render)
+     */
+    private void sendViaSendGrid(String toEmail, String code) throws IOException {
+        Email from = new Email(fromEmail, "Glyzier");
+        Email to = new Email(toEmail);
+        String subject = "Glyzier - Password Reset Code";
+        Content content = new Content("text/html", createPasswordResetEmailHtml(code));
+        Mail mail = new Mail(from, subject, to, content);
+        
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+        
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sg.api(request);
+            
+            // Log detailed response for debugging
+            System.out.println("  SendGrid Response Status: " + response.getStatusCode());
+            
+            if (response.getStatusCode() == 202) {
+                // 202 = Accepted (email queued for delivery)
+                System.out.println("  ✓ Email queued successfully");
+                System.out.println("  ");
+                System.out.println("  📧 Check your inbox (may take 1-2 minutes)");
+                System.out.println("  💡 Tips if email doesn't arrive:");
+                System.out.println("     - Check spam/junk folder");
+                System.out.println("     - Verify sender in SendGrid: https://app.sendgrid.com/settings/sender_auth");
+                System.out.println("     - Check SendGrid activity: https://app.sendgrid.com/email_activity");
+            } else if (response.getStatusCode() >= 400) {
+                throw new IOException("SendGrid returned status " + response.getStatusCode() + ": " + response.getBody());
+            } else {
+                System.out.println("  ⚠ Unexpected status: " + response.getStatusCode());
+                System.out.println("  Response: " + response.getBody());
+            }
+        } catch (IOException ex) {
+            throw ex;
+        }
+    }
+    
+    /**
+     * Send email via SMTP (local development only - blocked on Render)
+     */
+    private void sendViaSMTP(String toEmail, String code) throws MailException {
+        org.springframework.mail.javamail.MimeMessagePreparator preparator = mimeMessage -> {
+            mimeMessage.setFrom(fromEmail);
+            mimeMessage.setRecipient(jakarta.mail.Message.RecipientType.TO, new jakarta.mail.internet.InternetAddress(toEmail));
+            mimeMessage.setSubject("Glyzier - Password Reset Code");
+            String htmlContent = createPasswordResetEmailHtml(code);
+            mimeMessage.setContent(htmlContent, "text/html; charset=utf-8");
+        };
+        mailSender.send(preparator);
     }
     
     /**
