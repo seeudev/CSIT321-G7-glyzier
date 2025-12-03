@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAllProducts } from '../services/productService';
 import authService from '../services/authService';
-import styles from './ForgotPasswordPage.module.css';
+import styles from '../styles/pages/ForgotPasswordPage.module.css';
 
 function ForgotPasswordPage() {
   const navigate = useNavigate();

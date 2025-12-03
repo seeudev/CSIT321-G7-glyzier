@@ -47,6 +47,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SellerDashboard from './pages/SellerDashboard';
@@ -100,6 +102,12 @@ function App() {
             
             {/* Register page - new user registration */}
             <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Forgot Password page - request password reset code */}
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            
+            {/* Reset Password page - reset password with code */}
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             
             {/* Product detail page - view individual product (PUBLIC) */}
             <Route path="/products/:pid" element={<ProductDetailPage />} />

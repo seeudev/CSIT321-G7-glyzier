@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getAllProducts } from '../services/productService';
 import authService from '../services/authService';
-import styles from './ResetPasswordPage.module.css';
+import styles from '../styles/pages/ResetPasswordPage.module.css';
 
 function ResetPasswordPage() {
   const navigate = useNavigate();

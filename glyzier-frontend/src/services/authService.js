@@ -252,6 +252,93 @@ const isAuthenticated = () => {
   return !!localStorage.getItem('token');
 };
 
+/**
+ * Forgot Password function
+ * 
+ * Sends a password reset code to the user's email address.
+ * The code is valid for 10 minutes and can only be used once.
+ * 
+ * Backend endpoint: POST /api/auth/forgot-password
+ * Request body: { email }
+ * Response: { message }
+ * 
+ * @param {string} email - User's email address
+ * @returns {Promise<Object>} - Promise that resolves to success message
+ * @throws {Error} - If request fails (email not found, network error, etc.)
+ * 
+ * Usage:
+ * try {
+ *   await authService.forgotPassword('user@example.com');
+ *   // Show success message, redirect to reset page
+ * } catch (error) {
+ *   console.error('Failed to send reset code:', error.message);
+ * }
+ */
+const forgotPassword = async (email) => {
+  try {
+    const response = await api.post('/api/auth/forgot-password', { email });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || 
+        error.response.data.error || 
+        'Failed to send reset code. Please try again.'
+      );
+    } else if (error.request) {
+      throw new Error('Unable to reach the server. Please check your connection.');
+    } else {
+      throw new Error('An unexpected error occurred. Please try again.');
+    }
+  }
+};
+
+/**
+ * Reset Password function
+ * 
+ * Resets the user's password using the verification code sent via email.
+ * 
+ * Backend endpoint: POST /api/auth/reset-password
+ * Request body: { email, code, newPassword }
+ * Response: { message }
+ * 
+ * @param {string} email - User's email address
+ * @param {string} code - 6-digit verification code
+ * @param {string} newPassword - New password (minimum 6 characters)
+ * @returns {Promise<Object>} - Promise that resolves to success message
+ * @throws {Error} - If request fails (invalid code, expired, etc.)
+ * 
+ * Usage:
+ * try {
+ *   await authService.resetPassword('user@example.com', '123456', 'newPassword123');
+ *   // Show success message, redirect to login
+ * } catch (error) {
+ *   console.error('Failed to reset password:', error.message);
+ * }
+ */
+const resetPassword = async (email, code, newPassword) => {
+  try {
+    const response = await api.post('/api/auth/reset-password', {
+      email,
+      code,
+      newPassword,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || 
+        error.response.data.error || 
+        'Failed to reset password. Please check your code and try again.'
+      );
+    } else if (error.request) {
+      throw new Error('Unable to reach the server. Please check your connection.');
+    } else {
+      throw new Error('An unexpected error occurred. Please try again.');
+    }
+  }
+};
+
 // Export all functions as a single object (default export)
 const authService = {
   login,
@@ -260,6 +347,8 @@ const authService = {
   getCurrentUser,
   getCurrentUserFromBackend,
   isAuthenticated,
+  forgotPassword,
+  resetPassword,
 };
 
 export default authService;
