@@ -75,6 +75,19 @@ If you're setting up the project for the first time:
 - `application-supabase.properties.template` - Template only
 - `.env.example` - Example file
 
+## Port Configuration
+
+### Local Development
+- **Port 587 (TLS/STARTTLS)** works fine on your local machine
+- No restrictions on outbound SMTP connections
+
+### Cloud Deployment (Render, Heroku, AWS, etc.)
+- **Port 587 is blocked** by most cloud platforms (security measure)
+- **Use Port 465 (SSL)** instead - less commonly blocked
+- See `doc/RENDER_EMAIL_FIX.md` for detailed configuration
+
+The application is already configured to use **Port 465 (SSL)** for maximum compatibility.
+
 ## Testing Email Functionality
 
 When you start the application, check the console output:
@@ -119,6 +132,7 @@ The code is **always logged to the console**, so the feature works even if email
 - Gmail App Password is correct (16 characters, no spaces)
 - 2-Step Verification is enabled on Gmail account
 - Not hitting Gmail's sending limits (500 emails/day)
+- **On Render/cloud platforms:** Port 587 may be blocked, see `doc/RENDER_EMAIL_FIX.md`
 
 ### Application won't start?
 - Ensure `application-supabase.properties` exists
