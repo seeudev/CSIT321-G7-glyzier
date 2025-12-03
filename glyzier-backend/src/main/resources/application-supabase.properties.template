@@ -52,11 +52,14 @@ file.upload.max-size=100MB
 file.upload.allowed-types=image/jpeg,image/png,image/webp,application/pdf,application/zip,application/x-rar,application/x-zip-compressed,application/vnd.adobe.photoshop,application/postscript
 
 # ===========================================================
-# Email Configuration (Gmail SMTP)
+# Email Configuration (Gmail SMTP on Port 465 SSL)
 # ===========================================================
 # Used for sending password reset codes
 # IMPORTANT: Use Gmail App Password, not regular password
 # Generate at: https://myaccount.google.com/apppasswords
+# 
+# Note: Port 465 (SSL) is used instead of 587 (TLS) because
+# cloud platforms like Render block outbound connections on port 587
 
 spring.mail.username=YOUR_EMAIL@gmail.com
 spring.mail.password=YOUR_APP_PASSWORD
