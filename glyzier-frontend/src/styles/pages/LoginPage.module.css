@@ -115,11 +115,17 @@
   user-select: none;
 }
 
+.checkboxRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+}
+
 .checkbox {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0;
 }
 
 .checkbox input[type="checkbox"] {
@@ -133,6 +139,18 @@
   font-size: 0.95em;
   color: #2c3e50;
   cursor: pointer;
+}
+
+.forgotPassword {
+  font-size: 0.95em;
+  color: #8b7fc4;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgotPassword:hover {
+  color: #7c6fb8;
+  text-decoration: underline;
 }
 
 .submitButton {

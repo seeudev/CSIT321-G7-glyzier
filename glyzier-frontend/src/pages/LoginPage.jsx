@@ -204,15 +204,20 @@ function LoginPage() {
               </div>
             </div>
             
-            {/* Keep me logged in checkbox */}
-            <div className={styles.checkbox}>
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <label htmlFor="rememberMe">Keep me signed in</label>
+            {/* Keep me logged in checkbox and forgot password link */}
+            <div className={styles.checkboxRow}>
+              <div className={styles.checkbox}>
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <label htmlFor="rememberMe">Keep me signed in</label>
+              </div>
+              <Link to="/forgot-password" className={styles.forgotPassword}>
+                Forgot password?
+              </Link>
             </div>
             
             {/* Submit button */}
