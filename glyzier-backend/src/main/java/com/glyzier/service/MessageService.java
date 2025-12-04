@@ -6,9 +6,11 @@ import com.glyzier.dto.MessageResponse;
 import com.glyzier.dto.SendMessageRequest;
 import com.glyzier.model.Conversation;
 import com.glyzier.model.Message;
+import com.glyzier.model.Seller;
 import com.glyzier.model.Users;
 import com.glyzier.repository.ConversationRepository;
 import com.glyzier.repository.MessageRepository;
+import com.glyzier.repository.SellerRepository;
 import com.glyzier.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +49,9 @@ public class MessageService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SellerRepository sellerRepository;
 
     @Autowired
     private UserService userService;
@@ -230,6 +236,7 @@ public class MessageService {
      * 
      * Determines which user is the "other user" based on the current user,
      * and populates the response with that user's information.
+     * Also includes seller shop name if the other user is a seller.
      * 
      * @param conversation The conversation entity
      * @param currentUser The current authenticated user
@@ -242,11 +249,19 @@ public class MessageService {
                 ? conversation.getUser2()
                 : conversation.getUser1();
 
+        // Check if other user is a seller and get shop name
+        String sellerShopName = null;
+        Optional<Seller> seller = sellerRepository.findByUserUserid(otherUser.getUserid());
+        if (seller.isPresent()) {
+            sellerShopName = seller.get().getSellername();
+        }
+
         return new ConversationResponse(
                 conversation.getId(),
                 otherUser.getUserid(),
                 otherUser.getDisplayname(),
                 otherUser.getEmail(),
+                sellerShopName,
                 conversation.getUpdatedAt(),
                 conversation.getCreatedAt()
         );
