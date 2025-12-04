@@ -49,8 +49,36 @@
 .headerContent {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
   color: white;
+}
+
+.welcomeSection {
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.backButton {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .headerIcon {

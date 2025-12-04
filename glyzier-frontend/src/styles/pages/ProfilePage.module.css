@@ -9,6 +9,12 @@
  * @version 1.0 (Module 14)
  */
 
+/* Page wrapper */
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
 /* Main Container */
 .pageContainer {
   min-height: 100vh;
@@ -17,8 +23,12 @@
 
 /* Header Section */
 .header {
-  padding: 50px 20px;
   position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  height: 280px;
   overflow: hidden;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -57,9 +67,39 @@
   padding: 0 40px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
   position: relative;
   z-index: 1;
+}
+
+.welcomeSection {
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.backButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 .headerIcon {

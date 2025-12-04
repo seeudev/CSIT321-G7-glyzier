@@ -65,6 +65,11 @@ function MessageThreadPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   
+  // Handle back navigation
+  const handleGoBack = () => {
+    navigate(-1); // Go back to previous page
+  };
+  
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -230,10 +235,10 @@ function MessageThreadPage() {
   };
 
   /**
-   * Navigate back to inbox
+   * Navigate back to previous page (inbox or wherever user came from)
    */
   const handleBack = () => {
-    navigate('/messages');
+    navigate(-1);
   };
 
   // Loading state

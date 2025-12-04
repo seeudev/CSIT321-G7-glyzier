@@ -1,18 +1,95 @@
 /**
  * CartPage Styles
  * 
- * Modern shopping cart design matching wireframe layout
+ * Modern shopping cart design with Aurora header layout
+ * Updated to match Community Page styling
  */
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f5 100%);
+  background: #ffffff;
 }
 
+/* Header Section with Aurora Background */
+.headerSection {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 2rem 0;
+}
+
+.headerWrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Back Button - Darker for better visibility */
+.backButton {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.headerGlassCard {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Content Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 40px 24px;
+  background: #ffffff;
 }
 
 .loading {
@@ -20,18 +97,6 @@
   padding: 48px;
   color: #7f8c8d;
   font-size: 1.1em;
-}
-
-/* Header */
-.header {
-  margin-bottom: 32px;
-}
-
-.title {
-  font-size: 2.5em;
-  color: #2c3e50;
-  margin: 0;
-  font-weight: 700;
 }
 
 /* Empty cart */
@@ -299,6 +364,39 @@
 }
 
 @media (max-width: 768px) {
+  /* Adjust header content padding for mobile to prevent navbar overlap */
+  .headerContent {
+    padding: 80px 1rem 0;
+  }
+
+  /* Increase header wrapper min-height for better back button positioning */
+  .headerWrapper {
+    min-height: 140px;
+    padding-top: 10px;
+  }
+
+  /* Back button mobile adjustments */
+  .backButton {
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    top: 10px;
+  }
+
+  /* Glass card adjustments */
+  .headerGlassCard {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    margin-top: 50px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
   /* Layout Breakpoint - Stack cart items vertically */
   .container {
     padding: 20px 15px;
@@ -307,10 +405,6 @@
   
   .header {
     margin-bottom: 24px;
-  }
-  
-  .title {
-    font-size: 2.2em;
   }
   
   .cartItems {
@@ -539,5 +633,35 @@
   .checkoutButton {
     padding: 12px 24px;
     font-size: 0.95em;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Extra adjustments for very small screens */
+  .headerContent {
+    padding: 90px 0.75rem 0;
+  }
+
+  .headerWrapper {
+    min-height: 150px;
+  }
+
+  .backButton {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    top: 15px;
+  }
+
+  .headerGlassCard {
+    padding: 1.25rem 0.75rem;
+    margin-top: 55px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
   }
 }

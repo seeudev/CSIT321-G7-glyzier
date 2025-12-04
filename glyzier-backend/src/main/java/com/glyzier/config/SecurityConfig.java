@@ -155,6 +155,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/conversations", "/api/conversations/**").authenticated()
                 .requestMatchers("/api/messages", "/api/messages/**").authenticated()
                 
+                // Community posts - public reading, authenticated interactions (Module 18)
+                .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/**").permitAll()
+                .requestMatchers("/api/posts/**").authenticated()
+                
                 // All other /api endpoints require authentication
                 .requestMatchers("/api/**").authenticated()
                 

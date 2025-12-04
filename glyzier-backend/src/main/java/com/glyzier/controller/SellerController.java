@@ -192,4 +192,37 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
+
+    /**
+     * Update seller profile
+     * 
+     * Endpoint: PUT /api/sellers/me
+     * Access: Authenticated sellers only
+     * 
+     * This endpoint allows a seller to update their profile information.
+     * 
+     * @param request The updated seller information
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity with the updated Seller and HTTP 200 (OK)
+     */
+    @PutMapping("/me")
+    public ResponseEntity<?> updateSellerProfile(
+            @Valid @RequestBody SellerRegistrationRequest request,
+            Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Seller updatedSeller = sellerService.updateSellerProfile(email, request);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Seller profile updated successfully");
+            response.put("seller", new SellerResponse(updatedSeller));
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
 }

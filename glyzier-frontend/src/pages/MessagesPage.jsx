@@ -77,16 +77,33 @@ function MessagesPage() {
 
   return (
     <div className={styles.page}>
-      <Aurora 
-        colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
-        amplitude={1.0}
-        blend={0.5}
-        speed={0.3}
-      />
       <Navigation />
       
+      <div className={styles.headerSection}>
+        <Aurora 
+          colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+          amplitude={1.0}
+          blend={0.5}
+          speed={0.3}
+        />
+        <div className={styles.headerContent}>
+          <div className={styles.headerWrapper}>
+            <button 
+              onClick={() => navigate(-1)} 
+              className={styles.backButton}
+              aria-label="Go back"
+              title="Go back"
+            >
+              ← Back
+            </button>
+            <div className={styles.headerGlassCard}>
+              <h1 className={styles.title}>Messages</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className={styles.container}>
-        <h1 className={styles.pageTitle}>Messages</h1>
         
         <div className={styles.conversationsList}>
           {conversations.length === 0 ? (

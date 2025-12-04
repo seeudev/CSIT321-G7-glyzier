@@ -212,6 +212,9 @@ function SellerDashboard() {
                       {sellerProfile.storebio || 'No bio provided'}
                     </span>
                   </div>
+                  <Link to="/seller/profile" className={styles.editProfileLink}>
+                    Edit Profile
+                  </Link>
                 </>
               ) : (
                 <div className={styles.infoRow}>
