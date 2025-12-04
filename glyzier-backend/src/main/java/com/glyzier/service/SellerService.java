@@ -134,4 +134,38 @@ public class SellerService {
     public java.util.List<Seller> getAllSellers() {
         return sellerRepository.findAll();
     }
+
+    /**
+     * Update seller profile
+     * 
+     * This method allows a seller to update their profile information.
+     * Only sellername and storebio can be updated.
+     * 
+     * @param email The email of the authenticated user
+     * @param request The updated seller information
+     * @return The updated Seller entity
+     * @throws IllegalArgumentException if user not found or is not a seller
+     */
+    @Transactional
+    public Seller updateSellerProfile(String email, SellerRegistrationRequest request) {
+        // Find the user by email
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+
+        // Find the seller by user ID
+        Seller seller = sellerRepository.findByUserUserid(user.getUserid())
+                .orElseThrow(() -> new IllegalArgumentException("User is not registered as a seller"));
+
+        // Update seller information
+        if (request.getSellername() != null && !request.getSellername().trim().isEmpty()) {
+            seller.setSellername(request.getSellername());
+        }
+        
+        if (request.getStorebio() != null) {
+            seller.setStorebio(request.getStorebio());
+        }
+
+        // Save and return
+        return sellerRepository.save(seller);
+    }
 }
