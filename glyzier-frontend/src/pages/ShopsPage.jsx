@@ -154,6 +154,15 @@ function ShopsPage() {
       <Navigation />
       
       <div className={styles.container}>
+        {/* Back Button */}
+        <button 
+          className={styles.backButton} 
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
+        >
+          ← Back
+        </button>
+
         {/* Page Header */}
         <div className={styles.header}>
           <h1 className={styles.title}>All Shops</h1>

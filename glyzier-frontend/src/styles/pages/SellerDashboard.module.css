@@ -372,6 +372,26 @@
   line-height: 1.6;
 }
 
+.editProfileLink {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #8b7fc4, #7c6fb8);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.editProfileLink:hover {
+  background: linear-gradient(135deg, #9a8dd1, #8b7fc4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 127, 196, 0.4);
+}
+
 .muted {
   color: #95a5a6;
   font-size: 0.9em;

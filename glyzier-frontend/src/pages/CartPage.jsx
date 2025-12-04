@@ -186,6 +186,15 @@ const CartPage = () => {
       <Navigation />
       
       <div className={styles.container}>
+        {/* Back Button */}
+        <button 
+          className={styles.backButton} 
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
+        >
+          ← Back
+        </button>
+
         {/* Header */}
         <div className={styles.header}>
           <h1 className={styles.title}>Shopping Cart</h1>

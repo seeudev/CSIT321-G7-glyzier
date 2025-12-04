@@ -10,37 +10,24 @@
 
 /* Back Button */
 .backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 127, 196, 0.2);
-  border-radius: 50px;
-  color: #8b7fc4;
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 500;
   font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
 }
 
 .backButton:hover {
-  background: linear-gradient(135deg, #8b7fc4 0%, #7c6fb8 100%);
-  color: white;
-  transform: translateX(-4px);
-  box-shadow: 0 6px 20px rgba(139, 127, 196, 0.3);
-}
-
-.backArrow {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
-.backButton:hover .backArrow {
-  transform: translateX(-4px);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Page Header */

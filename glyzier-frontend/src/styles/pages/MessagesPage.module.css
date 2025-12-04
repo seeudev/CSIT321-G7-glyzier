@@ -34,7 +34,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
-  background: rgba(139, 127, 196, 0.15);
+  background: rgba(255, 255, 255, 0.95);
   border: 2px solid rgba(139, 127, 196, 0.3);
   border-radius: 12px;
   color: #5b4a80;
@@ -46,26 +46,29 @@
 }
 
 .backButton:hover {
-  background: rgba(139, 127, 196, 0.25);
+  background: rgba(255, 255, 255, 1);
   border-color: #8b7fc4;
-  transform: translateY(-50%) translateX(-4px);
+  transform: translateY(-50%);
+  box-shadow: 0 2px 8px rgba(139, 127, 196, 0.3);
 }
 
-.backButton svg {
-  transition: transform 0.3s ease;
-}
-
-.backButton:hover svg {
-  transform: translateX(-4px);
+.titleCard {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px 48px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
 .pageTitle {
-  text-align: center;
   font-size: 2.5rem;
   font-weight: 800;
-  color: #1e293b;
+  color: #ffffff;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .loadingContainer {
@@ -121,20 +124,20 @@
   align-items: center;
   gap: 1.25rem;
   padding: 1.25rem 1.5rem;
-  background: rgba(80, 60, 120, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .conversationCard:hover {
-  background: rgba(100, 80, 150, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -213,7 +216,12 @@
   }
 
   .backButton:hover {
-    transform: translateX(-4px);
+    transform: none;
+  }
+
+  .titleCard {
+    padding: 16px 24px;
+    border-radius: 12px;
   }
 
   .pageTitle {

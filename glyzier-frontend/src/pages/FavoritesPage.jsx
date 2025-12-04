@@ -170,8 +170,7 @@ const FavoritesPage = () => {
           onClick={() => navigate(-1)}
           aria-label="Go back"
         >
-          <span className={styles.backArrow}>←</span>
-          <span>Back</span>
+          ← Back
         </button>
         
         {/* Page Header */}

@@ -15,6 +15,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllPosts, createPost } from '../services/postService';
 import Navigation from '../components/Navigation';
@@ -24,6 +25,7 @@ import styles from '../styles/pages/CommunityPage.module.css';
 
 function CommunityPage() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [postContent, setPostContent] = useState('');
@@ -99,6 +101,13 @@ function CommunityPage() {
             <div className={styles.headerSection}>
                 <Aurora />
                 <div className={styles.headerContent}>
+                    <button 
+                        className={styles.backButton} 
+                        onClick={() => navigate(-1)}
+                        aria-label="Go back"
+                    >
+                        ← Back
+                    </button>
                     <div className={styles.headerGlassCard}>
                         <h1 className={styles.title}>Community Feed</h1>
                         <p className={styles.subtitle}>

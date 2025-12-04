@@ -64,6 +64,7 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import ProfilePage from './pages/ProfilePage';
+import SellerProfilePage from './pages/SellerProfilePage';
 import MessagesPage from './pages/MessagesPage';
 import MessageThreadPage from './pages/MessageThreadPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
@@ -161,6 +162,26 @@ function App() {
             element={
               <ProtectedRoute>
                 <SellerDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Seller Profile - seller profile management page (PROTECTED) */}
+          <Route 
+            path="/seller/profile" 
+            element={
+              <ProtectedRoute>
+                <SellerProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Manage Products - dedicated product management page for sellers (PROTECTED) */}
+          <Route 
+            path="/seller/profile" 
+            element={
+              <ProtectedRoute>
+                <SellerProfilePage />
               </ProtectedRoute>
             } 
           />

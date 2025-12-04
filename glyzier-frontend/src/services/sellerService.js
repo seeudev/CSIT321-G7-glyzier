@@ -180,3 +180,39 @@ export const getAllSellers = async () => {
     throw error;
   }
 };
+
+/**
+ * Update Seller Profile
+ * 
+ * Updates the seller profile for the authenticated user.
+ * This is a protected endpoint - requires JWT authentication.
+ * User must be a seller.
+ * 
+ * @param {Object} updateData - Updated seller profile data
+ * @param {string} updateData.sellername - New shop name (3-100 chars, optional)
+ * @param {string} updateData.storebio - New store bio (max 1000 chars, optional)
+ * @returns {Promise<Object>} Updated seller profile
+ * @throws {Error} If validation fails or user is not a seller
+ * 
+ * @example
+ * const updatedProfile = await updateSellerProfile({
+ *   sellername: "Updated Gallery",
+ *   storebio: "New description"
+ * });
+ */
+export const updateSellerProfile = async (updateData) => {
+  try {
+    const response = await api.put('/api/sellers/me', updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating seller profile:', error);
+    
+    // Extract error message from backend response
+    if (error.response && error.response.data) {
+      const errorMessage = error.response.data.error || error.response.data.message || 'Failed to update seller profile';
+      throw new Error(errorMessage);
+    }
+    
+    throw error;
+  }
+};

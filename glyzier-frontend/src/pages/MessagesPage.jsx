@@ -97,7 +97,9 @@ function MessagesPage() {
             </svg>
             Back
           </button>
-          <h1 className={styles.pageTitle}>Messages</h1>
+          <div className={styles.titleCard}>
+            <h1 className={styles.pageTitle}>Messages</h1>
+          </div>
         </div>
         
         <div className={styles.conversationsList}>
