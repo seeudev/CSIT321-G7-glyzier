@@ -59,13 +59,13 @@ import SearchPage from './pages/SearchPage';
 import ShopsPage from './pages/ShopsPage';
 import ShopDetailPage from './pages/ShopDetailPage';
 import CommunityPage from './pages/CommunityPage';
-import MorePage from './pages/MorePage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import ProfilePage from './pages/ProfilePage';
 import MessagesPage from './pages/MessagesPage';
+import MessageThreadPage from './pages/MessageThreadPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
@@ -118,7 +118,6 @@ function App() {
             {/* Placeholder pages for navigation links (PUBLIC) */}
             <Route path="/shops" element={<ShopsPage />} />
             <Route path="/community" element={<CommunityPage />} />
-            <Route path="/more" element={<MorePage />} />
             
             {/* Shop Detail page - view individual shop (PUBLIC - Module 15) */}
             <Route path="/shops/:sid" element={<ShopDetailPage />} />
@@ -240,7 +239,7 @@ function App() {
             path="/messages/:id" 
             element={
               <ProtectedRoute>
-                <MessagesPage />
+                <MessageThreadPage />
               </ProtectedRoute>
             } 
           />

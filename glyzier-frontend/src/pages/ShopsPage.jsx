@@ -19,6 +19,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import { useAuth } from '../context/AuthContext';
 import { getAllSellers } from '../services/sellerService';
 import { createOrGetConversation } from '../services/messageService';
@@ -101,7 +102,9 @@ function ShopsPage() {
    * Creates or gets existing conversation and navigates to message thread
    */
   const handleContactSeller = async (sellerUserId, sellerName, e) => {
-    e.stopPropagation(); // Prevent card click
+    // CRITICAL: Stop all event propagation immediately
+    e.stopPropagation();
+    e.preventDefault();
 
     // Check authentication
     if (!isAuthenticated) {
@@ -110,11 +113,23 @@ function ShopsPage() {
       return;
     }
 
+    // Prevent duplicate requests
+    if (contactingLoading[sellerUserId]) {
+      return;
+    }
+
     try {
       setContactingLoading(prev => ({ ...prev, [sellerUserId]: true }));
       
+      console.log('Creating conversation with user ID:', sellerUserId);
+      
       // Create or get conversation
       const conversation = await createOrGetConversation(sellerUserId);
+      
+      console.log('Conversation created/retrieved:', conversation);
+      
+      // Clear loading state before navigation
+      setContactingLoading(prev => ({ ...prev, [sellerUserId]: false }));
       
       // Navigate to message thread
       navigate(`/messages/${conversation.id}`);
@@ -122,14 +137,20 @@ function ShopsPage() {
       
     } catch (error) {
       console.error('Error contacting seller:', error);
-      showError(error.response?.data?.error || 'Failed to contact seller');
-    } finally {
+      console.error('Error details:', error.response);
       setContactingLoading(prev => ({ ...prev, [sellerUserId]: false }));
+      showError(error.response?.data?.error || 'Failed to contact seller. Please try again.');
     }
   };
 
   return (
     <div className={styles.page}>
+      <Aurora 
+        colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+        amplitude={1.0}
+        blend={0.5}
+        speed={0.3}
+      />
       <Navigation />
       
       <div className={styles.container}>
@@ -189,9 +210,10 @@ function ShopsPage() {
                     
                     {/* Contact Seller Button */}
                     <button
+                      type="button"
                       className={styles.contactButton}
-                      onClick={(e) => handleContactSeller(seller.userid, seller.sellername, e)}
-                      disabled={contactingLoading[seller.userid]}
+                      onClick={(e) => handleContactSeller(seller.userId, seller.sellername, e)}
+                      disabled={contactingLoading[seller.userId]}
                       aria-label="Contact seller"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">

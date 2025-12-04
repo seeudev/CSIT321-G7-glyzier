@@ -27,6 +27,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Navigation from '../components/Navigation';
+import Aurora from '../components/Aurora';
 import { getConversation, getMessages, sendMessage } from '../services/messageService';
 import styles from '../styles/pages/MessageThreadPage.module.css';
 
@@ -237,8 +239,17 @@ function MessageThreadPage() {
   // Loading state
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading conversation...</div>
+      <div className={styles.page}>
+        <Aurora 
+          colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+          amplitude={1.0}
+          blend={0.5}
+          speed={0.3}
+        />
+        <Navigation />
+        <div className={styles.container}>
+          <div className={styles.loading}>Loading conversation...</div>
+        </div>
       </div>
     );
   }
@@ -246,14 +257,31 @@ function MessageThreadPage() {
   // Error state (only for initial load failures)
   if (error && !conversation) {
     return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error}</div>
+      <div className={styles.page}>
+        <Aurora 
+          colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+          amplitude={1.0}
+          blend={0.5}
+          speed={0.3}
+        />
+        <Navigation />
+        <div className={styles.container}>
+          <div className={styles.error}>{error}</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
+      <Aurora 
+        colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+        amplitude={1.0}
+        blend={0.5}
+        speed={0.3}
+      />
+      <Navigation />
+      <div className={styles.container}>
       {/* Header with back button and user info */}
       <div className={styles.header}>
         <button
@@ -351,6 +379,7 @@ function MessageThreadPage() {
           {sending ? 'Sending...' : 'Send'}
         </button>
       </form>
+      </div>
     </div>
   );
 }

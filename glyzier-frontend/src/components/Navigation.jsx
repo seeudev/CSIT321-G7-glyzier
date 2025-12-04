@@ -159,7 +159,7 @@ function Navigation() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        {/* Brand (text only, no circle logo) */}
+        {/* Brand */}
         <Link to="/" className={styles.brand}>
           <span className={styles.brandText}>Glyzier</span>
         </Link>
@@ -202,9 +202,6 @@ function Navigation() {
           <Link to="/community" className={styles.navTab}>
             Community
           </Link>
-          <Link to="/more" className={styles.navTab}>
-            More
-          </Link>
         </div>
 
         {/* Mobile Menu Drawer - Visible when hamburger is clicked */}
@@ -234,9 +231,6 @@ function Navigation() {
                 </Link>
                 <Link to="/community" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
                   Community
-                </Link>
-                <Link to="/more" className={styles.mobileMenuLink} onClick={closeMobileMenu}>
-                  More
                 </Link>
               </nav>
             </div>
