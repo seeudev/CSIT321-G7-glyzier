@@ -148,25 +148,22 @@ function SellerProfilePage() {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.page}>
       <Navigation />
       
-      <div className={styles.content}>
-        {/* Page Header */}
-        <div className={styles.header}>
-          <Aurora 
-            colorStops={['#667eea', '#764ba2', '#f093fb']}
-            amplitude={1.2}
-            blend={0.6}
-            speed={0.4}
-          />
-          <div className={styles.headerCard}>
-            <div className={styles.headerContent}>
-              <PackageIcon className={styles.headerIcon} />
-              <div>
-                <h1 className={styles.title}>Seller Profile</h1>
-                <p className={styles.subtitle}>Manage your shop information</p>
-              </div>
+      {/* Header Section */}
+      <div className={styles.header}>
+        <Aurora 
+          colorStops={['#667eea', '#764ba2', '#f093fb']}
+          amplitude={1.2}
+          blend={0.6}
+          speed={0.4}
+        />
+        <div className={styles.headerCard}>
+          <div className={styles.headerContent}>
+            <div className={styles.welcomeSection}>
+              <h1 className={styles.title}>Seller Profile</h1>
+              <p className={styles.subtitle}>Manage your shop information</p>
             </div>
             <div className={styles.headerActions}>
               <Link to="/seller/dashboard" className={styles.backButton}>
@@ -175,6 +172,9 @@ function SellerProfilePage() {
             </div>
           </div>
         </div>
+      </div>
+      
+      <div className={styles.content}>
 
         {/* Loading State */}
         {profileLoading ? (

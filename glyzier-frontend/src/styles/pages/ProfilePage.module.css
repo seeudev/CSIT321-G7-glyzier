@@ -9,6 +9,12 @@
  * @version 1.0 (Module 14)
  */
 
+/* Page wrapper */
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
 /* Main Container */
 .pageContainer {
   min-height: 100vh;
@@ -17,8 +23,12 @@
 
 /* Header Section */
 .header {
-  padding: 50px 20px;
   position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  height: 280px;
   overflow: hidden;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -61,6 +71,10 @@
   gap: 20px;
   position: relative;
   z-index: 1;
+}
+
+.welcomeSection {
+  flex: 1;
 }
 
 .headerActions {

@@ -18,23 +18,30 @@
 .headerContent {
     position: relative;
     z-index: 1;
-    text-align: center;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 2rem 0;
 }
 
-/* Back Button */
+.headerWrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* Back Button - Darker for better visibility */
 .backButton {
-    background: rgba(255, 255, 255, 0.2);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
@@ -42,9 +49,9 @@
 }
 
 .backButton:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.6);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .headerGlassCard {

@@ -101,18 +101,20 @@ function CommunityPage() {
             <div className={styles.headerSection}>
                 <Aurora />
                 <div className={styles.headerContent}>
-                    <button 
-                        className={styles.backButton} 
-                        onClick={() => navigate(-1)}
-                        aria-label="Go back"
-                    >
-                        ← Back
-                    </button>
-                    <div className={styles.headerGlassCard}>
-                        <h1 className={styles.title}>Community Feed</h1>
-                        <p className={styles.subtitle}>
-                            Share your thoughts and connect with the Glyzier community
-                        </p>
+                    <div className={styles.headerWrapper}>
+                        <button 
+                            className={styles.backButton} 
+                            onClick={() => navigate(-1)}
+                            aria-label="Go back"
+                        >
+                            ← Back
+                        </button>
+                        <div className={styles.headerGlassCard}>
+                            <h1 className={styles.title}>Community Feed</h1>
+                            <p className={styles.subtitle}>
+                                Share your thoughts and connect with the Glyzier community
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

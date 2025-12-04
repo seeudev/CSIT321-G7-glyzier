@@ -259,11 +259,9 @@ function DashboardPage() {
                   {sellerCheckLoading ? 'Checking...' : isSeller ? 'Seller Account' : 'Buyer Account'}
                 </span>
               </div>
-              <div className={styles.cardActions}>
-                <Link to="/profile" className={styles.buttonPrimary}>
-                  Edit Profile
-                </Link>
-              </div>
+              <Link to="/profile" className={styles.editProfileLink}>
+                Edit Profile
+              </Link>
             </div>
           </div>
           
