@@ -43,6 +43,11 @@ public class ConversationResponse {
     private String otherUserEmail;
 
     /**
+     * Seller shop name if the other user is a seller
+     */
+    private String sellerShopName;
+
+    /**
      * Timestamp of the last activity in this conversation
      * 
      * Updated whenever a new message is sent.
@@ -68,16 +73,18 @@ public class ConversationResponse {
      * @param otherUserId Other user's ID
      * @param otherUserName Other user's display name
      * @param otherUserEmail Other user's email
+     * @param sellerShopName Seller shop name (null if not a seller)
      * @param updatedAt Last activity timestamp
      * @param createdAt Creation timestamp
      */
     public ConversationResponse(Long id, Long otherUserId, String otherUserName, 
-                               String otherUserEmail, LocalDateTime updatedAt, 
-                               LocalDateTime createdAt) {
+                               String otherUserEmail, String sellerShopName,
+                               LocalDateTime updatedAt, LocalDateTime createdAt) {
         this.id = id;
         this.otherUserId = otherUserId;
         this.otherUserName = otherUserName;
         this.otherUserEmail = otherUserEmail;
+        this.sellerShopName = sellerShopName;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
     }
@@ -114,6 +121,14 @@ public class ConversationResponse {
 
     public void setOtherUserEmail(String otherUserEmail) {
         this.otherUserEmail = otherUserEmail;
+    }
+
+    public String getSellerShopName() {
+        return sellerShopName;
+    }
+
+    public void setSellerShopName(String sellerShopName) {
+        this.sellerShopName = sellerShopName;
     }
 
     public LocalDateTime getUpdatedAt() {

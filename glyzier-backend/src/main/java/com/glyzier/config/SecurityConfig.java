@@ -152,8 +152,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/favorites/**").authenticated()
                 
                 // Messaging endpoints require authentication (Module 16)
-                .requestMatchers("/api/conversations/**").authenticated()
-                .requestMatchers("/api/messages/**").authenticated()
+                .requestMatchers("/api/conversations", "/api/conversations/**").authenticated()
+                .requestMatchers("/api/messages", "/api/messages/**").authenticated()
                 
                 // All other /api endpoints require authentication
                 .requestMatchers("/api/**").authenticated()

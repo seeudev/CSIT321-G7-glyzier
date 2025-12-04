@@ -63,8 +63,11 @@ function ProductDetailPage() {
         setProduct(data);
         
         // Check if current user owns this product (Module 19: Ownership guard)
-        if (user && data.sellerId) {
-          setIsOwner(user.uid === data.sellerId);
+        // Compare user.uid (user ID) with data.sellerUserId (seller's user ID)
+        if (user && data.sellerUserId) {
+          const ownershipMatch = user.uid === data.sellerUserId;
+          console.log('Ownership check:', { userUid: user.uid, sellerUserId: data.sellerUserId, isOwner: ownershipMatch });
+          setIsOwner(ownershipMatch);
         } else {
           setIsOwner(false);
         }
