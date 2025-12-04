@@ -86,7 +86,19 @@ function MessagesPage() {
       <Navigation />
       
       <div className={styles.container}>
-        <h1 className={styles.pageTitle}>Messages</h1>
+        <div className={styles.header}>
+          <button 
+            onClick={() => navigate(-1)} 
+            className={styles.backButton}
+            title="Go back"
+          >
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <h1 className={styles.pageTitle}>Messages</h1>
+        </div>
         
         <div className={styles.conversationsList}>
           {conversations.length === 0 ? (

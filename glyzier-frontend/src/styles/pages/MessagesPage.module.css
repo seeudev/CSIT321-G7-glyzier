@@ -20,12 +20,51 @@
   z-index: 1;
 }
 
+.header {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.backButton {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(139, 127, 196, 0.15);
+  border: 2px solid rgba(139, 127, 196, 0.3);
+  border-radius: 12px;
+  color: #5b4a80;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.backButton:hover {
+  background: rgba(139, 127, 196, 0.25);
+  border-color: #8b7fc4;
+  transform: translateY(-50%) translateX(-4px);
+}
+
+.backButton svg {
+  transition: transform 0.3s ease;
+}
+
+.backButton:hover svg {
+  transform: translateX(-4px);
+}
+
 .pageTitle {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 800;
   color: #1e293b;
-  margin: 0 0 2.5rem 0;
+  margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -162,9 +201,23 @@
     padding: 80px 1rem 1rem;
   }
 
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .backButton {
+    position: static;
+    transform: none;
+    width: fit-content;
+    margin-bottom: 1rem;
+  }
+
+  .backButton:hover {
+    transform: translateX(-4px);
+  }
+
   .pageTitle {
     font-size: 2rem;
-    margin-bottom: 1.5rem;
   }
 
   .conversationCard {

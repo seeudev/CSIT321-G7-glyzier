@@ -70,6 +70,7 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import AdminPostsPage from './pages/admin/AdminPostsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
@@ -282,6 +283,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminCategoriesPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Posts - community posts management (PROTECTED - ADMIN ONLY) */}
+          <Route 
+            path="/admin/posts" 
+            element={
+              <ProtectedRoute>
+                <AdminPostsPage />
               </ProtectedRoute>
             } 
           />
