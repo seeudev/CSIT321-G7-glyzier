@@ -40,7 +40,6 @@ function ManageProducts() {
   // File management state (Module 20)
   const [productFiles, setProductFiles] = useState({});
   const [fileLoadingStates, setFileLoadingStates] = useState({});
-  const [createFormDigitalFile, setCreateFormDigitalFile] = useState(null);
   
   // Form states
   const [createFormData, setCreateFormData] = useState({
@@ -181,20 +180,10 @@ function ManageProducts() {
       const newProductId = createdProduct.pid;
       
       console.log('[ManageProducts] Product created with ID:', newProductId);
-      console.log('[ManageProducts] Digital file to upload:', createFormDigitalFile);
       
-      // Upload digital file if provided (Module 20)
-      if (createFormData.type === 'Digital' && createFormDigitalFile) {
-        try {
-          console.log('[ManageProducts] Uploading digital file for product', newProductId);
-          const uploadResponse = await fileService.uploadFile(newProductId, createFormDigitalFile, 'digital_download');
-          console.log('[ManageProducts] Upload response:', uploadResponse);
-          showSuccess('Product and digital file created successfully!');
-        } catch (uploadErr) {
-          console.error('[ManageProducts] File upload failed:', uploadErr);
-          console.error('[ManageProducts] Error details:', uploadErr.response?.data);
-          showError('Product created but file upload failed. You can upload the file by editing the product.');
-        }
+      // Show success message with instruction for digital products
+      if (createFormData.type === 'Digital') {
+        showSuccess('Product created successfully! Click "Edit" to upload the digital file.');
       } else {
         showSuccess('Product created successfully!');
       }
@@ -211,7 +200,6 @@ function ManageProducts() {
         qtyonhand: '10',
         qtyreserved: '0'
       });
-      setCreateFormDigitalFile(null);
       setShowCreateForm(false);
       
       // Reload products
@@ -635,83 +623,24 @@ function ManageProducts() {
                 />
               </div>
               
-              {/* Digital File Upload Section (Module 20) */}
+              {/* Info message for digital products */}
               {createFormData.type === 'Digital' && (
-                <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>
-                    💾 Digital Product File (Optional)
-                  </label>
-                  <p style={{ fontSize: '0.9em', color: '#7f8c8d', marginTop: '-8px', marginBottom: '12px' }}>
-                    You can upload the digital file now, or add it later after creating the product.
-                  </p>
-                  <div 
-                    ref={(el) => {
-                      if (el && !el.dataset.productId) {
-                        el.dataset.productId = 'create-form-temp';
-                      }
-                    }}
-                  >
-                    {createFormDigitalFile ? (
-                      <div style={{ 
-                        marginTop: '8px', 
-                        padding: '16px', 
-                        background: '#e8f5e9', 
-                        borderRadius: '8px',
-                        border: '2px solid #66bb6a',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px'
-                      }}>
-                        <span style={{ fontSize: '2em' }}>✅</span>
-                        <div style={{ flex: 1 }}>
-                          <strong style={{ color: '#2e7d32', display: 'block' }}>{createFormDigitalFile.name}</strong>
-                          <div style={{ fontSize: '0.85em', color: '#558b2f', marginTop: '4px' }}>
-                            {(createFormDigitalFile.size / 1024 / 1024).toFixed(2)} MB • Ready to upload
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setCreateFormDigitalFile(null)}
-                          style={{
-                            background: '#f44336',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            padding: '8px 16px',
-                            cursor: 'pointer',
-                            fontSize: '0.9em',
-                            fontWeight: '600'
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <input
-                          type="file"
-                          className={styles.formInput}
-                          onChange={(e) => {
-                            const file = e.target.files[0];
-                            if (file) {
-                              // Validate file size (max 100MB)
-                              const maxSize = 100 * 1024 * 1024;
-                              if (file.size > maxSize) {
-                                showError('File size must be less than 100MB');
-                                e.target.value = '';
-                                return;
-                              }
-                              setCreateFormDigitalFile(file);
-                            }
-                          }}
-                          accept="*/*"
-                          disabled={createFormLoading}
-                        />
-                        <small className={styles.formHint}>
-                          Upload the digital file customers will download (all file types supported). Max 100MB.
-                        </small>
-                      </div>
-                    )}
+                <div style={{ 
+                  marginTop: '16px',
+                  padding: '16px', 
+                  background: '#e3f2fd', 
+                  borderRadius: '8px',
+                  border: '2px solid #2196f3',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}>
+                  <span style={{ fontSize: '2em' }}>💡</span>
+                  <div>
+                    <strong style={{ color: '#1976d2', display: 'block', marginBottom: '4px' }}>Digital Product File Upload</strong>
+                    <span style={{ color: '#1565c0', fontSize: '0.9em' }}>
+                      After creating the product, you'll be able to upload the digital file that customers will download. The upload interface will appear in the edit view.
+                    </span>
                   </div>
                 </div>
               )}
