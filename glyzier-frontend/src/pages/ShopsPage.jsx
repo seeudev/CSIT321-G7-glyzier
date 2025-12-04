@@ -145,31 +145,35 @@ function ShopsPage() {
 
   return (
     <div className={styles.page}>
-      <Aurora 
-        colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
-        amplitude={1.0}
-        blend={0.5}
-        speed={0.3}
-      />
       <Navigation />
       
-      <div className={styles.container}>
-        {/* Back Button */}
-        <button 
-          className={styles.backButton} 
-          onClick={() => navigate(-1)}
-          aria-label="Go back"
-        >
-          ← Back
-        </button>
-
-        {/* Page Header */}
-        <div className={styles.header}>
-          <h1 className={styles.title}>All Shops</h1>
-          <p className={styles.subtitle}>
-            Browse all seller shops on Glyzier and discover amazing art
-          </p>
+      <div className={styles.headerSection}>
+        <Aurora 
+          colorStops={['#c9bfe8', '#b8afe8', '#9b8dd4']}
+          amplitude={1.0}
+          blend={0.5}
+          speed={0.3}
+        />
+        <div className={styles.headerContent}>
+          <div className={styles.headerWrapper}>
+            <button 
+              className={styles.backButton} 
+              onClick={() => navigate(-1)}
+              aria-label="Go back"
+            >
+              ← Back
+            </button>
+            <div className={styles.headerGlassCard}>
+              <h1 className={styles.title}>All Shops</h1>
+              <p className={styles.subtitle}>
+                Browse all seller shops on Glyzier and discover amazing art
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+      
+      <div className={styles.container}>
 
         {/* Loading State */}
         {loading && (

@@ -457,26 +457,40 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .headerSection {
-        height: 200px;
+        height: 250px;
     }
 
+    /* Adjust header content padding for mobile to prevent navbar overlap */
     .headerContent {
-        padding-top: 40px;
-        padding-left: 16px;
-        padding-right: 16px;
+        padding: 80px 1rem 0;
     }
 
+    /* Increase header wrapper min-height for better back button positioning */
+    .headerWrapper {
+        min-height: 140px;
+        padding-top: 10px;
+    }
+
+    /* Back button mobile adjustments */
+    .backButton {
+        font-size: 0.9rem;
+        padding: 10px 18px;
+        top: 10px;
+    }
+
+    /* Glass card adjustments */
     .headerGlassCard {
-        padding: 24px 32px;
-        border-radius: 16px;
+        padding: 1.5rem 1rem;
+        max-width: 100%;
+        margin-top: 50px;
     }
 
     .title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .subtitle {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 
     .container {
@@ -500,5 +514,35 @@
 
     .commentSubmit {
         width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extra adjustments for very small screens */
+    .headerContent {
+        padding: 90px 0.75rem 0;
+    }
+
+    .headerWrapper {
+        min-height: 150px;
+    }
+
+    .backButton {
+        font-size: 0.85rem;
+        padding: 8px 14px;
+        top: 15px;
+    }
+
+    .headerGlassCard {
+        padding: 1.25rem 0.75rem;
+        margin-top: 55px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
     }
 }

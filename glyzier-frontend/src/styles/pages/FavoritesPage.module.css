@@ -2,6 +2,12 @@
 /* Styling for Favorites/Wishlist page (Module 10) */
 /* Updated to match Community Page Aurora header layout */
 
+/* Page wrapper with white background */
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
 /* Header Section with Aurora Background */
 .headerSection {
   position: relative;
@@ -82,7 +88,6 @@
   margin: 0 auto;
   padding: 40px 20px;
   min-height: calc(100vh - 250px);
-  background: #ffffff;
 }
 
 /* Loading State */
@@ -473,5 +478,96 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .productsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Adjust header content padding for mobile to prevent navbar overlap */
+  .headerContent {
+    padding: 80px 1rem 0;
+  }
+
+  /* Increase header wrapper min-height for better back button positioning */
+  .headerWrapper {
+    min-height: 140px;
+    padding-top: 10px;
+  }
+
+  /* Back button mobile adjustments */
+  .backButton {
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    top: 10px;
+  }
+
+  /* Glass card adjustments */
+  .headerGlassCard {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    margin-top: 50px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .pageContainer {
+    padding: 30px 16px;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Extra adjustments for very small screens */
+  .headerContent {
+    padding: 90px 0.75rem 0;
+  }
+
+  .headerWrapper {
+    min-height: 150px;
+  }
+
+  .backButton {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    top: 15px;
+  }
+
+  .headerGlassCard {
+    padding: 1.25rem 0.75rem;
+    margin-top: 55px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  .pageContainer {
+    padding: 20px 12px;
   }
 }

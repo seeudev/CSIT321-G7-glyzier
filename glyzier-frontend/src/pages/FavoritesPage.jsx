@@ -162,7 +162,7 @@ const FavoritesPage = () => {
   }
   
   return (
-    <>
+    <div className={styles.page}>
       <Navigation />
       <div className={styles.headerSection}>
         <Aurora 
@@ -271,7 +271,7 @@ const FavoritesPage = () => {
         </div>
       )}
         </div>
-      </>
+      </div>
     );
   };
 

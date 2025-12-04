@@ -180,14 +180,20 @@ function ManageProducts() {
       const createdProduct = await createProduct(productData);
       const newProductId = createdProduct.pid;
       
-      // Upload digital file if provided
+      console.log('[ManageProducts] Product created with ID:', newProductId);
+      console.log('[ManageProducts] Digital file to upload:', createFormDigitalFile);
+      
+      // Upload digital file if provided (Module 20)
       if (createFormData.type === 'Digital' && createFormDigitalFile) {
         try {
-          await fileService.uploadFile(newProductId, createFormDigitalFile, 'digital_download');
+          console.log('[ManageProducts] Uploading digital file for product', newProductId);
+          const uploadResponse = await fileService.uploadFile(newProductId, createFormDigitalFile, 'digital_download');
+          console.log('[ManageProducts] Upload response:', uploadResponse);
           showSuccess('Product and digital file created successfully!');
         } catch (uploadErr) {
-          console.error('File upload failed:', uploadErr);
-          showError('Product created but file upload failed. Please edit the product to upload the file.');
+          console.error('[ManageProducts] File upload failed:', uploadErr);
+          console.error('[ManageProducts] Error details:', uploadErr.response?.data);
+          showError('Product created but file upload failed. You can upload the file by editing the product.');
         }
       } else {
         showSuccess('Product created successfully!');
