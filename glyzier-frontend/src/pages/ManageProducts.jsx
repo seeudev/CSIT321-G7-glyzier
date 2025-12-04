@@ -633,63 +633,80 @@ function ManageProducts() {
               {createFormData.type === 'Digital' && (
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>
-                    💾 Digital Product File <span className={styles.required}>*</span>
+                    💾 Digital Product File (Optional)
                   </label>
-                  <input
-                    type="file"
-                    className={styles.formInput}
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        // Validate file size (max 100MB)
-                        const maxSize = 100 * 1024 * 1024;
-                        if (file.size > maxSize) {
-                          showError('File size must be less than 100MB');
-                          e.target.value = '';
-                          return;
-                        }
-                        setCreateFormDigitalFile(file);
-                        showInfo(`File "${file.name}" ready to upload (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                  <p style={{ fontSize: '0.9em', color: '#7f8c8d', marginTop: '-8px', marginBottom: '12px' }}>
+                    You can upload the digital file now, or add it later after creating the product.
+                  </p>
+                  <div 
+                    ref={(el) => {
+                      if (el && !el.dataset.productId) {
+                        el.dataset.productId = 'create-form-temp';
                       }
                     }}
-                    accept="*/*"
-                    disabled={createFormLoading}
-                  />
-                  <small className={styles.formHint}>
-                    Upload the digital file customers will download (all file types supported). Max 100MB.
-                  </small>
-                  {createFormDigitalFile && (
-                    <div style={{ 
-                      marginTop: '8px', 
-                      padding: '12px', 
-                      background: '#e3f2fd', 
-                      borderRadius: '6px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <span style={{ fontSize: '1.5em' }}>✅</span>
-                      <div>
-                        <strong style={{ color: '#1976d2' }}>{createFormDigitalFile.name}</strong>
-                        <div style={{ fontSize: '0.85em', color: '#555' }}>
-                          {(createFormDigitalFile.size / 1024 / 1024).toFixed(2)} MB
+                  >
+                    {createFormDigitalFile ? (
+                      <div style={{ 
+                        marginTop: '8px', 
+                        padding: '16px', 
+                        background: '#e8f5e9', 
+                        borderRadius: '8px',
+                        border: '2px solid #66bb6a',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}>
+                        <span style={{ fontSize: '2em' }}>✅</span>
+                        <div style={{ flex: 1 }}>
+                          <strong style={{ color: '#2e7d32', display: 'block' }}>{createFormDigitalFile.name}</strong>
+                          <div style={{ fontSize: '0.85em', color: '#558b2f', marginTop: '4px' }}>
+                            {(createFormDigitalFile.size / 1024 / 1024).toFixed(2)} MB • Ready to upload
+                          </div>
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => setCreateFormDigitalFile(null)}
+                          style={{
+                            background: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '8px 16px',
+                            cursor: 'pointer',
+                            fontSize: '0.9em',
+                            fontWeight: '600'
+                          }}
+                        >
+                          Remove
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setCreateFormDigitalFile(null)}
-                        style={{
-                          marginLeft: 'auto',
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          fontSize: '1.2em'
-                        }}
-                      >
-                        ❌
-                      </button>
-                    </div>
-                  )}
+                    ) : (
+                      <div>
+                        <input
+                          type="file"
+                          className={styles.formInput}
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              // Validate file size (max 100MB)
+                              const maxSize = 100 * 1024 * 1024;
+                              if (file.size > maxSize) {
+                                showError('File size must be less than 100MB');
+                                e.target.value = '';
+                                return;
+                              }
+                              setCreateFormDigitalFile(file);
+                            }
+                          }}
+                          accept="*/*"
+                          disabled={createFormLoading}
+                        />
+                        <small className={styles.formHint}>
+                          Upload the digital file customers will download (all file types supported). Max 100MB.
+                        </small>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               
